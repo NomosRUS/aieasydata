@@ -1,0 +1,13 @@
+{
+  "name": "sales_daily",
+  "mode": "batch",
+  "schedule": "0 * * * *",
+  "source": { "type": "csv", "options": { "path": "/data/sales_*.csv", "delimiter": "," } },
+  "validate": { "checks": ["not_null:amount","type:amount:int"] },
+  "transforms": [
+    { "op":"derive","expr":"dt = toDate(event_time)" },
+    { "op":"agg","by":["dt"],"metrics":[{"sum":"amount"}] }
+  ],
+  "target": { "system": "clickhouse", "object": "analytics.sales_by_day", "partitions": ["dt"] },
+  "ddl_overrides": {}
+}

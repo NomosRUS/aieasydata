@@ -1,0 +1,38 @@
+# IDE and editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.*
+
+# Data files
+# Ignore all content inside data_landing_zone, but track the directory itself via .gitkeep
+/data_landing_zone/*
+!/data_landing_zone/.gitkeep
+
+# Logs
+/airflow/logs/
+
+# Database data
+/postgres-data/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Frontend / Node.js
+/ui/node_modules/
+/ui/build/
+/ui/dist/
+.npm

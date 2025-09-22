@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.dockerignore
+docker-compose.yml
+Dockerfile*
+
+# Python
+.venv/
+venv/
+env/
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# IDEs
+.idea/
+.vscode/
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Data and logs - IMPORTANT
+# We exclude these from the build context to keep it small.
+# They are mounted as volumes anyway.
+*.log
+data_landing_zone/
+pg_data/
+ch_data/
+hdfs_name/
+hdfs_data/
+
+# Other project files not needed for the build
+README.md
+Task/

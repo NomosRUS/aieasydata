@@ -1,0 +1,11 @@
+-- ClickHouse DDL (MergeTree)
+CREATE DATABASE IF NOT EXISTS {{ table.db }};
+
+CREATE TABLE IF NOT EXISTS {{ table.db }}.{{ table.table }} (
+{% for col in columns -%}
+  {{ col.name }} {{ col.type }}{% if not loop.last %},{% endif %}
+{% endfor %}
+)
+ENGINE = MergeTree
+{% if partition_by %}PARTITION BY {{ partition_by }}{% endif %}
+{% if order_by %}ORDER BY ({{ order_by | join(', ') }}){% else %}ORDER BY tuple(){% endif %};

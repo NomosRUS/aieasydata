@@ -1,0 +1,13 @@
+-- PostgreSQL DDL
+CREATE SCHEMA IF NOT EXISTS {{ table.db }};
+CREATE TABLE IF NOT EXISTS {{ table.db }}.{{ table.table }} (
+{% for col in columns -%}
+  {{ col.name }} {{ col.type }}{% if not loop.last %},{% endif %}
+{% endfor %}
+);
+{% if indexes %}
+-- indexes
+{% for idx in indexes %}
+CREATE INDEX IF NOT EXISTS idx_{{ table.table }}_{{ idx }} ON {{ table.db }}.{{ table.table }}({{ idx }});
+{% endfor %}
+{% endif %}

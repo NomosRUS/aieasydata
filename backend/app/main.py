@@ -1,0 +1,153 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Optional, Literal, Dict, Any
+from datetime import datetime
+import os
+from . import agent, analyzer, rule_engine, dag_compiler
+from .database import get_db, DataProfile
+from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
+from dotenv import load_dotenv
+import requests
+
+load_dotenv()
+
+app = FastAPI(title="AiEasyData API (OpenAI)", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
+)
+
+class DSLModel(BaseModel):
+    name: str
+    mode: Literal["batch","stream"] = "batch"
+    schedule: Optional[str] = "0 * * * *"
+    source: Dict[str, Any]
+    validate: Optional[Dict[str, Any]] = None
+    transforms: Optional[List[Dict[str, Any]]] = []
+    target: Dict[str, Any]
+    ddl_overrides: Optional[Dict[str, str]] = {}
+
+class DataProfileResponse(BaseModel):
+    id: int
+    kind: Optional[str] = None
+    source_path: str
+    total_row_count: Optional[int] = None
+    file_count: Optional[int] = None
+    columns: Optional[List[Dict[str, Any]]] = None
+    sample_data: Optional[List[Dict[str, Any]]] = None
+    llm_summary: Optional[str] = None
+    error: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class DataInventoryResponse(BaseModel):
+    total_count: int
+    data: List[DataProfileResponse]
+
+@app.get("/health")
+def health():
+    return {"ok": True, "uses": "OpenAI API", "model": os.environ.get("OPENAI_MODEL","gpt-4o-mini")}
+
+@app.get("/api/data-inventory", response_model=DataInventoryResponse)
+def get_data_inventory(db: Session = Depends(get_db)):
+    """
+    Retrieves a list of all data profiles from the database.
+    """
+    profiles = db.query(DataProfile).order_by(DataProfile.id.desc()).all()
+    return {"total_count": len(profiles), "data": profiles}
+
+@app.post("/api/analyze-profile/{profile_id}", response_model=DataProfileResponse)
+def analyze_profile(profile_id: int, db: Session = Depends(get_db)):
+    """
+    Analyzes a single data profile using the LLM agent and saves the summary.
+    """
+    profile = db.query(DataProfile).filter(DataProfile.id == profile_id).first()
+    if not profile:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    # Правильное и надежное преобразование объекта SQLAlchemy в словарь
+    profile_dict = {
+        "id": profile.id,
+        "source_path": profile.source_path,
+        "kind": profile.kind,
+        "total_row_count": profile.total_row_count,
+        "file_count": profile.file_count,
+        "columns": profile.columns,
+        "sample_data": profile.sample_data,
+        "llm_summary": profile.llm_summary,
+        "error": profile.error,
+        "created_at": profile.created_at,
+        "updated_at": profile.updated_at
+    }
+
+    # Вызываем агент для анализа
+    analysis_result = agent.analyze_data_profile(profile_dict)
+    summary = analysis_result.get("content")
+
+    # Сохраняем результат в базу данных
+    profile.llm_summary = summary
+    db.commit()
+    db.refresh(profile)
+
+    return profile
+
+
+@app.post("/analyze")
+def api_analyze(cfg: Dict[str, Any]):
+    return analyzer.quick_profile(cfg)
+
+@app.post("/recommend")
+def api_recommend(profile: Dict[str, Any]):
+    return rule_engine.recommend(profile)
+
+@app.post("/ddl")
+def api_ddl(payload: Dict[str, Any]):
+    return agent.generate_ddl_with_explanation(payload)
+
+@app.post("/dag/compile")
+def api_dag_compile(dsl: DSLModel):
+    path = dag_compiler.compile_dag(dsl.model_dump())
+    return {"dag_path": path, "message": "DAG generated. Open Airflow UI to trigger."}
+
+@app.post("/api/trigger-dag/{dag_id}")
+def trigger_dag(dag_id: str):
+    """
+    Triggers a specific Airflow DAG using the Airflow REST API.
+    """
+    airflow_url = "http://airflow:8080"
+    airflow_user = "admin"
+    airflow_pass = "admin"
+
+    api_url = f"{airflow_url}/api/v1/dags/{dag_id}/dagRuns"
+
+    try:
+        response = requests.post(
+            api_url,
+            auth=(airflow_user, airflow_pass),
+            json={"conf": {}},
+            headers={"Content-Type": "application/json"},
+            timeout=15
+        )
+        response.raise_for_status()  # Will raise an exception for 4xx/5xx status codes
+
+        return {"message": f"DAG '{dag_id}' triggered successfully.", "details": response.json()}
+
+    except requests.exceptions.RequestException as e:
+        # This will catch connection errors, timeouts, etc.
+        error_details = str(e)
+        if e.response is not None:
+            try:
+                error_details = e.response.json().get('detail', e.response.text)
+            except Exception:
+                error_details = e.response.text
+        raise HTTPException(
+            status_code=502,  # Bad Gateway
+            detail=f"Failed to trigger DAG '{dag_id}'. Could not connect to Airflow: {error_details}"
+        )

@@ -1,0 +1,163 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: aie_pg
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: aieasydata
+    ports: ["5432:5432"]
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d aieasydata"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aie-network
+
+  airflow:
+    build:
+      context: .
+      dockerfile: ./airflow/Dockerfile
+    container_name: aie_airflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__EXECUTOR: "SequentialExecutor"
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+      AIRFLOW__WEBSERVER__RBAC: "True"
+      AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/aieasydata
+      AIRFLOW__WEBSERVER__WEB_SERVER_HOST: "0.0.0.0"      # <- принудительно слушать все интерфейсы
+      AIRFLOW__WEBSERVER__WEB_SERVER_PORT: "8080"
+      AIRFLOW__WEBSERVER__WORKERS: "1"                    # меньше процессов — проще увидеть ошибки
+      AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT: "120"
+      AIRFLOW_UID: "50000"
+      PYTHONPATH: /opt/airflow/dags:/opt/airflow/backend
+      POSTGRES_DSN: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/aieasydata
+    # не задаём user: "50000:0" на Windows — часто ломает права на volume
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/requirements.txt:/opt/airflow/requirements.txt
+      - ./data_landing_zone:/opt/airflow/data_landing_zone
+      - ./backend:/opt/airflow/backend
+    command: >
+      bash -c "airflow db init && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true && airflow webserver & airflow scheduler"
+    ports:
+      - "8080:8080"
+    networks:
+      - aie-network
+
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: aie_ch
+    ports: ["8123:8123", "9000:9000"]
+    volumes:
+      - ch_data:/var/lib/clickhouse
+    networks:
+      - aie-network
+
+  hdfs-namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: aie_hdfs_nn
+    environment:
+      - CLUSTER_NAME=aieasydata
+      - CORE_CONF_fs_defaultFS=hdfs://hdfs-namenode:8020
+    ports: ["9870:9870"]
+    volumes:
+      - hdfs_name:/hadoop/dfs/name
+    networks:
+      - aie-network
+
+  hdfs-datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: aie_hdfs_dn
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://hdfs-namenode:8020
+      - CLUSTER_NAME=aieasydata
+    depends_on:
+      hdfs-namenode:
+        condition: service_started
+    ports: ["9864:9864"]
+    volumes:
+      - hdfs_data:/hadoop/dfs/data
+    networks:
+      - aie-network
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aie_api
+    working_dir: /app
+    environment:
+      POSTGRES_DSN: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/aieasydata
+      CLICKHOUSE_HTTP: http://clickhouse:8123
+      HDFS_WEB: http://hdfs-namenode:9870
+      AIRFLOW_DAGS_DIR: /airflow_dags
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+    volumes:
+      - ./backend:/app
+      - ./airflow/dags:/airflow_dags
+      - ./data_landing_zone:/data
+    command: >
+      bash -c "
+        echo 'Waiting for Airflow to be healthy...';
+        until [ "$(curl -s -f -o /dev/null -w '%{http_code}' http://airflow:8080/health)" -eq 200 ] && \
+              [ "$(curl -s http://airflow:8080/health | jq -r .metadatabase.status)" = "healthy" ] && \
+              [ "$(curl -s http://airflow:8080/health | jq -r .scheduler.status)" = "healthy" ]; do
+          echo '... waiting for Airflow scheduler and metadatabase to be healthy ...';
+          sleep 5;
+        done; 
+        echo 'Airflow is healthy!';
+        
+        pip install psycopg2-binary; 
+        python -c 'from app.database import create_tables; create_tables()'; 
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload;
+      "
+    ports: ["8000:8000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow:
+        condition: service_started
+      clickhouse:
+        condition: service_started
+      hdfs-namenode:
+        condition: service_started
+    networks:
+      - aie-network
+
+  ui:
+    image: node:18
+    container_name: aie_ui
+    working_dir: /app
+    environment:
+      VITE_API_BASE: http://localhost:8000
+    volumes:
+      - ./ui:/app
+    command: bash -lc "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
+    ports: ["3000:3000"]
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - aie-network
+
+
+volumes:
+  pg_data:
+  ch_data:
+  hdfs_name:
+  hdfs_data:
+
+networks:
+  aie-network:
+    driver: bridge
