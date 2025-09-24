@@ -14,7 +14,7 @@ venv/
 
 # Environment variables
 .env
-.env.*
+
 
 # Data files
 # Ignore all content inside data_landing_zone, but track the directory itself via .gitkeep
@@ -30,6 +30,21 @@ venv/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Misc
+*.swp
+*~
+.DS_Store
+
+# Generated DAGs
+airflow/dags/generated_*.py
+
+# Temp files from testing
+--data
+-H
+-Method
+*.bak
+tmp_*.json
 
 # Frontend / Node.js
 /ui/node_modules/

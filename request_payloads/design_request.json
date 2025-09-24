@@ -1,0 +1,12 @@
+{
+  "source_profile_id": 1,
+  "business_requirements": "Нужны отчеты по продажам",
+  "analytics_requirements": {
+    "refresh_interval": "daily",
+    "metrics": ["revenue", "orders"]
+  },
+  "constraints": {
+    "sla": "99.9",
+    "budget": "medium"
+  }
+}

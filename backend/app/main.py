@@ -5,6 +5,7 @@ from typing import List, Optional, Literal, Dict, Any
 from datetime import datetime
 import os
 from . import agent, analyzer, rule_engine, dag_compiler
+from .warehouse_designer.router import router as warehouse_router
 from .database import get_db, DataProfile
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
@@ -20,12 +21,14 @@ app.add_middleware(
     allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
 
+app.include_router(warehouse_router)
+
 class DSLModel(BaseModel):
     name: str
     mode: Literal["batch","stream"] = "batch"
     schedule: Optional[str] = "0 * * * *"
     source: Dict[str, Any]
-    validate: Optional[Dict[str, Any]] = None
+    validation_rules: Optional[Dict[str, Any]] = None
     transforms: Optional[List[Dict[str, Any]]] = []
     target: Dict[str, Any]
     ddl_overrides: Optional[Dict[str, str]] = {}
@@ -61,6 +64,36 @@ def get_data_inventory(db: Session = Depends(get_db)):
     """
     profiles = db.query(DataProfile).order_by(DataProfile.id.desc()).all()
     return {"total_count": len(profiles), "data": profiles}
+
+class CreateDataProfileRequest(BaseModel):
+    source_path: str
+
+@app.post("/api/v1/data-profiles", response_model=DataProfileResponse, status_code=201)
+def create_data_profile(request: CreateDataProfileRequest, db: Session = Depends(get_db)):
+    """
+    Creates a new data profile by analyzing the source data.
+    """
+    try:
+        # Выполняем быстрый анализ для получения метаданных
+        profile_data = analyzer.quick_profile({'source_path': request.source_path})
+        
+        # Создаем новый объект DataProfile
+        new_profile = DataProfile(
+            source_path=request.source_path,
+            kind=profile_data.get('kind'),
+            total_row_count=profile_data.get('total_row_count'),
+            file_count=profile_data.get('file_count'),
+            columns=profile_data.get('columns'),
+            sample_data=profile_data.get('sample_data')
+        )
+        
+        db.add(new_profile)
+        db.commit()
+        db.refresh(new_profile)
+        
+        return new_profile
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create data profile: {str(e)}")
 
 @app.post("/api/analyze-profile/{profile_id}", response_model=DataProfileResponse)
 def analyze_profile(profile_id: int, db: Session = Depends(get_db)):

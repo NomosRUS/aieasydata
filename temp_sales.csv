@@ -1,0 +1,11 @@
+id,product_name,category,price,quantity,sale_date,customer_id
+1,Laptop Pro,Electronics,1299.99,2,2024-01-15,101
+2,Wireless Mouse,Electronics,29.99,5,2024-01-16,102
+3,Office Chair,Furniture,199.99,1,2024-01-17,103
+4,Coffee Maker,Appliances,89.99,3,2024-01-18,104
+5,Smartphone,Electronics,699.99,1,2024-01-19,105
+6,Desk Lamp,Furniture,45.99,2,2024-01-20,106
+7,Bluetooth Speaker,Electronics,79.99,4,2024-01-21,107
+8,Water Bottle,Sports,19.99,10,2024-01-22,108
+9,Running Shoes,Sports,129.99,2,2024-01-23,109
+10,Backpack,Travel,59.99,3,2024-01-24,110

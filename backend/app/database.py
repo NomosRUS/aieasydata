@@ -76,4 +76,5 @@ def get_db():
 
 # Утилита для создания таблицы (можно вызывать отдельно при инициализации приложения)
 def create_tables():
+    from .shared import schemas  # noqa: F401 — импорт нужен ради регистрации моделей
     Base.metadata.create_all(bind=engine)
