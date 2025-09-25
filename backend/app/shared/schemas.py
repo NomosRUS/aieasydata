@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime, Text, func
+from sqlalchemy import Column, Integer, String, JSON, DateTime, Text, func, UniqueConstraint
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -27,6 +27,10 @@ class OptimizationRecommendation(Base):
     recommendation_details = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    __table_args__ = (
+        UniqueConstraint('table_name', 'recommendation_type', name='uq_table_recommendation'),
+    )
 
 
 class WarehouseInstance(Base):

@@ -1,0 +1,24 @@
+﻿{
+    "source_profile_id":  7,
+    "business_requirements":  "РќСѓР¶РЅР° OLTP СЃРёСЃС‚РµРјР° РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё С‚СЂР°РЅР·Р°РєС†РёР№ РІ СЂРµР°Р»СЊРЅРѕРј РІСЂРµРјРµРЅРё СЃ РІС‹СЃРѕРєРѕР№ РєРѕРЅСЃРёСЃС‚РµРЅС‚РЅРѕСЃС‚СЊСЋ РґР°РЅРЅС‹С…",
+    "analytics_requirements":  {
+                                   "refresh_interval":  "real-time",
+                                   "metrics":  [
+                                                   "transaction_count",
+                                                   "revenue",
+                                                   "customer_activity"
+                                               ],
+                                   "query_patterns":  [
+                                                          "point_queries",
+                                                          "small_aggregations",
+                                                          "joins"
+                                                      ],
+                                   "concurrent_users":  "high"
+                               },
+    "constraints":  {
+                        "sla":  "99.99",
+                        "budget":  "medium",
+                        "consistency":  "ACID",
+                        "performance_priority":  "consistency"
+                    }
+}

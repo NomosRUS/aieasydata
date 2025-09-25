@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 from . import agent, analyzer, rule_engine, dag_compiler
 from .warehouse_designer.router import router as warehouse_router
+from .metrics_collector.router import router as metrics_router
 from .database import get_db, DataProfile
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(warehouse_router)
+app.include_router(metrics_router)
 
 class DSLModel(BaseModel):
     name: str

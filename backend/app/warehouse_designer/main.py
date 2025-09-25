@@ -229,8 +229,8 @@ def generate_ddl(context: Dict[str, Any], selected_db: str) -> str:
     source_path = data_profile.get("source_path", "unknown_table")
     table_name = _extract_table_name(source_path)
     
-    # Парсим рекомендации оптимизации
-    optimizations = _parse_optimization_recommendations(optimization_recommendations, selected_db)
+    # Парсим рекомендации оптимизации с учетом колонок
+    optimizations = _parse_optimization_recommendations(optimization_recommendations, selected_db, columns)
     
     # Подготавливаем параметры для шаблона
     template_params = {
@@ -248,7 +248,58 @@ def generate_ddl(context: Dict[str, Any], selected_db: str) -> str:
         **template_params
     })
     
-    return ddl_result.get("ddl", "")
+    ddl_script = ddl_result.get("ddl", "")
+    
+    # Валидируем сгенерированный DDL
+    validation_result = _validate_ddl_script(ddl_script, template_params["columns"], optimizations)
+    if not validation_result["valid"]:
+        raise ValueError(f"DDL validation failed: {validation_result['errors']}")
+    
+    return ddl_script
+
+
+def _validate_ddl_script(ddl_script: str, columns: list, optimizations: dict) -> Dict[str, Any]:
+    """
+    Валидирует сгенерированный DDL скрипт на корректность.
+    
+    Args:
+        ddl_script: Сгенерированный DDL скрипт
+        columns: Список колонок таблицы
+        optimizations: Параметры оптимизации
+    
+    Returns:
+        Результат валидации с флагом valid и списком ошибок
+    """
+    errors = []
+    
+    # Проверяем, что все колонки присутствуют в DDL
+    column_names = [col["name"] for col in columns]
+    for col_name in column_names:
+        if col_name not in ddl_script:
+            errors.append(f"Column '{col_name}' is missing from DDL")
+    
+    # Проверяем, что оптимизации ссылаются на существующие колонки
+    if "partition_by" in optimizations:
+        partition_expr = optimizations["partition_by"]
+        # Простая проверка - ищем имена колонок в выражении партиционирования
+        for col_name in column_names:
+            if col_name in partition_expr and col_name not in ddl_script:
+                errors.append(f"Partition expression references missing column '{col_name}'")
+    
+    if "order_by" in optimizations:
+        order_columns = optimizations["order_by"]
+        for col_name in order_columns:
+            if col_name not in ddl_script:
+                errors.append(f"ORDER BY references missing column '{col_name}'")
+    
+    # Проверяем базовую структуру DDL (для HDFS проверяем наличие HDFS структуры)
+    if "CREATE TABLE" not in ddl_script.upper() and "HDFS" not in ddl_script.upper():
+        errors.append("DDL does not contain CREATE TABLE statement")
+    
+    return {
+        "valid": len(errors) == 0,
+        "errors": errors
+    }
 
 
 def _extract_table_name(source_path: str) -> str:
@@ -280,15 +331,27 @@ def _extract_table_name(source_path: str) -> str:
 
 
 def _convert_columns_for_template(columns: list, selected_db: str) -> list:
+    """
+    Конвертирует колонки из DataProfile в формат для DDL шаблонов.
+    
+    Args:
+        columns: Список колонок из DataProfile
+        selected_db: Целевая СУБД
+    
+    Returns:
+        Список колонок в формате для DDL генерации
+    """
     converted = []
 
     for col in columns:
-        # accept both {'column_name': ...} and {'name': ...}
+        # Поддерживаем разные форматы колонок
         raw_name = col.get("column_name") or col.get("name") or "unknown_column"
         raw_type = col.get("column_type") or col.get("type") or "String"
 
-        safe_name = _extract_table_name(raw_name)
+        # Делаем имя колонки безопасным для SQL (но не применяем логику имени таблицы!)
+        safe_name = _make_safe_column_name(raw_name)
 
+        # Маппим тип данных для целевой СУБД
         if selected_db == "clickhouse":
             mapped_type = _map_type_to_clickhouse(raw_type)
         elif selected_db == "postgres":
@@ -299,6 +362,35 @@ def _convert_columns_for_template(columns: list, selected_db: str) -> list:
         converted.append({"name": safe_name, "type": mapped_type})
 
     return converted
+
+
+def _make_safe_column_name(column_name: str) -> str:
+    """
+    Делает имя колонки безопасным для SQL, сохраняя читаемость.
+    
+    Args:
+        column_name: Исходное имя колонки
+        
+    Returns:
+        Безопасное имя колонки для SQL
+    """
+    import re
+    
+    # Заменяем пробелы и специальные символы на подчеркивания
+    safe_name = re.sub(r'[^a-zA-Z0-9_]', '_', column_name)
+    
+    # Убираем множественные подчеркивания
+    safe_name = re.sub(r'_+', '_', safe_name)
+    
+    # Убираем подчеркивания в начале и конце
+    safe_name = safe_name.strip('_')
+    
+    # Если имя пустое или начинается с цифры, добавляем префикс
+    if not safe_name or safe_name[0].isdigit():
+        safe_name = f"col_{safe_name}"
+    
+    # Приводим к нижнему регистру для консистентности
+    return safe_name.lower()
 
 
 def _map_type_to_clickhouse(original_type: str) -> str:
@@ -338,11 +430,28 @@ def _map_type_to_postgres(original_type: str) -> str:
     return type_mapping.get(original_type, "TEXT")
 
 
-def _parse_optimization_recommendations(recommendations: list, selected_db: str) -> Dict[str, Any]:
+def _parse_optimization_recommendations(recommendations: list, selected_db: str, columns: list = None) -> Dict[str, Any]:
     """
     Парсит рекомендации оптимизации и преобразует их в параметры для шаблонов.
+    Также приводит имена колонок к безопасному формату.
+    
+    Args:
+        recommendations: Список рекомендаций оптимизации
+        selected_db: Целевая СУБД
+        columns: Список колонок для валидации (опционально)
+    
+    Returns:
+        Словарь с параметрами оптимизации
     """
     optimizations = {}
+    
+    # Создаем маппинг исходных имен колонок к безопасным именам
+    column_mapping = {}
+    if columns:
+        for col in columns:
+            original_name = col.get("column_name") or col.get("name", "")
+            safe_name = _make_safe_column_name(original_name)
+            column_mapping[original_name] = safe_name
     
     for rec in recommendations:
         rec_type = rec.get("recommendation_type", "")
@@ -353,28 +462,79 @@ def _parse_optimization_recommendations(recommendations: list, selected_db: str)
                 # Для ClickHouse: PARTITION BY
                 partition_expr = rec_details.get("partition_by")
                 if partition_expr:
-                    optimizations["partition_by"] = partition_expr
+                    # Заменяем имена колонок в выражении партиционирования
+                    safe_partition_expr = _replace_column_names_in_expression(partition_expr, column_mapping)
+                    optimizations["partition_by"] = safe_partition_expr
             
             elif rec_type == "order_by":
                 # Для ClickHouse: ORDER BY
                 order_columns = rec_details.get("columns", [])
                 if order_columns:
-                    optimizations["order_by"] = order_columns
+                    # Конвертируем имена колонок к безопасному формату
+                    safe_order_columns = [column_mapping.get(col, _make_safe_column_name(col)) for col in order_columns]
+                    optimizations["order_by"] = safe_order_columns
         
         elif selected_db == "postgres":
             if rec_type == "index":
                 # Для PostgreSQL: CREATE INDEX
                 index_columns = rec_details.get("columns", [])
                 if index_columns:
-                    optimizations["indexes"] = index_columns
+                    # Конвертируем имена колонок к безопасному формату
+                    safe_index_columns = [column_mapping.get(col, _make_safe_column_name(col)) for col in index_columns]
+                    optimizations["indexes"] = safe_index_columns
             
             elif rec_type == "partition":
                 # Для PostgreSQL: партиционирование (если поддерживается)
                 partition_expr = rec_details.get("partition_by")
                 if partition_expr:
+                    safe_partition_expr = _replace_column_names_in_expression(partition_expr, column_mapping)
+                    optimizations["partition_by"] = safe_partition_expr
+        
+        elif selected_db == "hdfs":
+            if rec_type == "partition":
+                # Для HDFS: партиционирование директорий
+                partition_expr = rec_details.get("partition_by")
+                if partition_expr:
                     optimizations["partition_by"] = partition_expr
+                
+                # Формат файлов для HDFS
+                file_format = rec_details.get("format", "parquet")
+                optimizations["format"] = file_format
+            
+            elif rec_type == "compression":
+                # Для HDFS: настройки сжатия
+                compression_type = rec_details.get("type", "snappy")
+                block_size = rec_details.get("block_size", "128MB")
+                optimizations["compression"] = {
+                    "type": compression_type,
+                    "block_size": block_size
+                }
     
     return optimizations
+
+
+def _replace_column_names_in_expression(expression: str, column_mapping: dict) -> str:
+    """
+    Заменяет имена колонок в SQL выражении на безопасные имена.
+    
+    Args:
+        expression: SQL выражение (например, "toYYYYMM(sale_date)")
+        column_mapping: Маппинг исходных имен к безопасным
+    
+    Returns:
+        Выражение с замененными именами колонок
+    """
+    import re
+    
+    result_expression = expression
+    
+    # Заменяем каждое имя колонки в выражении
+    for original_name, safe_name in column_mapping.items():
+        # Используем word boundary для точного совпадения
+        pattern = r'\b' + re.escape(original_name) + r'\b'
+        result_expression = re.sub(pattern, safe_name, result_expression)
+    
+    return result_expression
 
 
 def execute_ddl_in_database(ddl_script: str, selected_db: str) -> Dict[str, Any]:
@@ -458,23 +618,34 @@ def execute_ddl_in_database(ddl_script: str, selected_db: str) -> Dict[str, Any]
             
             # Извлекаем имя таблицы из DDL для создания директории
             import re
-            table_match = re.search(r'CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(\w+\.)?(\w+)', ddl_script, re.IGNORECASE)
+            # Поддерживаем как CREATE TABLE, так и CREATE EXTERNAL TABLE
+            table_match = re.search(r'CREATE\s+(?:EXTERNAL\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(\w+\.)?(\w+)', ddl_script, re.IGNORECASE)
             if table_match:
                 table_name = table_match.group(2)
-                
-                # Создаем директорию в HDFS через WebHDFS API
-                hdfs_path = f"/warehouse/{table_name}"
-                response = requests.put(
-                    f"{hdfs_web}/webhdfs/v1{hdfs_path}?op=MKDIRS&user.name=root"
-                )
-                
-                if response.status_code in [200, 201]:
-                    result["success"] = True
-                    result["details"]["hdfs_path"] = hdfs_path
-                else:
-                    raise Exception(f"HDFS error: {response.status_code} - {response.text}")
             else:
-                raise ValueError("Не удалось извлечь имя таблицы из DDL")
+                # Если не найдено, попробуем извлечь из комментария Target
+                target_match = re.search(r'Target:\s+\w+/(\w+)', ddl_script)
+                if target_match:
+                    table_name = target_match.group(1)
+                else:
+                    # Последняя попытка - извлечь из LOCATION
+                    location_match = re.search(r"LOCATION\s+'/warehouse/(\w+)/", ddl_script)
+                    if location_match:
+                        table_name = location_match.group(1)
+                    else:
+                        raise ValueError("Не удалось извлечь имя таблицы из HDFS DDL")
+            
+            # Создаем директорию в HDFS через WebHDFS API
+            hdfs_path = f"/warehouse/{table_name}"
+            response = requests.put(
+                f"{hdfs_web}/webhdfs/v1{hdfs_path}?op=MKDIRS&user.name=root"
+            )
+            
+            if response.status_code in [200, 201]:
+                result["success"] = True
+                result["details"]["hdfs_path"] = hdfs_path
+            else:
+                raise Exception(f"HDFS error: {response.status_code} - {response.text}")
         
         else:
             raise ValueError(f"Неподдерживаемая СУБД: {selected_db}")
@@ -505,8 +676,14 @@ def generate_etl_pipeline(design_id: str, context: Dict[str, Any], selected_db: 
     # Извлекаем данные из контекста
     data_profile = context.get("data_profile", {})
     source_path = data_profile.get("source_path", "")
-    if not source_path.startswith("hdfs://"):
-        source_path = f"hdfs://namenode:9000{source_path if source_path.startswith('/') else '/' + source_path}"
+    
+    # Для HDFS адаптируем путь к источнику данных
+    if selected_db == "hdfs":
+        if not source_path.startswith("hdfs://"):
+            source_path = f"hdfs://namenode:9000{source_path if source_path.startswith('/') else '/' + source_path}"
+    else:
+        # Для других СУБД оставляем путь как есть
+        pass
     
     # Определяем имя таблицы
     table_name = _extract_table_name(source_path)
@@ -530,7 +707,8 @@ def generate_etl_pipeline(design_id: str, context: Dict[str, Any], selected_db: 
     # Добавляем оптимизации в конфигурацию
     optimizations = context.get("optimization_recommendations", [])
     if optimizations:
-        target_config["optimizations"] = _parse_optimization_recommendations(optimizations, selected_db)
+        columns = data_profile.get("columns", [])
+        target_config["optimizations"] = _parse_optimization_recommendations(optimizations, selected_db, columns)
     
     # Подготавливаем DSL для генерации DAG
     dag_dsl = {
