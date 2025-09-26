@@ -7,6 +7,7 @@ import os
 from . import agent, analyzer, rule_engine, dag_compiler
 from .warehouse_designer.router import router as warehouse_router
 from .metrics_collector.router import router as metrics_router
+from .performance_optimizer.router import router as performance_router
 from .database import get_db, DataProfile
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
@@ -24,6 +25,7 @@ app.add_middleware(
 
 app.include_router(warehouse_router)
 app.include_router(metrics_router)
+app.include_router(performance_router)
 
 class DSLModel(BaseModel):
     name: str
@@ -54,6 +56,24 @@ class DataProfileResponse(BaseModel):
 class DataInventoryResponse(BaseModel):
     total_count: int
     data: List[DataProfileResponse]
+
+@app.get("/")
+def root():
+    return {
+        "message": "AiEasyData API - Модули 3, 4, 5 готовы к работе!",
+        "modules": {
+            "module_3": "Оптимизация производительности",
+            "module_4": "Проектирование хранилищ", 
+            "module_5": "Мониторинг хранилищ"
+        },
+        "endpoints": {
+            "docs": "/docs",
+            "health": "/health",
+            "performance": "/api/v1/performance/health-check",
+            "warehouse": "/api/v1/warehouse/design",
+            "metrics": "/api/v1/metrics/health-check"
+        }
+    }
 
 @app.get("/health")
 def health():
