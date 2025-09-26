@@ -1,0 +1,42 @@
+{
+  "dataset_name": "individual_large_xml_data_10_rows",
+  "created_at": "2025-09-26T21:05:34.618481",
+  "row_count": 100,
+  "column_count": 8,
+  "columns": [
+    {
+      "name": "actual_unverified_data",
+      "type": "object"
+    },
+    {
+      "name": "dated_info",
+      "type": "object"
+    },
+    {
+      "name": "metadata",
+      "type": "object"
+    },
+    {
+      "name": "object_common_data",
+      "type": "object"
+    },
+    {
+      "name": "object_formation",
+      "type": "object"
+    },
+    {
+      "name": "params",
+      "type": "object"
+    },
+    {
+      "name": "record_info",
+      "type": "object"
+    },
+    {
+      "name": "contour",
+      "type": "object"
+    }
+  ],
+  "file_format": "parquet",
+  "file_size_bytes": 5254
+}

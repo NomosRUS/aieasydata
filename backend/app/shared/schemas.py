@@ -13,10 +13,16 @@ class AggregationScenario(Base):
     __tablename__ = 'aggregation_scenarios'
 
     id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(Integer, comment="ID источника данных из таблицы data_profiles")
-    aggregation_type = Column(String, comment="Типы агрегаций, например, GROUP BY, JOIN")
-    target_schema = Column(JSON)
+    scenario_name = Column(String, unique=True, nullable=False, comment="Уникальное имя сценария")
+    description = Column(Text, comment="Описание сценария агрегации")
+    sources = Column(JSON, comment="Список источников данных")
+    aggregations = Column(JSON, comment="Конфигурация агрегаций")
+    enrichments = Column(JSON, comment="Правила обогащения данных")
+    target_requirements = Column(JSON, comment="Требования к целевой системе")
+    status = Column(String, default="created", comment="Статус сценария")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_executed = Column(DateTime, comment="Время последнего выполнения")
+    execution_stats = Column(JSON, comment="Статистика выполнения")
 
 class OptimizationRecommendation(Base):
     __tablename__ = "optimization_recommendations"
