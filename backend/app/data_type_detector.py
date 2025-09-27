@@ -7,6 +7,7 @@
 import os
 import json
 import re
+import csv
 from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 from urllib.parse import urlparse
@@ -171,10 +172,14 @@ class DataTypeDetector:
         if result['file_type'] == 'unknown':
             result['file_type'] = self._detect_by_content(file_path)
         
-        # Анализ структуры данных
+        # Детальный анализ структуры данных
         if result['file_type'] in ['csv', 'json', 'xml']:
-            structure_info = self._analyze_file_structure(file_path, result['file_type'])
-            result.update(structure_info)
+            if result['file_type'] == 'csv':
+                csv_info = self._analyze_csv_file(file_path)
+                result.update(csv_info)
+            else:
+                structure_info = self._analyze_file_structure(file_path, result['file_type'])
+                result.update(structure_info)
         
         return result
     
@@ -509,6 +514,125 @@ class DataTypeDetector:
             return [row[0] for row in result.result_rows]
         except:
             return []
+    
+    def _analyze_csv_file(self, file_path: str) -> Dict[str, Any]:
+        """Детальный анализ CSV файла с определением разделителя и схемы."""
+        result = {
+            'format': 'csv',
+            'separator': ',',
+            'encoding': 'utf-8',
+            'schema': None,
+            'sample_data': []
+        }
+        
+        try:
+            # Определяем кодировку и разделитель
+            encodings = ['utf-8', 'latin-1', 'cp1251']
+            content = None
+            
+            for encoding in encodings:
+                try:
+                    with open(file_path, 'r', encoding=encoding) as f:
+                        content = f.read(2048)  # Читаем первые 2KB
+                        result['encoding'] = encoding
+                        break
+                except UnicodeDecodeError:
+                    continue
+            
+            if not content:
+                return result
+            
+            # Определяем разделитель
+            sniffer = csv.Sniffer()
+            try:
+                # Берем только первые несколько строк для анализа
+                sample_lines = '\\n'.join(content.split('\\n')[:10])
+                dialect = sniffer.sniff(sample_lines, delimiters=',;\t|')
+                result['separator'] = dialect.delimiter
+            except:
+                # Fallback: подсчитываем разделители в первых строках
+                first_lines = '\\n'.join(content.split('\\n')[:5])
+                separators = {',': first_lines.count(','), ';': first_lines.count(';'), 
+                             '\\t': first_lines.count('\\t'), '|': first_lines.count('|')}
+                result['separator'] = max(separators, key=separators.get) if separators else ','
+            
+            # Анализируем схему
+            with open(file_path, 'r', encoding=result['encoding']) as f:
+                reader = csv.reader(f, delimiter=result['separator'])
+                
+                # Читаем заголовки
+                headers = next(reader, [])
+                if headers:
+                    # Читаем несколько строк для определения типов
+                    sample_rows = []
+                    for i, row in enumerate(reader):
+                        if i >= 5:  # Ограничиваем 5 строками
+                            break
+                        sample_rows.append(row)
+                    
+                    # Определяем типы колонок
+                    columns = []
+                    for i, header in enumerate(headers):
+                        col_type = self._detect_column_type([row[i] if i < len(row) else '' for row in sample_rows])
+                        columns.append({
+                            'name': header.strip(),
+                            'type': col_type,
+                            'index': i
+                        })
+                    
+                    result['schema'] = {
+                        'columns': columns,
+                        'column_count': len(columns)
+                    }
+                    result['sample_data'] = sample_rows[:3]  # Первые 3 строки
+            
+        except Exception as e:
+            result['error'] = str(e)
+        
+        return result
+    
+    def _detect_column_type(self, values: list) -> str:
+        """Определяет тип колонки по значениям."""
+        non_empty_values = [v for v in values if v and str(v).strip()]
+        
+        if not non_empty_values:
+            return 'string'
+        
+        # Проверяем на числа
+        numeric_count = 0
+        date_count = 0
+        
+        for value in non_empty_values:
+            value = str(value).strip()
+            
+            # Проверяем на число
+            try:
+                float(value)
+                numeric_count += 1
+                continue
+            except ValueError:
+                pass
+            
+            # Проверяем на дату
+            date_patterns = [
+                r'\d{4}-\d{2}-\d{2}',  # YYYY-MM-DD
+                r'\d{2}/\d{2}/\d{4}',  # MM/DD/YYYY
+                r'\d{2}\.\d{2}\.\d{4}' # DD.MM.YYYY
+            ]
+            
+            for pattern in date_patterns:
+                if re.match(pattern, value):
+                    date_count += 1
+                    break
+        
+        total = len(non_empty_values)
+        
+        if numeric_count / total > 0.8:
+            return 'numeric'
+        elif date_count / total > 0.8:
+            return 'date'
+        else:
+            return 'string'
 
 # Функция-утилита для быстрого использования
 def detect_data_type(source: str) -> Dict[str, Any]:

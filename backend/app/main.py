@@ -9,6 +9,7 @@ from .warehouse_designer.router import router as warehouse_router
 from .metrics_collector.router import router as metrics_router
 from .performance_optimizer.router import router as performance_router
 from .data_aggregator.router import router as aggregation_router
+from .data_validator.router import router as data_validator_router
 from .database import get_db, DataProfile
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
@@ -28,6 +29,7 @@ app.include_router(warehouse_router)
 app.include_router(metrics_router)
 app.include_router(performance_router)
 app.include_router(aggregation_router)
+app.include_router(data_validator_router)
 
 class DSLModel(BaseModel):
     name: str
@@ -62,8 +64,9 @@ class DataInventoryResponse(BaseModel):
 @app.get("/")
 def root():
     return {
-        "message": "AiEasyData API - Модули 2, 3, 4, 5 готовы к работе!",
+        "message": "AiEasyData API - Все модули готовы к работе!",
         "modules": {
+            "module_1": "Валидация и очистка данных",
             "module_2": "Агрегация и обогащение данных",
             "module_3": "Оптимизация производительности",
             "module_4": "Проектирование хранилищ", 
@@ -72,6 +75,7 @@ def root():
         "endpoints": {
             "docs": "/docs",
             "health": "/health",
+            "data_quality": "/api/v1/data-quality/health-check",
             "aggregation": "/api/v1/aggregation/health-check",
             "performance": "/api/v1/performance/health-check",
             "warehouse": "/api/v1/warehouse/design",

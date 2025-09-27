@@ -35,6 +35,9 @@ def auto_detect_and_collect_metrics(source: str) -> dict:
     detector = DataTypeDetector()
     detection_result = detector.detect_data_type(source)
     
+    # Собираем базовые метрики
+    metrics = {}
+    
     if detection_result['type'] == 'database':
         # Создаем ConnectionInfo для БД
         conn_info = ConnectionInfo(
@@ -46,7 +49,7 @@ def auto_detect_and_collect_metrics(source: str) -> dict:
             db_name=detection_result.get('database', 'default'),
             table_name=detection_result.get('tables', ['unknown'])[0] if detection_result.get('tables') else 'unknown'
         )
-        return collect_metrics(conn_info)
+        metrics = collect_metrics(conn_info)
     
     elif detection_result['type'] in ['file', 'directory']:
         # Создаем ConnectionInfo для файловой системы
@@ -60,13 +63,28 @@ def auto_detect_and_collect_metrics(source: str) -> dict:
             table_name='',
             file_path=source
         )
-        return collect_metrics(conn_info)
+        metrics = collect_metrics(conn_info)
     
     else:
-        return {
+        metrics = {
             'error': f"Unsupported data type: {detection_result['type']}",
-            'detection_result': detection_result
+            'row_count': 0,
+            'size_in_bytes': 0,
+            'file_count': 0
         }
+    
+    # Добавляем информацию об автоопределении
+    metrics.update({
+        'data_type': detection_result.get('format', detection_result.get('type')),
+        'format': detection_result.get('format'),
+        'detected_type': detection_result.get('type'),
+        'schema': detection_result.get('schema'),
+        'separator': detection_result.get('separator'),
+        'encoding': detection_result.get('encoding'),
+        'detection_details': detection_result
+    })
+    
+    return metrics
 
 def _collect_clickhouse_metrics(conn_info: ConnectionInfo) -> dict:
     """Собирает метрики из ClickHouse."""
