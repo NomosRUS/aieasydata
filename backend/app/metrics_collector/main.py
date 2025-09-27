@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Dict, Any, Union
 from .schemas import ConnectionInfo
-from ..data_type_detector import DataTypeDetector
+from .data_type_detector import DataTypeDetector
 
 # Добавляем поддержку XML
 try:

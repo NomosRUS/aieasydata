@@ -7,14 +7,16 @@
 
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Any, Optional
-import logging
-from datetime import datetime
+from typing import Dict, Any, List, Optional
+import pandas as pd
+import numpy as np
+from pathlib import Path
+from ..shared.base_profiler import get_basic_file_info, get_basic_schema_info
 
 from .schemas import QualityAssessment, QualityIssue, AnomalyInfo
+import logging
 
 logger = logging.getLogger(__name__)
-
 
 class QualityAssessor:
     """Класс для оценки качества данных."""

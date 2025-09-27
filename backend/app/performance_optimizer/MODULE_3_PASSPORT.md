@@ -12,18 +12,39 @@
 
 ```
 performance_optimizer/
-├── __init__.py          # Инициализация модуля
-├── main.py              # Основная логика и координация
-├── analyzer.py          # Анализ производительности
-├── optimizer.py         # Генерация рекомендаций
-├── router.py            # API endpoints
-├── schemas.py           # Pydantic модели
-└── MODULE_3_PASSPORT.md # Этот документ
+├── __init__.py              # Инициализация модуля
+├── main.py                  # Основная логика и координация
+├── analyzer.py              # Анализ производительности
+├── optimizer.py             # Генерация рекомендаций
+├── performance_profiler.py  # Специализированное профилирование производительности
+├── router.py                # API endpoints
+├── schemas.py               # Pydantic модели
+└── MODULE_3_PASSPORT.md     # Этот документ
 ```
 
 ## ОСНОВНЫЕ КЛАССЫ И ФУНКЦИИ
 
-### 1. `PerformanceAnalyzer` (analyzer.py)
+### 1. `PerformanceProfiler` (performance_profiler.py)
+
+**Назначение:** Специализированное профилирование производительности хранилищ данных
+
+**Основные методы:**
+
+#### `analyze_storage_performance(source_path: str) -> Dict[str, Any]`
+
+**Назначение:** Анализирует производительность хранилища данных с фокусом на скорости доступа, размере данных, оптимизации запросов
+
+**Специализированные анализы:**
+- `_analyze_read_performance()` - тестирование скорости чтения
+- `_analyze_compression_potential()` - потенциал сжатия данных
+- `_analyze_indexing_potential()` - рекомендации по индексам
+- `_analyze_partitioning_potential()` - рекомендации по партиционированию
+
+**Интеграция с общими компонентами:**
+- Использует `shared/base_profiler.py` для базовой информации
+- Специализируется на метриках производительности
+
+### 2. `PerformanceAnalyzer` (analyzer.py)
 
 **Назначение:** Анализ производительности источников данных с интеграцией с Модулем 5
 
