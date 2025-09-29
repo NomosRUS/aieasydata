@@ -1,0 +1,120 @@
+{
+    "scenario_id": "M4_E002",
+    "name": "Module 4 - Design Warehouse",
+    "category": "elementary/module4",
+    "timestamp": 1759095626,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call design endpoint",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "/api/v1/warehouse/design",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "source_profile_id": 1,
+                    "business_requirements": "Test business requirements",
+                    "analytics_requirements": {},
+                    "constraints": {}
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "design_id": "f2f95956-42b4-46c5-8e48-1d6d47d94637",
+                    "status": "awaiting_user_confirmation",
+                    "results": {
+                        "context": {
+                            "data_profile": {
+                                "id": 1,
+                                "source_path": "/data/raw/sales.csv",
+                                "kind": null,
+                                "total_row_count": null,
+                                "file_count": null,
+                                "columns": [
+                                    {
+                                        "name": "dt",
+                                        "type": "Date"
+                                    },
+                                    {
+                                        "name": "amount",
+                                        "type": "Int64"
+                                    }
+                                ],
+                                "sample_data": null,
+                                "llm_summary": null,
+                                "error": null,
+                                "created_at": "2025-09-25T13:34:05.487325",
+                                "updated_at": "2025-09-25T13:34:05.487330"
+                            },
+                            "optimization_recommendations": [
+                                {
+                                    "id": 1,
+                                    "table_name": "/data/raw/sales.csv",
+                                    "recommendation_type": "partition",
+                                    "recommendation_details": {
+                                        "partition_by": "toYYYYMM(dt)"
+                                    },
+                                    "created_at": null,
+                                    "updated_at": null
+                                }
+                            ],
+                            "request": {
+                                "source_profile_id": 1,
+                                "business_requirements": "Test business requirements",
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "heuristic_decision": {
+                            "candidate": "postgres",
+                            "scores": {
+                                "clickhouse": 0,
+                                "postgres": 1,
+                                "hdfs": 0
+                            },
+                            "reasons": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "evaluated_facts": {
+                                "total_row_count": 0,
+                                "quality_score": null,
+                                "aggregation_types": [],
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "llm_analysis": {
+                            "final_choice": "postgres",
+                            "summary": "Не удалось получить ответ от ИИ: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+                            "critical_arguments": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "confidence": "средняя",
+                            "notes": "Ответ LLM не в формате JSON; использовано содержание как есть.",
+                            "debug_log": {
+                                "base_url": "https://api.openai.com/v1/",
+                                "model": "gpt-4o-mini",
+                                "prompt": "Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \"context\": {\n    \"data_profile\": {\n      \"id\": 1,\n      \"source_path\": \"/data/raw/sales.csv\",\n      \"kind\": null,\n      \"total_row_count\": null,\n      \"file_count\": null,\n      \"columns\": [\n        {\n          \"name\": \"dt\",\n          \"type\": \"Date\"\n        },\n        {\n          \"name\": \"amount\",\n          \"type\": \"Int64\"\n        }\n      ],\n      \"sample_data\": null,\n      \"llm_summary\": null,\n      \"error\": null,\n      \"created_at\": \"2025-09-25T13:34:05.487325\",\n      \"updated_at\": \"2025-09-25T13:34:05.487330\"\n    },\n    \"optimization_recommendations\": [\n      {\n        \"id\": 1,\n        \"table_name\": \"/data/raw/sales.csv\",\n        \"recommendation_type\": \"partition\",\n        \"recommendation_details\": {\n          \"partition_by\": \"toYYYYMM(dt)\"\n        },\n        \"created_at\": null,\n        \"updated_at\": null\n      }\n    ],\n    \"request\": {\n      \"source_profile_id\": 1,\n      \"business_requirements\": \"Test business requirements\",\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  },\n  \"heuristic\": {\n    \"candidate\": \"postgres\",\n    \"scores\": {\n      \"clickhouse\": 0,\n      \"postgres\": 1,\n      \"hdfs\": 0\n    },\n    \"reasons\": [\n      \"Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\"\n    ],\n    \"evaluated_facts\": {\n      \"total_row_count\": 0,\n      \"quality_score\": null,\n      \"aggregation_types\": [],\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  }\n}",
+                                "response": null,
+                                "error": "Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

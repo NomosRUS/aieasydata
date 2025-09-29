@@ -1,0 +1,26 @@
+{
+    "scenario_id": "SHARED_E001",
+    "name": "Shared Components - Data Profiler Test",
+    "description": "Тест профилирования данных через общие компоненты",
+    "category": "elementary",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Тест профилирования данных",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/api/v1/data-profiles",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "source_path": "/data/raw/sales.csv"
+            },
+            "save_to": "profiling_result"
+        }
+    ],
+    "ai_training": {
+        "goal": "Test data profiling via shared components",
+        "success_pattern": "profiling_ok_and_list_ok",
+        "key_decisions": []
+    }
+}

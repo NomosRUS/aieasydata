@@ -1,0 +1,119 @@
+{
+    "scenario_id": "S004",
+    "name": "Multiple APIs to Single Warehouse",
+    "description": "Объединение данных из нескольких внешних API (posts, users) и загрузка в единое хранилище ClickHouse",
+    "category": "end_to_end_flows",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Загрузка данных постов из JSONPlaceholder",
+            "action": "external_api_call",
+            "endpoint": "posts",
+            "method": "GET",
+            "save_to": "/data/raw/api_posts.json"
+        },
+        {
+            "step": 2,
+            "description": "Загрузка данных пользователей из JSONPlaceholder",
+            "action": "external_api_call",
+            "endpoint": "users",
+            "method": "GET",
+            "save_to": "/data/raw/api_users.json"
+        },
+        {
+            "step": 3,
+            "description": "Создание сценария агрегации в Module 2",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "scenario_name": "posts_with_users_aggregation",
+                "sources": [
+                    {
+                        "source_id": "posts",
+                        "source_type": "file",
+                        "path": "/data/raw/api_posts.json"
+                    },
+                    {
+                        "source_id": "users",
+                        "source_type": "file",
+                        "path": "/data/raw/api_users.json"
+                    }
+                ],
+                "operations": [
+                    {
+                        "type": "join",
+                        "left": "posts",
+                        "right": "users",
+                        "on": [
+                            {
+                                "left_on": "userId",
+                                "right_on": "id"
+                            }
+                        ],
+                        "how": "left"
+                    }
+                ]
+            },
+            "save_to": "aggregation_scenario"
+        },
+        {
+            "step": 4,
+            "description": "Выполнение сценария агрегации",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "/api/v1/aggregation/execute/{{ aggregation_scenario.scenario_id }}",
+            "method": "POST",
+            "save_to": "aggregated_data"
+        },
+        {
+            "step": 5,
+            "description": "Проектирование хранилища ClickHouse для агрегированных данных",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_data": "{{ aggregated_data.output_path }}",
+                "target_db": "clickhouse",
+                "table_name": "posts_with_users"
+            },
+            "save_to": "warehouse_design"
+        },
+        {
+            "step": 6,
+            "description": "Создание таблицы в ClickHouse",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "confirm-design",
+            "method": "POST",
+            "payload": {
+                "design_id": "{{ warehouse_design.design_id }}"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "database_table_exists",
+                "db_type": "clickhouse",
+                "table": "posts_with_users"
+            },
+            {
+                "type": "data_count_in_table",
+                "db_type": "clickhouse",
+                "table": "posts_with_users",
+                "expected_count": 100
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Aggregate data from multiple APIs and load into a ClickHouse warehouse",
+        "success_pattern": "fetch_api1 -> fetch_api2 -> create_aggregation_scenario -> execute_aggregation -> design_warehouse -> create_table",
+        "key_decisions": [
+            "join_strategy",
+            "target_db_selection"
+        ]
+    }
+}

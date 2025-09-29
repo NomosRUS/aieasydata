@@ -8,6 +8,7 @@ import os
 import json
 import re
 import csv
+import requests
 from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 from urllib.parse import urlparse
@@ -45,6 +46,8 @@ class DataTypeDetector:
             '.xlsx': 'excel',
             '.xls': 'excel'
         }
+        self.api_sources = []
+        self._load_api_sources()
     
     def detect_data_type(self, source: str) -> Dict[str, Any]:
         """
@@ -57,6 +60,12 @@ class DataTypeDetector:
             Dict с информацией о типе данных и параметрах подключения
         """
         
+        # 0. Проверяем, является ли это API-источником из справочника
+        if self._is_url(source):
+            api_result = self._detect_api_source(source)
+            if api_result['type'] != 'unknown':
+                return api_result
+
         # 1. Проверяем, является ли это строкой подключения к БД
         db_result = self._detect_database_connection(source)
         if db_result['type'] != 'unknown':
@@ -442,6 +451,12 @@ class DataTypeDetector:
     
     def _detect_url_type(self, url: str) -> Dict[str, Any]:
         """Определяет тип данных по URL."""
+        # Сначала проверяем наш справочник
+        api_result = self._detect_api_source(url)
+        if api_result['type'] != 'unknown':
+            return api_result
+
+        # Если в справочнике нет, возвращаем общую информацию
         return {
             'type': 'url',
             'source': url,
@@ -507,6 +522,64 @@ class DataTypeDetector:
         except:
             return []
     
+    def _load_api_sources(self):
+        """Загружает справочник внешних API-источников."""
+        # Путь к файлу может потребовать корректировки в зависимости от рабочего каталога
+        # Пробуем несколько вариантов пути для надежности
+        potential_paths = [
+            Path(__file__).resolve().parent.parent.parent / "data_landing_zone/metadata/exports/external_api_sources.json",
+            Path("data_landing_zone/metadata/exports/external_api_sources.json"),
+            Path("../data_landing_zone/metadata/exports/external_api_sources.json"),
+        ]
+        
+        for path in potential_paths:
+            if path.exists():
+                try:
+                    with open(path, 'r', encoding='utf-8') as f:
+                        self.api_sources = json.load(f)
+                    return
+                except (json.JSONDecodeError, IOError):
+                    continue
+
+    def _detect_api_source(self, url: str) -> Dict[str, Any]:
+        """Проверяет, является ли URL известным API-источником."""
+        for api_source in self.api_sources:
+            if api_source.get('uri') == url:
+                return self._analyze_api_source(api_source)
+        return {'type': 'unknown'}
+
+    def _analyze_api_source(self, api_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Анализирует API-источник, собирая метаданные о таблицах."""
+        result = {
+            'type': 'api',
+            'source': api_config.get('uri'),
+            'name': api_config.get('name'),
+            'db_type': 'postgres' if 'postgres' in api_config.get('name', '').lower() else 'clickhouse',
+            'tables': [],
+            'error': None
+        }
+        try:
+            # Получаем список таблиц
+            response = requests.get(api_config['uri'], timeout=5)
+            response.raise_for_status()
+            db_info = response.json()
+            table_names = db_info.get('tables', [])
+
+            # Получаем схему для каждой таблицы
+            for table_name in table_names:
+                table_url = f"{api_config['uri']}/{table_name}"
+                table_response = requests.get(table_url, timeout=5)
+                table_response.raise_for_status()
+                table_info = table_response.json()
+                result['tables'].append(table_info)
+
+        except requests.exceptions.RequestException as e:
+            result['error'] = f"API request failed: {e}"
+        except Exception as e:
+            result['error'] = f"Failed to analyze API source: {e}"
+        
+        return result
+
     def _get_clickhouse_tables(self, client) -> list:
         """Получает список таблиц из ClickHouse."""
         try:

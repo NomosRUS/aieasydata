@@ -1,0 +1,8 @@
+{
+    "enabled": true,
+    "output_file": "reports/ai_training_data.json",
+    "format": "langgraph",
+    "min_trajectory_length": 3,
+    "include_failed_trajectories": false,
+    "deduplicate_patterns": true
+}

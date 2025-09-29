@@ -1,0 +1,24 @@
+{
+    "scenario_id": "M3_E002",
+    "name": "Module 3 - Analyze Performance",
+    "description": "Elementary test for performance analysis.",
+    "category": "elementary/module3",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call analyze endpoint",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "/api/v1/performance/analyze",
+            "method": "POST",
+            "payload": {
+                "source": "/data/raw/sales.csv"
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

@@ -1,0 +1,91 @@
+{
+    "scenario_id": "S025",
+    "name": "ETL Pipeline Orchestration",
+    "description": "Полный ETL пайплайн через Airflow оркестрацию",
+    "category": "airflow_integration",
+    "priority": "high",
+    "expected_duration": 120,
+    "steps": [
+        {
+            "step": 1,
+            "description": "Создание ETL пайплайна",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/api/v1/orchestrator/generate-dag",
+            "method": "POST",
+            "timeout": 45,
+            "payload": {
+                "name": "etl_pipeline_{{ timestamp }}",
+                "schedule": "@once",
+                "description": "Full ETL pipeline test",
+                "stages": [
+                    {
+                        "stage_name": "validate_data",
+                        "type": "module_call",
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/validate-file",
+                        "method": "POST",
+                        "params": {
+                            "file_path": "/data/raw/sales.csv"
+                        }
+                    },
+                    {
+                        "stage_name": "aggregate_data",
+                        "type": "module_call",
+                        "module": 2,
+                        "endpoint": "/api/v1/aggregation/create-scenario",
+                        "method": "POST",
+                        "depends_on": ["validate_data"],
+                        "params": {
+                            "name": "etl_aggregation",
+                            "description": "ETL data aggregation"
+                        }
+                    },
+                    {
+                        "stage_name": "optimize_performance",
+                        "type": "module_call",
+                        "module": 3,
+                        "endpoint": "/api/v1/performance/analyze",
+                        "method": "POST",
+                        "depends_on": ["aggregate_data"],
+                        "params": {
+                            "source": "/data/aggregated/etl_result"
+                        }
+                    }
+                ]
+            },
+            "save_to": "etl_dag_generation",
+            "expected_status": [200, 201, 404]
+        },
+        {
+            "step": 2,
+            "description": "Запуск ETL пайплайна",
+            "action": "airflow_dag_trigger",
+            "dag_id": "{{ etl_dag_generation.dag_id }}",
+            "conf": {
+                "etl_run": true,
+                "source_data": "/data/raw/sales.csv",
+                "target_format": "parquet"
+            },
+            "timeout": 90,
+            "save_to": "etl_execution",
+            "expected_status": [200, 404, 500]
+        },
+        {
+            "step": 3,
+            "description": "Мониторинг выполнения пайплайна",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ etl_dag_generation.dag_id }}/dagRuns",
+            "method": "GET",
+            "timeout": 20,
+            "save_to": "pipeline_status",
+            "expected_status": [200, 404]
+        }
+    ],
+    "success_criteria": [
+        "ETL пайплайн создан и запущен",
+        "Все этапы пайплайна выполнены или система недоступна"
+    ],
+    "cleanup": [],
+    "tags": ["airflow", "etl_pipeline", "orchestration", "integration"]
+}

@@ -1,0 +1,24 @@
+{
+    "scenario_id": "M5_E002",
+    "name": "Module 5 - Auto Detect",
+    "description": "Elementary test for auto-detecting data type.",
+    "category": "elementary/module5",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call auto-detect endpoint",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "/api/v1/metrics/auto-detect",
+            "method": "GET",
+            "params": {
+                "source": "/data/raw/sales.csv"
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

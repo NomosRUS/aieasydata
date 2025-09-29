@@ -1,0 +1,45 @@
+{
+    "scenario_id": "M1_E002",
+    "name": "Module 1 - Full Diagnostics",
+    "category": "elementary/module1",
+    "timestamp": 1759097425,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call full-diagnostics endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/full-diagnostics",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5": "unavailable",
+                        "data_organization": "available",
+                        "available_databases": [],
+                        "base_data_dir": "data_landing_zone"
+                    },
+                    "last_check": "2025-09-28T22:10:05.244999",
+                    "diagnostic_type": "full"
+                }
+            }
+        }
+    ]
+}

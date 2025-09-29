@@ -1,0 +1,49 @@
+{
+    "scenario_id": "S024",
+    "name": "Daily ETL via Airflow",
+    "category": "airflow_integration",
+    "timestamp": 1759148912,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Генерация Airflow DAG для ежедневного ETL",
+                "action": "module_api_call",
+                "module": 0,
+                "endpoint": "/dag/compile",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "daily_sales_etl_{{timestamp}}",
+                    "schedule": "@daily",
+                    "source": {
+                        "type": "file",
+                        "path": "/data/raw/sales.csv"
+                    },
+                    "target": {
+                        "type": "clickhouse",
+                        "table": "daily_sales_etl"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_1_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "dag_path": "/airflow_dags/generated_daily_sales_etl_1759148912.py",
+                    "message": "DAG generated. Open Airflow UI to trigger."
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "default": {
+        "parallel_execution": false,
+        "timeout_per_scenario": 600,
+        "retry_failed_scenarios": true,
+        "retry_count": 1,
+        "generate_test_data": false,
+        "cleanup_after_test": true,
+        "detailed_logging": true
+    },
+    "ci": {
+        "parallel_execution": true,
+        "timeout_per_scenario": 900,
+        "retry_failed_scenarios": false,
+        "generate_test_data": true,
+        "cleanup_after_test": true,
+        "detailed_logging": false
+    },
+    "modules_config": {
+        "base_url": "http://localhost",
+        "timeout": 300,
+        "retry_count": 3
+    },
+    "airflow_config": {
+        "base_url": "http://localhost:8080",
+        "username": "airflow",
+        "password": "airflow",
+        "timeout": 1800
+    }
+}

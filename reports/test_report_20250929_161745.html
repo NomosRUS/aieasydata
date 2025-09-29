@@ -1,0 +1,190 @@
+        <html>
+        <head>
+            <title>Test Report - 2025-09-29 16:17:45</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 40px; }
+                .summary { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: .25rem; padding: 20px; margin-bottom: 20px; }
+                .scenario { border: 1px solid #dee2e6; border-radius: .25rem; margin-bottom: 10px; }
+                .scenario-header { padding: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+                .passed { border-left: 5px solid #28a745; }
+                .failed { border-left: 5px solid #dc3545; }
+                .passed .scenario-header { background-color: #d4edda; }
+                .failed .scenario-header { background-color: #f8d7da; }
+                .trajectory { display: none; padding: 10px; border-top: 1px solid #dee2e6; background-color: #fff; }
+                pre { background-color: #e9ecef; padding: 10px; border-radius: .25rem; white-space: pre-wrap; word-wrap: break-word; }
+            </style>
+            <script>
+                function toggleTrajectory(element) {
+                    var content = element.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                }
+            </script>
+        </head>
+        <body>
+            <h1>Test Execution Report</h1>
+            <div class='summary'>
+                <h2>Summary</h2>
+                <p>Total Scenarios: 1</p>
+                <p>Passed: 0</p>
+                <p>Failed: 1</p>
+                <p>Pass Rate: <strong>0.00%</strong></p>
+                <p>Total Execution Time: 2.47s</p>
+            </div>
+            <h2>Scenario Details</h2>
+                    <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 3 to Module 4 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 3 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Анализ производительности (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250929_131743_954847&quot;,
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-29T13:17:43.962960&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-29T13:17:45.046400&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Получение результатов анализа по ID&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analysis/{{step_1_output.analysis_id}}&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;analysis_results&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250929_131743_954847&quot;,
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-29T13:17:43.962960&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-29T13:17:45.046400&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 3,
+      &quot;description&quot;: &quot;Проверка формата рекомендаций оптимизации&quot;,
+      &quot;action&quot;: &quot;format_validation&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: null,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: &quot;{{analysis_results.recommendations}}&quot;,
+      &quot;expected_schema&quot;: {
+        &quot;format&quot;: &quot;json&quot;,
+        &quot;structure&quot;: {
+          &quot;optimization_type&quot;: &quot;string&quot;,
+          &quot;table_name&quot;: &quot;string&quot;,
+          &quot;recommendations&quot;: &quot;array&quot;,
+          &quot;estimated_improvement&quot;: &quot;number&quot;
+        }
+      },
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;JSON is not an object or array of objects.&quot;,
+      &quot;data&quot;: {
+        &quot;success&quot;: false,
+        &quot;error&quot;: &quot;JSON is not an object or array of objects.&quot;
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+            </body></html>

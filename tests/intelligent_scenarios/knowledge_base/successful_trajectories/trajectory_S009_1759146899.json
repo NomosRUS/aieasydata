@@ -1,0 +1,214 @@
+{
+    "scenario_id": "S009",
+    "name": "Module 1 to Module 2 Format Validation",
+    "category": "format_validation",
+    "timestamp": 1759146899,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Валидация и очистка тестовых данных (Модуль 1)",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "validate-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_1_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "validation_id": "cac28933-e7ed-44cc-a4b7-c19ecaae675e",
+                    "status": "completed",
+                    "quality_score": 0.9839999999999999,
+                    "issues_count": 9,
+                    "issues": [
+                        {
+                            "issue_id": "79dcd578-2b84-4d77-801a-495a6ab531c7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 2,
+                            "percentage": 20.0,
+                            "description": "Колонка 'price' содержит 2 потенциальных выбросов (20.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "6bfd9609-537e-49a3-ab1d-2a6ba753e34c",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 10.0,
+                            "description": "Колонка 'quantity' содержит 1 потенциальных выбросов (10.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "iqr_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_price_4",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_4",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_quantity_7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_quantity_7",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "multivariate_0",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "multivariate",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Многомерная аномалия в строке 0: необычная комбинация значений",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        }
+                    ],
+                    "recommendations_count": 1,
+                    "processing_time_ms": 30769.928
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 2,
+                "description": "Передача очищенных данных в модуль агрегации (Модуль 2)",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "create-scenario",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "format_validation_test_{{timestamp}}",
+                    "description": "Test format validation from M1 to M2",
+                    "sources": [
+                        {
+                            "source_id": "cleaned_data_from_m1",
+                            "source_type": "file",
+                            "path": "{{ step_1_output.cleaned_data_path }}",
+                            "selected_columns": [
+                                "dt",
+                                "amount"
+                            ]
+                        }
+                    ],
+                    "aggregations": [
+                        {
+                            "type": "group_by",
+                            "parameters": {
+                                "columns": [
+                                    "dt"
+                                ],
+                                "aggregates": {
+                                    "total_amount": "sum(amount)"
+                                }
+                            }
+                        }
+                    ],
+                    "target_requirements": {
+                        "expected_volume": "<1MB"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_2_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "scenario_id": "228",
+                    "name": "format_validation_test_1759146898",
+                    "description": "Test format validation from M1 to M2",
+                    "status": "validated",
+                    "sources_analysis": [
+                        {
+                            "source_id": "cleaned_data_from_m1",
+                            "source_type": "file",
+                            "columns": [],
+                            "row_count": 0,
+                            "data_size_bytes": null,
+                            "sample_data": [],
+                            "compatibility_issues": []
+                        }
+                    ],
+                    "estimated_output_size": 1000,
+                    "recommended_engine": "postgres",
+                    "validation_errors": [],
+                    "created_at": "2025-09-29T11:54:59.161733",
+                    "last_modified": "2025-09-29T11:54:59.161739"
+                }
+            }
+        }
+    ]
+}

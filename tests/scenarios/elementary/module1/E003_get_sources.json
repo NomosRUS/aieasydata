@@ -1,0 +1,21 @@
+{
+    "scenario_id": "M1_E003",
+    "name": "Module 1 - Get Sources",
+    "description": "Elementary test for getting available sources.",
+    "category": "elementary/module1",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call sources endpoint",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "/api/v1/data-quality/sources",
+            "method": "GET"
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "scenario_id": "M1_E005",
+    "name": "Module 1 - Clean File",
+    "description": "Elementary test for file cleaning.",
+    "category": "elementary/module1",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call clean-file endpoint",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "/api/v1/data-quality/clean-file",
+            "method": "POST",
+            "params": {
+                "file_path": "/data/raw/sales.csv"
+            },
+            "payload": {
+                "cleaning_strategy": "auto"
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

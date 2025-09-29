@@ -14,6 +14,9 @@ import psycopg2
 from sqlalchemy import create_engine, text
 import requests
 from urllib.parse import urlparse
+import gc
+import psutil
+from datetime import datetime
 
 from .schemas import DataSource, SourceType, ColumnInfo, SourceAnalysis
 from ..database import get_db
@@ -26,6 +29,47 @@ class DataSourceCollector:
     
     def __init__(self):
         self.module5_base_url = "http://localhost:8000/api/v1/metrics"
+        # ОПТИМИЗАЦИЯ ПАМЯТИ: Константы для управления ресурсами
+        self.MAX_FILE_SIZE_MB = 500  # Максимальный размер файла в MB
+        self.CHUNK_SIZE = 1000  # Размер чанка для потоковой обработки
+        self.MAX_MEMORY_USAGE_PERCENT = 80  # Максимальное использование памяти в %
+        self.PROGRESS_CALLBACK = None  # Callback для прогресс-индикатора
+    
+    def _check_file_size(self, file_path: str) -> bool:
+        """Проверяет размер файла перед загрузкой."""
+        try:
+            file_size_mb = os.path.getsize(file_path) / (1024 * 1024)
+            if file_size_mb > self.MAX_FILE_SIZE_MB:
+                logger.warning(f"File {file_path} size ({file_size_mb:.1f}MB) exceeds limit ({self.MAX_FILE_SIZE_MB}MB)")
+                return False
+            logger.info(f"File {file_path} size: {file_size_mb:.1f}MB - OK")
+            return True
+        except Exception as e:
+            logger.error(f"Error checking file size: {e}")
+            return False
+    
+    def _check_memory_usage(self) -> bool:
+        """Проверяет текущее использование памяти."""
+        try:
+            memory_percent = psutil.virtual_memory().percent
+            if memory_percent > self.MAX_MEMORY_USAGE_PERCENT:
+                logger.warning(f"Memory usage ({memory_percent:.1f}%) exceeds limit ({self.MAX_MEMORY_USAGE_PERCENT}%)")
+                return False
+            return True
+        except Exception as e:
+            logger.error(f"Error checking memory usage: {e}")
+            return True  # Продолжаем работу если не можем проверить
+    
+    def _update_progress(self, current: int, total: int, operation: str = "Processing"):
+        """Обновляет прогресс-индикатор."""
+        if self.PROGRESS_CALLBACK:
+            progress = (current / total) * 100 if total > 0 else 0
+            self.PROGRESS_CALLBACK(progress, f"{operation}: {current}/{total}")
+        
+        # Логируем прогресс каждые 10%
+        if total > 0 and current % max(1, total // 10) == 0:
+            progress = (current / total) * 100
+            logger.info(f"{operation} progress: {progress:.1f}% ({current}/{total})")
         
     async def analyze_source(self, source: DataSource) -> SourceAnalysis:
         """
@@ -501,19 +545,48 @@ class DataSourceCollector:
             raise ValueError(f"Failed to parse CSV file with all attempted parameters: {str(e)}")
     
     async def _load_csv_streaming(self, file_path: str, sep: str, encoding: str, limit: Optional[int]) -> pd.DataFrame:
-        """Потоковая загрузка CSV по чанкам для экономии памяти."""
-        chunk_size = 1000  # Читаем по 1000 строк за раз
+        """Потоковая загрузка CSV по чанкам для экономии памяти с прогресс-индикатором."""
+        
+        # ПРОВЕРКА РАЗМЕРА ФАЙЛА
+        if not self._check_file_size(file_path):
+            raise ValueError(f"File size exceeds {self.MAX_FILE_SIZE_MB}MB limit")
+        
+        chunk_size = self.CHUNK_SIZE
         chunks = []
         total_rows = 0
+        chunk_count = 0
+        
+        # Оценка общего количества строк для прогресс-индикатора
+        try:
+            with open(file_path, 'r', encoding=encoding) as f:
+                estimated_total_rows = sum(1 for _ in f) - 1  # -1 для заголовка
+        except:
+            estimated_total_rows = None
+        
+        start_time = datetime.utcnow()
+        logger.info(f"Starting CSV streaming: {file_path} (estimated {estimated_total_rows} rows)")
         
         try:
             # Читаем файл чанками
-            for chunk in pd.read_csv(file_path, sep=sep, encoding=encoding, chunksize=chunk_size):
+            csv_reader = pd.read_csv(file_path, sep=sep, encoding=encoding, chunksize=chunk_size)
+            
+            for chunk in csv_reader:
+                # ПРОВЕРКА ПАМЯТИ перед обработкой каждого чанка
+                if not self._check_memory_usage():
+                    logger.warning("Memory usage too high, forcing garbage collection")
+                    gc.collect()
+                    if not self._check_memory_usage():
+                        raise MemoryError("Insufficient memory to continue processing")
+                
                 chunks.append(chunk)
                 total_rows += len(chunk)
+                chunk_count += 1
+                
+                # ПРОГРЕСС-ИНДИКАТОР
+                if estimated_total_rows:
+                    self._update_progress(total_rows, estimated_total_rows, "Loading CSV")
                 
                 # Принудительная очистка памяти после каждого чанка
-                import gc
                 gc.collect()
                 
                 # Прерываем если достигли лимита
@@ -521,12 +594,18 @@ class DataSourceCollector:
                     logger.info(f"Reached limit {limit} rows, stopping CSV streaming")
                     break
                     
-                # Защита от переполнения памяти - максимум 10 чанков за раз
-                if len(chunks) >= 10:
+                # УЛУЧШЕННАЯ защита от переполнения памяти - адаптивное объединение
+                max_chunks_in_memory = max(5, min(20, 100000 // chunk_size))  # Адаптивный лимит
+                if len(chunks) >= max_chunks_in_memory:
                     # Объединяем накопленные чанки
+                    logger.info(f"Consolidating {len(chunks)} chunks to save memory")
                     partial_df = pd.concat(chunks, ignore_index=True)
                     chunks = [partial_df]  # Заменяем чанки объединенным DataFrame
                     gc.collect()
+                    
+                # Асинхронная пауза для других задач
+                if chunk_count % 10 == 0:
+                    await asyncio.sleep(0.001)  # Микропауза для асинхронности
             
             # Объединяем все чанки в финальный DataFrame
             if chunks:

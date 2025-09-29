@@ -1,0 +1,170 @@
+{
+    "scenario_id": "S012",
+    "name": "Module 5 to Module 1 Format Validation",
+    "category": "format_validation",
+    "timestamp": 1759148065,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Сбор метрик по файлу через Module 5",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "auto-detect",
+                "method": "GET",
+                "params": {
+                    "source": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": "metrics_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "row_count": 0,
+                    "size_in_bytes": 0,
+                    "file_count": 0,
+                    "avg_file_size": 0,
+                    "file_types": {},
+                    "processing_time_seconds": 0.0,
+                    "files_analyzed": 0,
+                    "analysis_limited": false,
+                    "data_type": "csv",
+                    "format": "csv",
+                    "detected_type": "file",
+                    "schema": {
+                        "columns": [
+                            {
+                                "name": "id",
+                                "type": "numeric",
+                                "index": 0
+                            },
+                            {
+                                "name": "product_name",
+                                "type": "string",
+                                "index": 1
+                            },
+                            {
+                                "name": "category",
+                                "type": "string",
+                                "index": 2
+                            },
+                            {
+                                "name": "price",
+                                "type": "numeric",
+                                "index": 3
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "numeric",
+                                "index": 4
+                            },
+                            {
+                                "name": "sale_date",
+                                "type": "date",
+                                "index": 5
+                            },
+                            {
+                                "name": "customer_id",
+                                "type": "numeric",
+                                "index": 6
+                            }
+                        ],
+                        "column_count": 7
+                    },
+                    "separator": ",",
+                    "encoding": "utf-8",
+                    "detection_details": {
+                        "type": "file",
+                        "file_type": "csv",
+                        "source": "/data/raw/sales.csv",
+                        "file_size": 557,
+                        "file_name": "sales.csv",
+                        "format": "csv",
+                        "separator": ",",
+                        "encoding": "utf-8",
+                        "schema": {
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "type": "numeric",
+                                    "index": 0
+                                },
+                                {
+                                    "name": "product_name",
+                                    "type": "string",
+                                    "index": 1
+                                },
+                                {
+                                    "name": "category",
+                                    "type": "string",
+                                    "index": 2
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "numeric",
+                                    "index": 3
+                                },
+                                {
+                                    "name": "quantity",
+                                    "type": "numeric",
+                                    "index": 4
+                                },
+                                {
+                                    "name": "sale_date",
+                                    "type": "date",
+                                    "index": 5
+                                },
+                                {
+                                    "name": "customer_id",
+                                    "type": "numeric",
+                                    "index": 6
+                                }
+                            ],
+                            "column_count": 7
+                        },
+                        "sample_data": [
+                            [
+                                "1",
+                                "Laptop Pro",
+                                "Electronics",
+                                "1299.99",
+                                "2",
+                                "2024-01-15",
+                                "101"
+                            ],
+                            [
+                                "2",
+                                "Wireless Mouse",
+                                "Electronics",
+                                "29.99",
+                                "5",
+                                "2024-01-16",
+                                "102"
+                            ],
+                            [
+                                "3",
+                                "Office Chair",
+                                "Furniture",
+                                "199.99",
+                                "1",
+                                "2024-01-17",
+                                "103"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

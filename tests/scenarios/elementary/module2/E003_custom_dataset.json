@@ -1,0 +1,32 @@
+{
+    "scenario_id": "M2_E003",
+    "name": "Module 2 - Custom Dataset",
+    "description": "Elementary test for creating a custom dataset.",
+    "category": "elementary/module2",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call custom-dataset endpoint",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "/api/v1/aggregation/custom-dataset",
+            "method": "POST",
+            "payload": {
+                "dataset_name": "test_dataset",
+                "sources": [
+                    {
+                        "source_id": "sales",
+                        "source_type": "file",
+                        "path": "/data/raw/sales.csv",
+                        "selected_columns": ["product_name", "price"]
+                    }
+                ]
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

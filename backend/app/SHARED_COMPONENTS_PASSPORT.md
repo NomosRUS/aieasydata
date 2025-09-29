@@ -148,7 +148,7 @@ def get_connections(db: Session, skip: int = 0, limit: int = 100)
 ```python
 class ConnectionBase(BaseModel):
     name: str
-    type: Literal["postgres", "clickhouse", "hdfs", "s3", "csv", "json", "xml"]
+    type: Literal["postgres", "clickhouse", "hdfs", "s3", "csv", "json", "xml", "api"]
     uri: str
 ```
 
@@ -330,13 +330,12 @@ async def ai_analyze_data(request: AIAnalysisRequest)
 
 #### **2. Автоопределение типов данных:**
 - **Общие:** ~~`data_type_detector.py`~~ - ПЕРЕМЕЩЕН в модуль 5
-- **Модуль 5:** `data_type_detector.py` - автоопределение типов
+- **Модуль 5:** `data_type_detector.py` - автоопределение типов (включая `api`)
 - **✅ ИСПРАВЛЕНО:** Дублирование устранено, компонент перемещен в модуль 5
 
 #### **3. Рекомендации по СУБД:**
 - **Общие:** `rule_engine.py` - базовые рекомендации по выбору СУБД
 - **Модуль 1:** `StorageRecommender` - специализация на качестве данных
-- **Модуль 3:** `OptimizationGenerator` - специализация на производительности
 - **✅ СПЕЦИАЛИЗИРОВАНО:** Каждый компонент имеет свою область ответственности
 
 ### **✅ ПРАВИЛЬНЫЕ ИНТЕГРАЦИИ:**

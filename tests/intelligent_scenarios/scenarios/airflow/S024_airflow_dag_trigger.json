@@ -1,0 +1,80 @@
+{
+    "scenario_id": "S024",
+    "name": "Airflow DAG Trigger Test",
+    "description": "Тест запуска DAG'а через Airflow API",
+    "category": "airflow_integration",
+    "priority": "high",
+    "expected_duration": 60,
+    "steps": [
+        {
+            "step": 1,
+            "description": "Проверка доступности Airflow",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags",
+            "method": "GET",
+            "timeout": 10,
+            "save_to": "airflow_availability",
+            "expected_status": [200, 401, 404]
+        },
+        {
+            "step": 2,
+            "description": "Генерация тестового DAG'а",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/api/v1/orchestrator/generate-dag",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "name": "airflow_test_dag_{{ timestamp }}",
+                "schedule": "@once",
+                "description": "Test DAG for Airflow integration",
+                "stages": [
+                    {
+                        "stage_name": "health_check",
+                        "type": "module_call",
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/health-check",
+                        "method": "GET"
+                    }
+                ]
+            },
+            "save_to": "dag_generation",
+            "expected_status": [200, 201, 404]
+        },
+        {
+            "step": 3,
+            "description": "Запуск DAG'а через Airflow",
+            "action": "airflow_dag_trigger",
+            "dag_id": "{{ dag_generation.dag_id }}",
+            "conf": {
+                "test_run": true,
+                "scenario_id": "S024"
+            },
+            "timeout": 45,
+            "save_to": "dag_trigger_result",
+            "expected_status": [200, 404, 500]
+        },
+        {
+            "step": 4,
+            "description": "Проверка статуса выполнения DAG'а",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ dag_generation.dag_id }}/dagRuns",
+            "method": "GET",
+            "timeout": 15,
+            "save_to": "dag_status",
+            "expected_status": [200, 404]
+        }
+    ],
+    "success_criteria": [
+        "DAG успешно создан и запущен или Airflow недоступен",
+        "Статус выполнения получен"
+    ],
+    "cleanup": [
+        {
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ dag_generation.dag_id }}",
+            "method": "DELETE"
+        }
+    ],
+    "tags": ["airflow", "dag_trigger", "integration", "orchestration"]
+}

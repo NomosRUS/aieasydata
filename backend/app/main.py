@@ -104,7 +104,13 @@ def create_data_profile(request: CreateDataProfileRequest, db: Session = Depends
     Creates a new data profile by analyzing the source data.
     """
     try:
-        # Выполняем быстрый анализ для получения метаданных
+        # Проверяем, существует ли уже профиль с таким source_path
+        existing_profile = db.query(DataProfile).filter(DataProfile.source_path == request.source_path).first()
+        if existing_profile:
+            # Если профиль существует, возвращаем его
+            return existing_profile
+
+        # Если профиль не найден, выполняем быстрый анализ для получения метаданных
         profile_data = analyzer.quick_profile({'source_path': request.source_path})
         
         # Создаем новый объект DataProfile
@@ -123,6 +129,7 @@ def create_data_profile(request: CreateDataProfileRequest, db: Session = Depends
         
         return new_profile
     except Exception as e:
+        db.rollback() # Откатываем транзакцию в случае ошибки
         raise HTTPException(status_code=500, detail=f"Failed to create data profile: {str(e)}")
 
 @app.post("/api/analyze-profile/{profile_id}", response_model=DataProfileResponse)

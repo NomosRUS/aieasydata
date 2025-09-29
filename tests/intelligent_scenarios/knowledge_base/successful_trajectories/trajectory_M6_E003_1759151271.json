@@ -1,0 +1,55 @@
+{
+    "scenario_id": "M6_E003",
+    "name": "Module 6 - Validate DAG Configuration",
+    "category": "elementary",
+    "timestamp": 1759151271,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Компиляция второго тестового DAG'а для проверки компилятора",
+                "action": "module_api_call",
+                "module": 0,
+                "endpoint": "/dag/compile",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "validation_dag_compile_test_{{ timestamp }}",
+                    "schedule": "@hourly",
+                    "source": {
+                        "type": "file",
+                        "path": "/data/raw/sales.csv"
+                    },
+                    "transforms": [
+                        {
+                            "action": "clean",
+                            "task_id": "clean_source_data"
+                        }
+                    ],
+                    "target": {
+                        "type": "clickhouse",
+                        "table_name": "validation_dag_output_{{ timestamp }}"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "compilation_result",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 30,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "dag_path": "/airflow_dags/generated_validation_dag_compile_test_{{ timestamp }}.py",
+                    "message": "DAG generated. Open Airflow UI to trigger."
+                }
+            }
+        }
+    ]
+}

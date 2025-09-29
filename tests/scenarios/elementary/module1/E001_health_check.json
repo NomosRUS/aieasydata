@@ -1,0 +1,21 @@
+{
+    "scenario_id": "M1_E001",
+    "name": "Module 1 - Health Check",
+    "description": "Elementary test for Module 1 health check.",
+    "category": "elementary/module1",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call health-check endpoint",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "/api/v1/data-quality/health-check",
+            "method": "GET"
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

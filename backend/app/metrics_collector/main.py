@@ -2,12 +2,21 @@ import psycopg2
 import clickhouse_connect
 import os
 import glob
-import pandas as pd
-import json
+import asyncio
+import logging
+from datetime import datetime
+from typing import Dict, Any, List, Optional
 from pathlib import Path
-from typing import Dict, Any, Union
-from .schemas import ConnectionInfo
+import json
+import aiohttp
+import pandas as pd
+import polars as pl
+
+# Импортируем новую систему управления данными
+from ..config import DataPaths, file_manager
+from ..shared.base_profiler import get_database_files, get_available_databases
 from .data_type_detector import DataTypeDetector
+from .schemas import ConnectionInfo
 
 # Добавляем поддержку XML
 try:
@@ -27,6 +36,23 @@ def collect_metrics(conn_info: ConnectionInfo) -> dict:
     else:
         raise ValueError(f"Unsupported DB type: {conn_info.db_type}")
 
+def _sanitize_for_json(data: Any) -> Any:
+    """Recursively cleans a data structure to make it JSON serializable."""
+    if isinstance(data, dict):
+        return {k: _sanitize_for_json(v) for k, v in data.items()}
+    if isinstance(data, list):
+        return [_sanitize_for_json(i) for i in data]
+    if isinstance(data, float) and (math.isinf(data) or math.isnan(data)):
+        return None  # Заменяем невалидные float на None
+    # Проверка на типы numpy
+    if hasattr(data, 'item'):
+        try:
+            return data.item()
+        except (ValueError, AttributeError):
+            pass
+    return data
+
+
 def auto_detect_and_collect_metrics(source: str) -> dict:
     """
     Автоматически определяет тип данных и собирает метрики.
@@ -34,6 +60,7 @@ def auto_detect_and_collect_metrics(source: str) -> dict:
     """
     detector = DataTypeDetector()
     detection_result = detector.detect_data_type(source)
+    detection_result = _sanitize_for_json(detection_result)
     
     # Собираем базовые метрики
     metrics = {}
@@ -74,14 +101,21 @@ def auto_detect_and_collect_metrics(source: str) -> dict:
         }
     
     # Добавляем информацию об автоопределении
+    # Преобразуем все значения в безопасные для JSON типы
+    try:
+        safe_detection_result = json.loads(json.dumps(detection_result, default=str))
+    except (TypeError, ValueError):
+        # В случае сложных, несериализуемых объектов, просто преобразуем их в строки
+        safe_detection_result = {k: str(v) for k, v in detection_result.items()}
+
     metrics.update({
-        'data_type': detection_result.get('format', detection_result.get('type')),
-        'format': detection_result.get('format'),
-        'detected_type': detection_result.get('type'),
-        'schema': detection_result.get('schema'),
-        'separator': detection_result.get('separator'),
-        'encoding': detection_result.get('encoding'),
-        'detection_details': detection_result
+        'data_type': safe_detection_result.get('format', safe_detection_result.get('type')),
+        'format': safe_detection_result.get('format'),
+        'detected_type': safe_detection_result.get('type'),
+        'schema': safe_detection_result.get('schema'),
+        'separator': safe_detection_result.get('separator'),
+        'encoding': safe_detection_result.get('encoding'),
+        'detection_details': safe_detection_result
     })
     
     return metrics
@@ -173,14 +207,30 @@ def _collect_postgres_metrics(conn_info: ConnectionInfo) -> dict:
 
     return metrics
 
+import math
+
+def safe_float(value):
+    """Converts non-compliant floats (inf, nan) to 0 for JSON serialization."""
+    if isinstance(value, float) and (math.isinf(value) or math.isnan(value)):
+        return 0
+    return value
+
 def _collect_filesystem_metrics(conn_info: ConnectionInfo) -> dict:
     """Собирает метрики из файловой системы (data_landing_zone)."""
+    import time
+    start_time = time.time()
+    max_processing_time = 60  # Максимум 60 секунд на обработку
+    max_files_to_analyze = 100  # Максимум 100 файлов для детального анализа
+    
     metrics = {
         "row_count": 0,
         "size_in_bytes": 0,
         "file_count": 0,
         "avg_file_size": 0,
-        "file_types": {}
+        "file_types": {},
+        "processing_time_seconds": 0,
+        "files_analyzed": 0,
+        "analysis_limited": False
     }
     
     try:
@@ -197,9 +247,17 @@ def _collect_filesystem_metrics(conn_info: ConnectionInfo) -> dict:
         file_count = 0
         row_count = 0
         file_types = {}
+        files_analyzed = 0
         
-        # Рекурсивный обход всех файлов
+        print(f"Starting analysis of directory: {conn_info.file_path}")
+        
+        # Рекурсивный обход всех файлов с ограничениями
         for file_path in path.rglob("*"):
+            # Проверяем время выполнения
+            if time.time() - start_time > max_processing_time:
+                print(f"Analysis stopped due to time limit ({max_processing_time}s)")
+                metrics["analysis_limited"] = True
+                break
             if file_path.is_file():
                 file_size = file_path.stat().st_size
                 total_size += file_size
@@ -212,57 +270,87 @@ def _collect_filesystem_metrics(conn_info: ConnectionInfo) -> dict:
                 else:
                     file_types[file_ext] = 1
                 
-                # Попытка подсчета строк для структурированных файлов
-                try:
-                    if file_ext in ['.csv', '.tsv']:
-                        # Пробуем разные разделители для CSV
-                        df = None
-                        for sep in [',', ';', '\t']:
-                            try:
-                                df = pd.read_csv(file_path, sep=sep, nrows=1)
-                                # Проверяем, что получили больше одной колонки
-                                if len(df.columns) > 1:
-                                    # Читаем весь файл с найденным разделителем
-                                    df = pd.read_csv(file_path, sep=sep)
+                # Попытка подсчета строк для структурированных файлов (только для первых файлов)
+                if files_analyzed < max_files_to_analyze:
+                    try:
+                        if file_ext in ['.csv', '.tsv']:
+                            # Проверяем размер файла - для больших файлов используем оптимизированный подход
+                            if file_size > 50 * 1024 * 1024:  # Файлы больше 50MB
+                                print(f"Large CSV file detected: {file_path.name} ({file_size / 1024**2:.1f}MB) - using optimized counting")
+                                # Для больших файлов просто подсчитываем строки без загрузки в pandas
+                                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                                    row_count += sum(1 for _ in f) - 1  # -1 для заголовка
+                            else:
+                                # Для небольших файлов используем pandas
+                                df = None
+                                for sep in [',', ';', '\t']:
+                                    try:
+                                        df = pd.read_csv(file_path, sep=sep, nrows=1)
+                                        # Проверяем, что получили больше одной колонку
+                                        if len(df.columns) > 1:
+                                            # Читаем весь файл с найденным разделителем
+                                            df = pd.read_csv(file_path, sep=sep)
+                                            row_count += len(df)
+                                            break
+                                    except:
+                                        continue
+                                
+                                # Если не удалось определить разделитель, читаем как есть
+                                if df is None:
+                                    df = pd.read_csv(file_path)
                                     row_count += len(df)
-                                    break
-                            except:
-                                continue
-                        
-                        # Если не удалось определить разделитель, читаем как есть
-                        if df is None:
-                            df = pd.read_csv(file_path)
+                            
+                            files_analyzed += 1
+                            
+                        elif file_ext in ['.json', '.jsonl']:
+                            # Обработка JSON файлов
+                            json_rows = _count_json_rows(file_path)
+                            row_count += json_rows
+                            files_analyzed += 1
+                            
+                        elif file_ext in ['.xml']:
+                            # Обработка XML файлов
+                            if XML_AVAILABLE:
+                                xml_rows = _count_xml_rows(file_path)
+                                row_count += xml_rows
+                            else:
+                                print(f"XML support not available, skipping {file_path}")
+                            files_analyzed += 1
+                            
+                        elif file_ext in ['.parquet']:
+                            df = pd.read_parquet(file_path)
                             row_count += len(df)
+                            files_analyzed += 1
                             
-                    elif file_ext in ['.json', '.jsonl']:
-                        # Обработка JSON файлов
-                        json_rows = _count_json_rows(file_path)
-                        row_count += json_rows
-                        
-                    elif file_ext in ['.xml']:
-                        # Обработка XML файлов
-                        if XML_AVAILABLE:
-                            xml_rows = _count_xml_rows(file_path)
-                            row_count += xml_rows
-                        else:
-                            print(f"XML support not available, skipping {file_path}")
-                            
-                    elif file_ext in ['.parquet']:
-                        df = pd.read_parquet(file_path)
-                        row_count += len(df)
-                        
-                except Exception as e:
-                    # Если не удается прочитать файл, просто пропускаем подсчет строк
-                    print(f"Could not read file {file_path} for row counting: {e}")
-                    continue
+                    except Exception as e:
+                        # Если не удается прочитать файл, просто пропускаем подсчет строк
+                        print(f"Could not read file {file_path} for row counting: {e}")
+                        continue
+        
+        processing_time = time.time() - start_time
+        
+        # Безопасное вычисление среднего размера файла
+        avg_file_size = total_size // file_count if file_count > 0 else 0
+        
+        # Проверяем на некорректные float значения
+        def safe_float(value):
+            import math
+            if isinstance(value, float) and (math.isinf(value) or math.isnan(value)):
+                return 0
+            return value
         
         metrics.update({
-            "row_count": row_count,
-            "size_in_bytes": total_size,
-            "file_count": file_count,
-            "avg_file_size": total_size // file_count if file_count > 0 else 0,
-            "file_types": file_types
+            "row_count": int(row_count),
+            "size_in_bytes": int(total_size),
+            "file_count": int(file_count),
+            "avg_file_size": int(avg_file_size),
+            "file_types": file_types,
+            "processing_time_seconds": safe_float(round(processing_time, 2)),
+            "files_analyzed": int(files_analyzed),
+            "analysis_limited": bool(metrics["analysis_limited"])
         })
+        
+        print(f"Analysis completed in {processing_time:.2f}s: {file_count} files, {files_analyzed} analyzed, {row_count:,} rows")
         
     except Exception as e:
         print(f"Error collecting filesystem metrics: {e}")
@@ -449,9 +537,9 @@ def get_connection_info_from_warehouse_instance(design_id: str, db_type: str) ->
             table_name='unknown',
             design_id=design_id
         )
-    elif db_type == 'postgres':
+    elif db_type in ['postgres', 'postgresql']:
         return ConnectionInfo(
-            db_type='postgres',
+            db_type='postgres',  # Нормализуем к 'postgres'
             host=os.getenv('POSTGRES_HOST', 'localhost'),
             port=int(os.getenv('POSTGRES_PORT', '5432')),
             user=os.getenv('POSTGRES_USER', 'user'),
@@ -500,3 +588,214 @@ def _get_real_db_connection_info(db_type: str, table_name: str = None) -> Connec
         )
     else:
         raise ValueError(f"Unsupported database type for real DB connection: {db_type}")
+
+def collect_metrics_from_organized_data(database_name: str, stage: str = None) -> Dict[str, Any]:
+    """
+    Сбор метрик из организованной системы данных.
+    
+    Args:
+        database_name: Имя базы данных
+        stage: Этап обработки (validated, cleaned, aggregated, optimized)
+    
+    Returns:
+        Метрики по организованным данным
+    """
+    try:
+        # Получаем файлы из организованной структуры
+        files = get_database_files(database_name, stage)
+        
+        if not files:
+            return {
+                "database_name": database_name,
+                "stage": stage,
+                "status": "no_data",
+                "files_count": 0
+            }
+        
+        total_size = 0
+        total_rows = 0
+        file_metrics = []
+        
+        for file_path in files[:10]:  # Ограничиваем анализ первыми 10 файлами
+            try:
+                file_path_obj = Path(file_path)
+                file_size = file_path_obj.stat().st_size
+                total_size += file_size
+                
+                # Анализируем файл в зависимости от формата
+                if file_path.endswith('.parquet'):
+                    df = pd.read_parquet(file_path)
+                    rows = len(df)
+                    cols = len(df.columns)
+                    total_rows += rows
+                    
+                    file_metrics.append({
+                        "file": str(file_path_obj.name),
+                        "size_mb": round(file_size / (1024 * 1024), 2),
+                        "rows": rows,
+                        "columns": cols,
+                        "format": "parquet"
+                    })
+                
+            except Exception as e:
+                file_metrics.append({
+                    "file": str(Path(file_path).name),
+                    "error": str(e)
+                })
+        
+        return {
+            "database_name": database_name,
+            "stage": stage or "all_stages",
+            "status": "success",
+            "files_count": len(files),
+            "analyzed_files": len(file_metrics),
+            "total_size_mb": round(total_size / (1024 * 1024), 2),
+            "total_rows": total_rows,
+            "file_metrics": file_metrics
+        }
+        
+    except Exception as e:
+        return {
+            "database_name": database_name,
+            "stage": stage,
+            "status": "error",
+            "error": str(e)
+        }
+
+def monitor_data_organization_health() -> Dict[str, Any]:
+    """
+    Мониторинг здоровья новой системы организации данных.
+    
+    Returns:
+        Статус здоровья системы организации данных
+    """
+    try:
+        # Проверяем доступность основных компонентов
+        health_status = {
+            "timestamp": datetime.now().isoformat(),
+            "overall_status": "healthy",
+            "components": {}
+        }
+        
+        # Проверяем DataPaths
+        try:
+            base_dir_exists = DataPaths.BASE_DATA_DIR.exists()
+            metadata_db_exists = DataPaths.MAIN_METADATA_DB.exists()
+            
+            health_status["components"]["data_paths"] = {
+                "status": "healthy" if base_dir_exists else "unhealthy",
+                "base_dir_exists": base_dir_exists,
+                "metadata_db_exists": metadata_db_exists,
+                "base_dir": str(DataPaths.BASE_DATA_DIR)
+            }
+        except Exception as e:
+            health_status["components"]["data_paths"] = {
+                "status": "error",
+                "error": str(e)
+            }
+        
+        # Проверяем доступные базы данных
+        try:
+            databases = get_available_databases()
+            health_status["components"]["databases"] = {
+                "status": "healthy",
+                "count": len(databases),
+                "databases": databases
+            }
+        except Exception as e:
+            health_status["components"]["databases"] = {
+                "status": "error",
+                "error": str(e)
+            }
+        
+        # Проверяем file_manager
+        try:
+            if file_manager:
+                health_status["components"]["file_manager"] = {
+                    "status": "healthy",
+                    "max_file_size_mb": DataPaths.MAX_FILE_SIZE_MB
+                }
+            else:
+                health_status["components"]["file_manager"] = {
+                    "status": "unavailable"
+                }
+        except Exception as e:
+            health_status["components"]["file_manager"] = {
+                "status": "error",
+                "error": str(e)
+            }
+        
+        # Определяем общий статус
+        component_statuses = [comp.get("status") for comp in health_status["components"].values()]
+        if "error" in component_statuses:
+            health_status["overall_status"] = "degraded"
+        elif "unhealthy" in component_statuses or "unavailable" in component_statuses:
+            health_status["overall_status"] = "degraded"
+        
+        return health_status
+        
+    except Exception as e:
+        return {
+            "timestamp": datetime.now().isoformat(),
+            "overall_status": "error",
+            "error": str(e)
+        }
+
+def get_database_metrics_summary() -> Dict[str, Any]:
+    """
+    Получить сводку метрик по всем базам данных в системе.
+    
+    Returns:
+        Сводка метрик по базам данных
+    """
+    try:
+        databases = get_available_databases()
+        summary = {
+            "timestamp": datetime.now().isoformat(),
+            "total_databases": len(databases),
+            "databases": {}
+        }
+        
+        for db_name in databases:
+            try:
+                # Собираем метрики по всем этапам
+                db_metrics = {
+                    "stages": {}
+                }
+                
+                stages = ["validated", "cleaned", "aggregated", "optimized"]
+                total_files = 0
+                total_size_mb = 0
+                
+                for stage in stages:
+                    stage_metrics = collect_metrics_from_organized_data(db_name, stage)
+                    db_metrics["stages"][stage] = {
+                        "files_count": stage_metrics.get("files_count", 0),
+                        "total_size_mb": stage_metrics.get("total_size_mb", 0),
+                        "status": stage_metrics.get("status", "unknown")
+                    }
+                    
+                    if stage_metrics.get("status") == "success":
+                        total_files += stage_metrics.get("files_count", 0)
+                        total_size_mb += stage_metrics.get("total_size_mb", 0)
+                
+                db_metrics["total_files"] = total_files
+                db_metrics["total_size_mb"] = round(total_size_mb, 2)
+                db_metrics["status"] = "active" if total_files > 0 else "empty"
+                
+                summary["databases"][db_name] = db_metrics
+                
+            except Exception as e:
+                summary["databases"][db_name] = {
+                    "status": "error",
+                    "error": str(e)
+                }
+        
+        return summary
+        
+    except Exception as e:
+        return {
+            "timestamp": datetime.now().isoformat(),
+            "status": "error",
+            "error": str(e)
+        }

@@ -1,0 +1,45 @@
+{
+    "scenario_id": "S030",
+    "name": "Airflow Dynamic DAG Creation",
+    "description": "Проверка динамического создания DAG'ов на основе появления новых источников данных",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Создание нового источника данных (например, новая таблица в БД)",
+            "action": "module_api_call",
+            "command": "psql -c 'CREATE TABLE new_source_table (...);'",
+            "method": "POST"
+        },
+        {
+            "step": 2,
+            "description": "Запуск DAG-генератора для обнаружения нового источника",
+            "action": "airflow_dag_trigger",
+            "dag_id": "dag_factory_dag"
+        },
+        {
+            "step": 3,
+            "description": "Проверка, что новый DAG был создан для нового источника",
+            "action": "airflow_dag_trigger",
+            "endpoint": "etl_new_source_table",
+            "method": "GET",
+            "expected_response": {
+                "dag_id": "etl_new_source_table"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify dynamic DAG creation in Airflow based on new data sources",
+        "success_pattern": "create_new_source -> run_dag_factory -> verify_new_dag_exists",
+        "key_decisions": [
+            "source_detection_logic"
+        ]
+    }
+}

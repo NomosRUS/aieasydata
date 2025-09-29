@@ -1,0 +1,4 @@
+user_id,username,email,registration_date
+1,john_doe,john.doe@example.com,2023-01-15
+2,jane_smith,jane.smith@example.com,2023-02-20
+3,bob_johnson,bob.johnson@example.com,2023-03-10

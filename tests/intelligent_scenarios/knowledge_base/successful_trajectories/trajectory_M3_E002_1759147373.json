@@ -1,0 +1,60 @@
+{
+    "scenario_id": "M3_E002",
+    "name": "Module 3 - Analyze Performance",
+    "category": "elementary/module3",
+    "timestamp": 1759147373,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call analyze endpoint",
+                "action": "module_api_call",
+                "module": 3,
+                "endpoint": "/api/v1/performance/analyze",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "source": "/data/raw/sales.csv"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "analysis_id": "analysis_20250929_120253_339680",
+                    "source": "/data/raw/sales.csv",
+                    "source_type": "csv",
+                    "status": "completed",
+                    "current_metrics": {
+                        "source_type": "csv",
+                        "data_size_bytes": 0,
+                        "row_count": 0,
+                        "column_count": null,
+                        "processing_time_ms": 0.0,
+                        "avg_query_time_ms": null,
+                        "index_usage_stats": null,
+                        "partition_stats": null,
+                        "bottlenecks": [],
+                        "structure_info": {}
+                    },
+                    "bottlenecks": [],
+                    "recommendations": [],
+                    "llm_analysis": "Не удалось получить ответ от ИИ: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+                    "created_at": "2025-09-29T12:02:53.339870",
+                    "completed_at": "2025-09-29T12:02:53.890519",
+                    "error_message": null
+                }
+            }
+        }
+    ]
+}

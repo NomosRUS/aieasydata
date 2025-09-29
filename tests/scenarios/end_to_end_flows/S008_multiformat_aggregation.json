@@ -1,0 +1,114 @@
+{
+    "scenario_id": "S008",
+    "name": "Multi-format Aggregation to Multi-DB",
+    "description": "Сложная агрегация данных из разных форматов (CSV, JSON, XML) и загрузка в разные БД (PostgreSQL, ClickHouse)",
+    "category": "end_to_end_flows",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Агрегация CSV, JSON и XML данных в Module 2",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "custom-dataset",
+            "method": "POST",
+            "payload": {
+                "dataset_name": "multi_format_join",
+                "sources": [
+                    {
+                        "source_id": "transactions",
+                        "source_type": "file",
+                        "path": "/data/raw/transactions.csv",
+                        "selected_columns": ["transaction_id", "user_id", "product_id"]
+                    },
+                    {
+                        "source_id": "users",
+                        "source_type": "file",
+                        "path": "/data/raw/users.json",
+                        "selected_columns": ["id", "name"]
+                    },
+                    {
+                        "source_id": "products",
+                        "source_type": "file",
+                        "path": "/data/raw/products.xml",
+                        "selected_columns": ["pid", "product_name"]
+                    }
+                ],
+                "join_strategy": "auto"
+            },
+            "save_to": "aggregated_data"
+        },
+        {
+            "step": 2,
+            "description": "Проектирование хранилища PostgreSQL",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Transactional data to PostgreSQL",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "pg_design"
+        },
+        {
+            "step": 3,
+            "description": "Подтверждение дизайна PostgreSQL",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "/design/{{pg_design.design_id}}/confirm",
+            "method": "POST",
+            "payload": {
+                "chosen_db": "postgresql"
+            }
+        },
+        {
+            "step": 4,
+            "description": "Проектирование хранилища ClickHouse",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Analytical data to ClickHouse",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "ch_design"
+        },
+        {
+            "step": 5,
+            "description": "Подтверждение дизайна ClickHouse",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "/design/{{ch_design.design_id}}/confirm",
+            "method": "POST",
+            "payload": {
+                "chosen_db": "clickhouse"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "database_table_exists",
+                "db_type": "postgresql",
+                "table": "enriched_transactions"
+            },
+            {
+                "type": "database_table_exists",
+                "db_type": "clickhouse",
+                "table": "analytics_transactions"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Aggregate multi-format data and load into different specialized databases",
+        "success_pattern": "aggregate_multi_format -> load_to_postgres -> load_to_clickhouse",
+        "key_decisions": [
+            "database_selection_for_purpose"
+        ]
+    }
+}

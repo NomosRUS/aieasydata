@@ -6,7 +6,7 @@ from datetime import datetime
 
 from ..database import get_db
 from . import schemas, main as service
-from ..shared.schemas import WarehouseDesign # Импортируем основную модель
+from ..shared.schemas import WarehouseDesign, WarehouseInstance # Импортируем основные модели
 
 router = APIRouter(
     prefix="/api/v1/warehouse",
@@ -14,6 +14,10 @@ router = APIRouter(
 )
 
 CONFIRMABLE_STATES = {"awaiting_user_confirmation"}
+
+@router.get("/health-check")
+def health_check():
+    return {"status": "healthy"}
 
 @router.post("/design", response_model=schemas.DesignStatusResponse)
 def design_warehouse(request: schemas.DesignRequest, db: Session = Depends(get_db)) -> Any:
@@ -83,6 +87,35 @@ def confirm_design_selection(
     flag_modified(db_design, 'results')
     db_design.status = "ddl_generated" if "ddl_script" in results else "ddl_error"
     db_design.selected_db = final_choice
+    
+    # ИСПРАВЛЕНИЕ: Создаем WarehouseInstance для интеграции с модулем 5
+    if "ddl_script" in results:
+        # Проверяем, существует ли уже WarehouseInstance
+        existing_instance = db.query(WarehouseInstance).filter(
+            WarehouseInstance.design_id == design_id
+        ).first()
+        
+        if not existing_instance:
+            # Извлекаем информацию о таблице из контекста
+            context = results.get("context", {})
+            data_profile = context.get("data_profile", {})
+            source_path = data_profile.get("source_path", "unknown_table")
+            
+            # Создаем безопасное имя таблицы
+            table_name = source_path.split("/")[-1].replace(".csv", "").replace(".", "_")
+            
+            warehouse_instance = WarehouseInstance(
+                design_id=design_id,
+                target_db_type=final_choice,
+                db_name="analytics",  # Стандартная схема
+                table_name=table_name,
+                ddl_script=results["ddl_script"],
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            
+            db.add(warehouse_instance)
+    
     db.commit()
     db.refresh(db_design)
 

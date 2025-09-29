@@ -1,0 +1,58 @@
+{
+    "scenario_id": "S018",
+    "name": "Database Connectivity Check",
+    "description": "Проверка подключения ко всем основным базам данных (PostgreSQL, ClickHouse)",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Проверка подключения к PostgreSQL",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "collect",
+            "method": "POST",
+            "payload": {
+                "db_type": "postgres",
+                "host": "postgres",
+                "port": 5432,
+                "db_name": "aieasydata_db",
+                "user": "admin",
+                "password": "admin"
+            },
+            "expected_response": {
+                "connection_status": "successful"
+            }
+        },
+        {
+            "step": 2,
+            "description": "Проверка подключения к ClickHouse",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "collect",
+            "method": "POST",
+            "payload": {
+                "db_type": "clickhouse",
+                "host": "clickhouse",
+                "port": 8123,
+                "db_name": "default",
+                "user": "default",
+                "password": ""
+            },
+            "expected_response": {
+                "connection_status": "successful"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify connectivity to all system databases",
+        "success_pattern": "check_postgres_connectivity -> check_clickhouse_connectivity",
+        "key_decisions": []
+    }
+}

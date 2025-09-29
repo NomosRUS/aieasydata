@@ -1,0 +1,46 @@
+{
+    "scenario_id": "M2_E001",
+    "name": "Module 2 - Health Check",
+    "category": "elementary/module2",
+    "timestamp": 1759149446,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call health-check endpoint",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "/api/v1/aggregation/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5_metrics": true,
+                        "module_4_warehouse": true,
+                        "database": false
+                    },
+                    "active_scenarios": 65,
+                    "last_execution": null,
+                    "error_details": null
+                }
+            }
+        }
+    ]
+}

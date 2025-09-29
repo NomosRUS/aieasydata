@@ -1,0 +1,41 @@
+{
+    "scenario_id": "S026",
+    "name": "Hourly Monitoring via Airflow",
+    "description": "Запускает ежечасный мониторинг хранилищ и отправляет алерты при необходимости",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 2,
+            "description": "Проверка метрик и отправка алертов",
+            "action": "module_api_call",
+            "module": 5,
+            "script": "tests/scripts/check_metrics_and_alert.py",
+            "params": {
+                "metrics": "{{ step_1_output.metrics }}",
+                "thresholds": {
+                    "query_latency_ms": 1000,
+                    "data_freshness_hours": 2
+                }
+            },
+            "expected_response": {
+                "alerts_sent": 0
+            },
+            "method": "POST"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "metrics_collected",
+                "metrics": "{{ step_1_output.metrics }}"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Monitor data warehouse performance and send alerts if thresholds are breached",
+        "success_pattern": "collect_metrics -> check_thresholds -> send_alerts",
+        "key_decisions": [
+            "monitoring_thresholds"
+        ]
+    }
+}

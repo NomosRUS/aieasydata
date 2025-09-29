@@ -1,0 +1,45 @@
+{
+    "scenario_id": "M2_E002",
+    "name": "Module 2 - Create Scenario",
+    "description": "Elementary test for creating an aggregation scenario.",
+    "category": "elementary/module2",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call create-scenario endpoint",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "/api/v1/aggregation/create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "test_scenario_{{timestamp}}",
+                "description": "Test description",
+                "sources": [
+                    {
+                        "source_id": "sales",
+                        "source_type": "file",
+                        "path": "/data/raw/sales.csv",
+                        "selected_columns": ["product_name", "price"]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": ["product_name"],
+                            "aggregates": { "avg_price": "avg(price)" }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1GB"
+                }
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

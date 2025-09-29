@@ -1,0 +1,4247 @@
+        <html>
+        <head>
+            <title>Test Report - 2025-09-28 23:25:32</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 40px; }
+                .summary { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: .25rem; padding: 20px; margin-bottom: 20px; }
+                .scenario { border: 1px solid #dee2e6; border-radius: .25rem; margin-bottom: 10px; }
+                .scenario-header { padding: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+                .passed { border-left: 5px solid #28a745; }
+                .failed { border-left: 5px solid #dc3545; }
+                .passed .scenario-header { background-color: #d4edda; }
+                .failed .scenario-header { background-color: #f8d7da; }
+                .trajectory { display: none; padding: 10px; border-top: 1px solid #dee2e6; background-color: #fff; }
+                pre { background-color: #e9ecef; padding: 10px; border-radius: .25rem; white-space: pre-wrap; word-wrap: break-word; }
+            </style>
+            <script>
+                function toggleTrajectory(element) {
+                    var content = element.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                }
+            </script>
+        </head>
+        <body>
+            <h1>Test Execution Report</h1>
+            <div class='summary'>
+                <h2>Summary</h2>
+                <p>Total Scenarios: 27</p>
+                <p>Passed: 7</p>
+                <p>Failed: 20</p>
+                <p>Pass Rate: <strong>25.93%</strong></p>
+                <p>Total Execution Time: 571.16s</p>
+            </div>
+            <h2>Scenario Details</h2>
+                    <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>External API to PostgreSQL Full Cycle</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 9 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Health-check Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5&quot;: &quot;not_checked&quot;,
+          &quot;data_landing_zone&quot;: &quot;available&quot;
+        },
+        &quot;last_check&quot;: &quot;2025-09-28T20:16:03.066960&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Автоопределение типа данных (Модуль 5)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_2_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;file_count&quot;: 0,
+        &quot;avg_file_size&quot;: 0,
+        &quot;file_types&quot;: {},
+        &quot;data_type&quot;: &quot;csv&quot;,
+        &quot;format&quot;: &quot;csv&quot;,
+        &quot;detected_type&quot;: &quot;file&quot;,
+        &quot;schema&quot;: {
+          &quot;columns&quot;: [
+            {
+              &quot;name&quot;: &quot;id&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 0
+            },
+            {
+              &quot;name&quot;: &quot;product_name&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;index&quot;: 1
+            },
+            {
+              &quot;name&quot;: &quot;category&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;index&quot;: 2
+            },
+            {
+              &quot;name&quot;: &quot;price&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 3
+            },
+            {
+              &quot;name&quot;: &quot;quantity&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 4
+            },
+            {
+              &quot;name&quot;: &quot;sale_date&quot;,
+              &quot;type&quot;: &quot;date&quot;,
+              &quot;index&quot;: 5
+            },
+            {
+              &quot;name&quot;: &quot;customer_id&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 6
+            }
+          ],
+          &quot;column_count&quot;: 7
+        },
+        &quot;separator&quot;: &quot;,&quot;,
+        &quot;encoding&quot;: &quot;utf-8&quot;,
+        &quot;detection_details&quot;: {
+          &quot;type&quot;: &quot;file&quot;,
+          &quot;file_type&quot;: &quot;csv&quot;,
+          &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+          &quot;file_size&quot;: 557,
+          &quot;file_name&quot;: &quot;sales.csv&quot;,
+          &quot;format&quot;: &quot;csv&quot;,
+          &quot;separator&quot;: &quot;,&quot;,
+          &quot;encoding&quot;: &quot;utf-8&quot;,
+          &quot;schema&quot;: {
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;id&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 0
+              },
+              {
+                &quot;name&quot;: &quot;product_name&quot;,
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;index&quot;: 1
+              },
+              {
+                &quot;name&quot;: &quot;category&quot;,
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;index&quot;: 2
+              },
+              {
+                &quot;name&quot;: &quot;price&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 3
+              },
+              {
+                &quot;name&quot;: &quot;quantity&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 4
+              },
+              {
+                &quot;name&quot;: &quot;sale_date&quot;,
+                &quot;type&quot;: &quot;date&quot;,
+                &quot;index&quot;: 5
+              },
+              {
+                &quot;name&quot;: &quot;customer_id&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 6
+              }
+            ],
+            &quot;column_count&quot;: 7
+          },
+          &quot;sample_data&quot;: [
+            [
+              &quot;1&quot;,
+              &quot;Laptop Pro&quot;,
+              &quot;Electronics&quot;,
+              &quot;1299.99&quot;,
+              &quot;2&quot;,
+              &quot;2024-01-15&quot;,
+              &quot;101&quot;
+            ],
+            [
+              &quot;2&quot;,
+              &quot;Wireless Mouse&quot;,
+              &quot;Electronics&quot;,
+              &quot;29.99&quot;,
+              &quot;5&quot;,
+              &quot;2024-01-16&quot;,
+              &quot;102&quot;
+            ],
+            [
+              &quot;3&quot;,
+              &quot;Office Chair&quot;,
+              &quot;Furniture&quot;,
+              &quot;199.99&quot;,
+              &quot;1&quot;,
+              &quot;2024-01-17&quot;,
+              &quot;103&quot;
+            ]
+          ]
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 3,
+      &quot;description&quot;: &quot;Валидация файла (Модуль 1)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_3_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;8748ed34-5d68-45de-8de4-765435c92645&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;quality_score&quot;: 0.9839999999999999,
+        &quot;issues_count&quot;: 9,
+        &quot;issues&quot;: [
+          {
+            &quot;issue_id&quot;: &quot;e240b2a7-b094-4449-80c0-9f403dacec68&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 2,
+            &quot;percentage&quot;: 20.0,
+            &quot;description&quot;: &quot;Колонка &#x27;price&#x27; содержит 2 потенциальных выбросов (20.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;d7982193-6e6f-453f-9b63-fa5b612a060d&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 10.0,
+            &quot;description&quot;: &quot;Колонка &#x27;quantity&#x27; содержит 1 потенциальных выбросов (10.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;multivariate_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;multivariate&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Многомерная аномалия в строке 0: необычная комбинация значений&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          }
+        ],
+        &quot;recommendations_count&quot;: 1,
+        &quot;processing_time_ms&quot;: 30710.355
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 4,
+      &quot;description&quot;: &quot;Создание сценария агрегации (Модуль 2)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;sales_aggregation_test_{{timestamp}}&quot;,
+        &quot;description&quot;: &quot;Test aggregation scenario&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_csv&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales.csv&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;category&quot;,
+              &quot;region&quot;,
+              &quot;amount&quot;,
+              &quot;quantity&quot;
+            ]
+          }
+        ],
+        &quot;aggregations&quot;: [
+          {
+            &quot;type&quot;: &quot;group_by&quot;,
+            &quot;parameters&quot;: {
+              &quot;columns&quot;: [
+                &quot;category&quot;,
+                &quot;region&quot;
+              ],
+              &quot;aggregates&quot;: {
+                &quot;total_amount&quot;: &quot;sum(amount)&quot;,
+                &quot;transaction_count&quot;: &quot;count(quantity)&quot;
+              }
+            }
+          }
+        ],
+        &quot;target_requirements&quot;: {
+          &quot;expected_volume&quot;: &quot;&lt;1GB&quot;,
+          &quot;refresh_interval&quot;: &quot;daily&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_4_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;scenario_id&quot;: &quot;77&quot;,
+        &quot;name&quot;: &quot;sales_aggregation_test_1759090594&quot;,
+        &quot;description&quot;: &quot;Test aggregation scenario&quot;,
+        &quot;status&quot;: &quot;validated&quot;,
+        &quot;sources_analysis&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_csv&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;columns&quot;: [],
+            &quot;row_count&quot;: 0,
+            &quot;data_size_bytes&quot;: null,
+            &quot;sample_data&quot;: [],
+            &quot;compatibility_issues&quot;: []
+          }
+        ],
+        &quot;estimated_output_size&quot;: 1000,
+        &quot;recommended_engine&quot;: &quot;postgres&quot;,
+        &quot;validation_errors&quot;: [],
+        &quot;created_at&quot;: &quot;2025-09-28T20:16:35.660104&quot;,
+        &quot;last_modified&quot;: &quot;2025-09-28T20:16:35.660107&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 5,
+      &quot;description&quot;: &quot;Анализ производительности (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_5_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250928_201636_054226&quot;,
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-28T20:16:36.055000&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-28T20:16:37.148946&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 6,
+      &quot;description&quot;: &quot;Поиск существующего профиля данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 0,
+      &quot;endpoint&quot;: &quot;/api/data-inventory&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_6_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;total_count&quot;: 5,
+        &quot;data&quot;: [
+          {
+            &quot;id&quot;: 10,
+            &quot;kind&quot;: null,
+            &quot;source_path&quot;: &quot;{{ step_1_output.output_path }}&quot;,
+            &quot;total_row_count&quot;: null,
+            &quot;file_count&quot;: null,
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;dt&quot;,
+                &quot;type&quot;: &quot;Date&quot;
+              },
+              {
+                &quot;name&quot;: &quot;amount&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              }
+            ],
+            &quot;sample_data&quot;: null,
+            &quot;llm_summary&quot;: null,
+            &quot;error&quot;: null,
+            &quot;created_at&quot;: &quot;2025-09-28T16:56:44.213791&quot;,
+            &quot;updated_at&quot;: &quot;2025-09-28T16:56:44.213797&quot;
+          },
+          {
+            &quot;id&quot;: 8,
+            &quot;kind&quot;: null,
+            &quot;source_path&quot;: &quot;/data/raw/sales_hdfs.csv&quot;,
+            &quot;total_row_count&quot;: null,
+            &quot;file_count&quot;: null,
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;transaction_id&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;timestamp&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;user_id&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;session_id&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;event_type&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;product_category&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;revenue&quot;,
+                &quot;type&quot;: &quot;Float64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;country&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;device_type&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;channel&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              }
+            ],
+            &quot;sample_data&quot;: null,
+            &quot;llm_summary&quot;: null,
+            &quot;error&quot;: null,
+            &quot;created_at&quot;: &quot;2025-09-25T14:44:37.910738&quot;,
+            &quot;updated_at&quot;: &quot;2025-09-25T14:44:37.910742&quot;
+          },
+          {
+            &quot;id&quot;: 7,
+            &quot;kind&quot;: null,
+            &quot;source_path&quot;: &quot;/data/raw/sales_postgres.csv&quot;,
+            &quot;total_row_count&quot;: null,
+            &quot;file_count&quot;: null,
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;id&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;customer_id&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;product_name&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;category&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;price&quot;,
+                &quot;type&quot;: &quot;Float64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;quantity&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;sale_date&quot;,
+                &quot;type&quot;: &quot;Date&quot;
+              },
+              {
+                &quot;name&quot;: &quot;payment_method&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;store_location&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              }
+            ],
+            &quot;sample_data&quot;: null,
+            &quot;llm_summary&quot;: null,
+            &quot;error&quot;: null,
+            &quot;created_at&quot;: &quot;2025-09-25T14:42:07.483773&quot;,
+            &quot;updated_at&quot;: &quot;2025-09-25T14:42:07.483794&quot;
+          },
+          {
+            &quot;id&quot;: 6,
+            &quot;kind&quot;: null,
+            &quot;source_path&quot;: &quot;/data/raw/sales_extended.csv&quot;,
+            &quot;total_row_count&quot;: null,
+            &quot;file_count&quot;: null,
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;id&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;product_name&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;category&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              },
+              {
+                &quot;name&quot;: &quot;price&quot;,
+                &quot;type&quot;: &quot;Float64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;quantity&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;sale_date&quot;,
+                &quot;type&quot;: &quot;Date&quot;
+              },
+              {
+                &quot;name&quot;: &quot;customer_id&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;is_premium&quot;,
+                &quot;type&quot;: &quot;Boolean&quot;
+              },
+              {
+                &quot;name&quot;: &quot;discount_rate&quot;,
+                &quot;type&quot;: &quot;Float64&quot;
+              },
+              {
+                &quot;name&quot;: &quot;region&quot;,
+                &quot;type&quot;: &quot;String&quot;
+              }
+            ],
+            &quot;sample_data&quot;: null,
+            &quot;llm_summary&quot;: null,
+            &quot;error&quot;: null,
+            &quot;created_at&quot;: &quot;2025-09-25T14:32:16.249354&quot;,
+            &quot;updated_at&quot;: &quot;2025-09-25T14:32:16.249360&quot;
+          },
+          {
+            &quot;id&quot;: 1,
+            &quot;kind&quot;: null,
+            &quot;source_path&quot;: &quot;/data/raw/sales.csv&quot;,
+            &quot;total_row_count&quot;: null,
+            &quot;file_count&quot;: null,
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;dt&quot;,
+                &quot;type&quot;: &quot;Date&quot;
+              },
+              {
+                &quot;name&quot;: &quot;amount&quot;,
+                &quot;type&quot;: &quot;Int64&quot;
+              }
+            ],
+            &quot;sample_data&quot;: null,
+            &quot;llm_summary&quot;: null,
+            &quot;error&quot;: null,
+            &quot;created_at&quot;: &quot;2025-09-25T13:34:05.487325&quot;,
+            &quot;updated_at&quot;: &quot;2025-09-25T13:34:05.487330&quot;
+          }
+        ]
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 8,
+      &quot;description&quot;: &quot;Проектирование хранилища (Модуль 4)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;design&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_profile_id&quot;: &quot;1&quot;,
+        &quot;business_requirements&quot;: &quot;OLAP cube for sales analysis&quot;,
+        &quot;analytics_requirements&quot;: {},
+        &quot;constraints&quot;: {}
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_8_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;design_id&quot;: &quot;bf3e2501-ee2a-4e40-905c-7eac6680ad34&quot;,
+        &quot;status&quot;: &quot;awaiting_user_confirmation&quot;,
+        &quot;results&quot;: {
+          &quot;context&quot;: {
+            &quot;data_profile&quot;: {
+              &quot;id&quot;: 1,
+              &quot;source_path&quot;: &quot;/data/raw/sales.csv&quot;,
+              &quot;kind&quot;: null,
+              &quot;total_row_count&quot;: null,
+              &quot;file_count&quot;: null,
+              &quot;columns&quot;: [
+                {
+                  &quot;name&quot;: &quot;dt&quot;,
+                  &quot;type&quot;: &quot;Date&quot;
+                },
+                {
+                  &quot;name&quot;: &quot;amount&quot;,
+                  &quot;type&quot;: &quot;Int64&quot;
+                }
+              ],
+              &quot;sample_data&quot;: null,
+              &quot;llm_summary&quot;: null,
+              &quot;error&quot;: null,
+              &quot;created_at&quot;: &quot;2025-09-25T13:34:05.487325&quot;,
+              &quot;updated_at&quot;: &quot;2025-09-25T13:34:05.487330&quot;
+            },
+            &quot;optimization_recommendations&quot;: [
+              {
+                &quot;id&quot;: 1,
+                &quot;table_name&quot;: &quot;/data/raw/sales.csv&quot;,
+                &quot;recommendation_type&quot;: &quot;partition&quot;,
+                &quot;recommendation_details&quot;: {
+                  &quot;partition_by&quot;: &quot;toYYYYMM(dt)&quot;
+                },
+                &quot;created_at&quot;: null,
+                &quot;updated_at&quot;: null
+              }
+            ],
+            &quot;request&quot;: {
+              &quot;source_profile_id&quot;: 1,
+              &quot;business_requirements&quot;: &quot;OLAP cube for sales analysis&quot;,
+              &quot;analytics_requirements&quot;: {},
+              &quot;constraints&quot;: {}
+            }
+          },
+          &quot;heuristic_decision&quot;: {
+            &quot;candidate&quot;: &quot;postgres&quot;,
+            &quot;scores&quot;: {
+              &quot;clickhouse&quot;: 0,
+              &quot;postgres&quot;: 1,
+              &quot;hdfs&quot;: 0
+            },
+            &quot;reasons&quot;: [
+              &quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.&quot;
+            ],
+            &quot;evaluated_facts&quot;: {
+              &quot;total_row_count&quot;: 0,
+              &quot;quality_score&quot;: null,
+              &quot;aggregation_types&quot;: [],
+              &quot;analytics_requirements&quot;: {},
+              &quot;constraints&quot;: {}
+            }
+          },
+          &quot;llm_analysis&quot;: {
+            &quot;final_choice&quot;: &quot;postgres&quot;,
+            &quot;summary&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+            &quot;critical_arguments&quot;: [
+              &quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.&quot;
+            ],
+            &quot;confidence&quot;: &quot;средняя&quot;,
+            &quot;notes&quot;: &quot;Ответ LLM не в формате JSON; использовано содержание как есть.&quot;,
+            &quot;debug_log&quot;: {
+              &quot;base_url&quot;: &quot;https://api.openai.com/v1/&quot;,
+              &quot;model&quot;: &quot;gpt-4o-mini&quot;,
+              &quot;prompt&quot;: &quot;Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \&quot;context\&quot;: {\n    \&quot;data_profile\&quot;: {\n      \&quot;id\&quot;: 1,\n      \&quot;source_path\&quot;: \&quot;/data/raw/sales.csv\&quot;,\n      \&quot;kind\&quot;: null,\n      \&quot;total_row_count\&quot;: null,\n      \&quot;file_count\&quot;: null,\n      \&quot;columns\&quot;: [\n        {\n          \&quot;name\&quot;: \&quot;dt\&quot;,\n          \&quot;type\&quot;: \&quot;Date\&quot;\n        },\n        {\n          \&quot;name\&quot;: \&quot;amount\&quot;,\n          \&quot;type\&quot;: \&quot;Int64\&quot;\n        }\n      ],\n      \&quot;sample_data\&quot;: null,\n      \&quot;llm_summary\&quot;: null,\n      \&quot;error\&quot;: null,\n      \&quot;created_at\&quot;: \&quot;2025-09-25T13:34:05.487325\&quot;,\n      \&quot;updated_at\&quot;: \&quot;2025-09-25T13:34:05.487330\&quot;\n    },\n    \&quot;optimization_recommendations\&quot;: [\n      {\n        \&quot;id\&quot;: 1,\n        \&quot;table_name\&quot;: \&quot;/data/raw/sales.csv\&quot;,\n        \&quot;recommendation_type\&quot;: \&quot;partition\&quot;,\n        \&quot;recommendation_details\&quot;: {\n          \&quot;partition_by\&quot;: \&quot;toYYYYMM(dt)\&quot;\n        },\n        \&quot;created_at\&quot;: null,\n        \&quot;updated_at\&quot;: null\n      }\n    ],\n    \&quot;request\&quot;: {\n      \&quot;source_profile_id\&quot;: 1,\n      \&quot;business_requirements\&quot;: \&quot;OLAP cube for sales analysis\&quot;,\n      \&quot;analytics_requirements\&quot;: {},\n      \&quot;constraints\&quot;: {}\n    }\n  },\n  \&quot;heuristic\&quot;: {\n    \&quot;candidate\&quot;: \&quot;postgres\&quot;,\n    \&quot;scores\&quot;: {\n      \&quot;clickhouse\&quot;: 0,\n      \&quot;postgres\&quot;: 1,\n      \&quot;hdfs\&quot;: 0\n    },\n    \&quot;reasons\&quot;: [\n      \&quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\&quot;\n    ],\n    \&quot;evaluated_facts\&quot;: {\n      \&quot;total_row_count\&quot;: 0,\n      \&quot;quality_score\&quot;: null,\n      \&quot;aggregation_types\&quot;: [],\n      \&quot;analytics_requirements\&quot;: {},\n      \&quot;constraints\&quot;: {}\n    }\n  }\n}&quot;,
+              &quot;response&quot;: null,
+              &quot;error&quot;: &quot;Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 9,
+      &quot;description&quot;: &quot;Подтверждение дизайна хранилища (Модуль 4)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;/design/{{step_8_output.design_id}}/confirm&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;chosen_db&quot;: &quot;clickhouse&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_9_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Design with id {{step_8_output.design_id}} not found.\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Daily ETL via Airflow</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Генерация Airflow DAG для ежедневного ETL&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 0,
+      &quot;endpoint&quot;: &quot;/dag/compile&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;daily_sales_etl_{{timestamp}}&quot;,
+        &quot;schedule&quot;: &quot;@daily&quot;,
+        &quot;source&quot;: {
+          &quot;type&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;/data/raw/sales.csv&quot;
+        },
+        &quot;target&quot;: {
+          &quot;type&quot;: &quot;clickhouse&quot;,
+          &quot;table&quot;: &quot;daily_sales_etl&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;dag_path&quot;: &quot;/airflow_dags/generated_daily_sales_etl_1759090606.py&quot;,
+        &quot;message&quot;: &quot;DAG generated. Open Airflow UI to trigger.&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Запуск сгенерированного Airflow DAG&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 0,
+      &quot;endpoint&quot;: &quot;/api/trigger-dag/{{ step_1_output.dag_id }}&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;message&quot;: &quot;DAG triggered successfully&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 60,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 502,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Failed to trigger DAG &#x27;{{ step_1_output.dag_id }}&#x27;. Could not connect to Airflow: DAG with dag_id: &#x27;{{ step_1_output.dag_id }}&#x27; not found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Weekly Optimization via Airflow</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Анализ производительности хранилища (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/warehouses/sales_data&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250928_201655_731706&quot;,
+        &quot;source&quot;: &quot;/data/warehouses/sales_data&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-28T20:16:55.731781&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-28T20:16:56.368713&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Hourly Monitoring via Airflow</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка метрик и отправка алертов&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;metrics&quot;: &quot;{{ step_1_output.metrics }}&quot;,
+        &quot;thresholds&quot;: {
+          &quot;query_latency_ms&quot;: 1000,
+          &quot;data_freshness_hours&quot;: 2
+        }
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;alerts_sent&quot;: 0
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;Module None not configured&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Airflow Parallel DAGs Execution</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Одновременный запуск трех DAG&#x27;ов&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;Module None not configured&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Airflow Dynamic DAG Creation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание нового источника данных (например, новая таблица в БД)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;Module None not configured&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>External API to ClickHouse</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 6 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Health-check Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5&quot;: &quot;not_checked&quot;,
+          &quot;data_landing_zone&quot;: &quot;available&quot;
+        },
+        &quot;last_check&quot;: &quot;2025-09-28T20:16:56.754284&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Автоопределение типа данных (Модуль 5)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;https://jsonplaceholder.typicode.com/posts&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_2_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;error&quot;: &quot;Unsupported data type: url&quot;,
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;file_count&quot;: 0,
+        &quot;data_type&quot;: &quot;url&quot;,
+        &quot;format&quot;: null,
+        &quot;detected_type&quot;: &quot;url&quot;,
+        &quot;schema&quot;: null,
+        &quot;separator&quot;: null,
+        &quot;encoding&quot;: null,
+        &quot;detection_details&quot;: {
+          &quot;type&quot;: &quot;url&quot;,
+          &quot;source&quot;: &quot;https://jsonplaceholder.typicode.com/posts&quot;,
+          &quot;url_type&quot;: &quot;web&quot;
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 3,
+      &quot;description&quot;: &quot;Валидация загруженных данных (Модуль 1)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;https://jsonplaceholder.typicode.com/posts&quot;,
+        &quot;validation_options&quot;: {
+          &quot;check_duplicates&quot;: true,
+          &quot;assess_quality&quot;: true
+        }
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_3_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;952134d3-514f-418d-8256-0b1a56fd128c&quot;,
+        &quot;status&quot;: &quot;failed&quot;,
+        &quot;quality_score&quot;: 0.0,
+        &quot;issues_count&quot;: 0,
+        &quot;issues&quot;: [],
+        &quot;recommendations_count&quot;: 0,
+        &quot;processing_time_ms&quot;: 0
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 4,
+      &quot;description&quot;: &quot;Создание сценария агрегации (Модуль 2)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;posts_aggregation_test_{{timestamp}}&quot;,
+        &quot;description&quot;: &quot;Test aggregation scenario for posts data&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;posts_api&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;https://jsonplaceholder.typicode.com/posts&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;userId&quot;,
+              &quot;id&quot;,
+              &quot;title&quot;,
+              &quot;body&quot;
+            ]
+          }
+        ],
+        &quot;aggregations&quot;: [
+          {
+            &quot;type&quot;: &quot;group_by&quot;,
+            &quot;parameters&quot;: {
+              &quot;columns&quot;: [
+                &quot;userId&quot;
+              ],
+              &quot;aggregates&quot;: {
+                &quot;post_count&quot;: &quot;count(id)&quot;,
+                &quot;avg_title_length&quot;: &quot;avg(len(title))&quot;
+              }
+            }
+          }
+        ],
+        &quot;target_requirements&quot;: {
+          &quot;expected_volume&quot;: &quot;&lt;1GB&quot;,
+          &quot;refresh_interval&quot;: &quot;hourly&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_4_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;scenario_id&quot;: &quot;78&quot;,
+        &quot;name&quot;: &quot;posts_aggregation_test_1759090617&quot;,
+        &quot;description&quot;: &quot;Test aggregation scenario for posts data&quot;,
+        &quot;status&quot;: &quot;validated&quot;,
+        &quot;sources_analysis&quot;: [
+          {
+            &quot;source_id&quot;: &quot;posts_api&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;columns&quot;: [],
+            &quot;row_count&quot;: 0,
+            &quot;data_size_bytes&quot;: null,
+            &quot;sample_data&quot;: [],
+            &quot;compatibility_issues&quot;: []
+          }
+        ],
+        &quot;estimated_output_size&quot;: 1000,
+        &quot;recommended_engine&quot;: &quot;postgres&quot;,
+        &quot;validation_errors&quot;: [],
+        &quot;created_at&quot;: &quot;2025-09-28T20:16:57.969936&quot;,
+        &quot;last_modified&quot;: &quot;2025-09-28T20:16:57.969938&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 5,
+      &quot;description&quot;: &quot;Анализ производительности (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;https://jsonplaceholder.typicode.com/posts&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_5_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250928_201658_371845&quot;,
+        &quot;source&quot;: &quot;https://jsonplaceholder.typicode.com/posts&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-28T20:16:58.371886&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-28T20:16:59.070655&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 6,
+      &quot;description&quot;: &quot;Поиск существующего профиля данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 0,
+      &quot;endpoint&quot;: &quot;data-inventory&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_6_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Filesystem to HDFS</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Health-check Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5&quot;: &quot;not_checked&quot;,
+          &quot;data_landing_zone&quot;: &quot;available&quot;
+        },
+        &quot;last_check&quot;: &quot;2025-09-28T20:17:06.993219&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Автоопределение типа данных из файловой системы (Модуль 5)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/syn_csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_2_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 500,
+      &quot;details&quot;: &quot;Internal Server Error&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Full Batch Processing Cycle</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Пакетная валидация нескольких файлов&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;batch-validate&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_part1&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales_part1.csv&quot;
+          },
+          {
+            &quot;source_id&quot;: &quot;sales_part2&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales_part2.csv&quot;
+          }
+        ]
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;validation_result&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;batch_results&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_part1&quot;,
+            &quot;validation_id&quot;: &quot;5d4af74f-da49-45b9-aa0d-6a6714d826d8&quot;,
+            &quot;status&quot;: &quot;failed&quot;,
+            &quot;quality_score&quot;: 0.0,
+            &quot;issues_count&quot;: 0,
+            &quot;recommendations_count&quot;: 0,
+            &quot;error&quot;: &quot;Не удалось загрузить данные из источника&quot;
+          },
+          {
+            &quot;source_id&quot;: &quot;sales_part2&quot;,
+            &quot;validation_id&quot;: &quot;49b1f50f-b3c2-4d92-b3de-90e521778c77&quot;,
+            &quot;status&quot;: &quot;failed&quot;,
+            &quot;quality_score&quot;: 0.0,
+            &quot;issues_count&quot;: 0,
+            &quot;recommendations_count&quot;: 0,
+            &quot;error&quot;: &quot;Не удалось загрузить данные из источника&quot;
+          }
+        ],
+        &quot;summary&quot;: {
+          &quot;total_sources&quot;: 2,
+          &quot;successful_validations&quot;: 0,
+          &quot;failed_validations&quot;: 2,
+          &quot;average_quality_score&quot;: 0.0
+        },
+        &quot;processed_at&quot;: &quot;2025-09-28T20:21:17.544861&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Агрегация очищенных данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;custom-dataset&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;sources&quot;: &quot;{{ cleaned_data.output_paths }}&quot;,
+        &quot;aggregation_logic&quot;: {
+          &quot;type&quot;: &quot;union&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;aggregated_data&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 422,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:[{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;dataset_name\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;sources\&quot;:\&quot;{{ cleaned_data.output_paths }}\&quot;,\&quot;aggregation_logic\&quot;:{\&quot;type\&quot;:\&quot;union\&quot;}}},{\&quot;type\&quot;:\&quot;list_type\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;sources\&quot;],\&quot;msg\&quot;:\&quot;Input should be a valid list\&quot;,\&quot;input\&quot;:\&quot;{{ cleaned_data.output_paths }}\&quot;}]}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Real-time Validation and Monitoring</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка, что метрики качества были обновлены в Module 5&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;query&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;query&quot;: &quot;SELECT COUNT(*) as count FROM quality_metrics WHERE source = &#x27;payment_gateway&#x27; AND last_hour = true&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Multi-format Aggregation to Multi-DB</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Агрегация CSV, JSON и XML данных в Module 2&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;custom-dataset&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;dataset_name&quot;: &quot;multi_format_join&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;transactions&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/transactions.csv&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;transaction_id&quot;,
+              &quot;user_id&quot;,
+              &quot;product_id&quot;
+            ]
+          },
+          {
+            &quot;source_id&quot;: &quot;users&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/users.json&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;id&quot;,
+              &quot;name&quot;
+            ]
+          },
+          {
+            &quot;source_id&quot;: &quot;products&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/products.xml&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;pid&quot;,
+              &quot;product_name&quot;
+            ]
+          }
+        ],
+        &quot;join_strategy&quot;: &quot;auto&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;aggregated_data&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;success&quot;: false,
+        &quot;error&quot;: &quot;No data sources could be loaded&quot;,
+        &quot;details&quot;: &quot;All data sources failed to load&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проектирование и загрузка в PostgreSQL для транзакционных данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;design-and-confirm&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_data&quot;: &quot;{{ aggregated_data.output_path }}&quot;,
+        &quot;target_db&quot;: &quot;postgresql&quot;,
+        &quot;table_name&quot;: &quot;enriched_transactions&quot;,
+        &quot;columns&quot;: [
+          &quot;transaction_id&quot;,
+          &quot;amount&quot;,
+          &quot;user_name&quot;,
+          &quot;product_name&quot;
+        ]
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 1 to Module 2 Format Validation</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Валидация и очистка тестовых данных (Модуль 1)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;128cbc72-1522-42e7-9eb7-8132e446aec2&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;quality_score&quot;: 0.9839999999999999,
+        &quot;issues_count&quot;: 9,
+        &quot;issues&quot;: [
+          {
+            &quot;issue_id&quot;: &quot;afdb1c3f-8362-424c-ae62-47a2a9b66691&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 2,
+            &quot;percentage&quot;: 20.0,
+            &quot;description&quot;: &quot;Колонка &#x27;price&#x27; содержит 2 потенциальных выбросов (20.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;9eb571f4-2cb6-4842-a9b5-49254565aeb4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 10.0,
+            &quot;description&quot;: &quot;Колонка &#x27;quantity&#x27; содержит 1 потенциальных выбросов (10.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;multivariate_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;multivariate&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Многомерная аномалия в строке 0: необычная комбинация значений&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          }
+        ],
+        &quot;recommendations_count&quot;: 1,
+        &quot;processing_time_ms&quot;: 30574.759000000002
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Передача очищенных данных в модуль агрегации (Модуль 2)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;format_validation_test_{{timestamp}}&quot;,
+        &quot;description&quot;: &quot;Test format validation from M1 to M2&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;cleaned_data_from_m1&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;{{ step_1_output.cleaned_data_path }}&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;dt&quot;,
+              &quot;amount&quot;
+            ]
+          }
+        ],
+        &quot;aggregations&quot;: [
+          {
+            &quot;type&quot;: &quot;group_by&quot;,
+            &quot;parameters&quot;: {
+              &quot;columns&quot;: [
+                &quot;dt&quot;
+              ],
+              &quot;aggregates&quot;: {
+                &quot;total_amount&quot;: &quot;sum(amount)&quot;
+              }
+            }
+          }
+        ],
+        &quot;target_requirements&quot;: {
+          &quot;expected_volume&quot;: &quot;&lt;1MB&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_2_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;scenario_id&quot;: &quot;83&quot;,
+        &quot;name&quot;: &quot;format_validation_test_1759090939&quot;,
+        &quot;description&quot;: &quot;Test format validation from M1 to M2&quot;,
+        &quot;status&quot;: &quot;validated&quot;,
+        &quot;sources_analysis&quot;: [
+          {
+            &quot;source_id&quot;: &quot;cleaned_data_from_m1&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;columns&quot;: [],
+            &quot;row_count&quot;: 0,
+            &quot;data_size_bytes&quot;: null,
+            &quot;sample_data&quot;: [],
+            &quot;compatibility_issues&quot;: []
+          }
+        ],
+        &quot;estimated_output_size&quot;: 1000,
+        &quot;recommended_engine&quot;: &quot;postgres&quot;,
+        &quot;validation_errors&quot;: [],
+        &quot;created_at&quot;: &quot;2025-09-28T20:22:19.863581&quot;,
+        &quot;last_modified&quot;: &quot;2025-09-28T20:22:19.863584&quot;
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 1 to Module 2 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Валидация и очистка тестовых данных (Модуль 1)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;validation_options&quot;: {
+          &quot;check_duplicates&quot;: true,
+          &quot;assess_quality&quot;: true
+        }
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;babf7bdb-1a71-48f9-8395-4ddb6c5df4f0&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;quality_score&quot;: 0.9839999999999999,
+        &quot;issues_count&quot;: 9,
+        &quot;issues&quot;: [
+          {
+            &quot;issue_id&quot;: &quot;e564c098-de46-4d54-b9a7-f875a1d5912b&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 2,
+            &quot;percentage&quot;: 20.0,
+            &quot;description&quot;: &quot;Колонка &#x27;price&#x27; содержит 2 потенциальных выбросов (20.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;f5b7245d-d28e-4c1f-91ad-7df9729370ad&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 10.0,
+            &quot;description&quot;: &quot;Колонка &#x27;quantity&#x27; содержит 1 потенциальных выбросов (10.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;multivariate_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;multivariate&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Многомерная аномалия в строке 0: необычная комбинация значений&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          }
+        ],
+        &quot;recommendations_count&quot;: 1,
+        &quot;processing_time_ms&quot;: 30194.393
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка формата очищенных данных&quot;,
+      &quot;action&quot;: &quot;format_validation&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: null,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: &quot;step_1_output.cleaned_data_path&quot;,
+      &quot;expected_schema&quot;: {
+        &quot;format&quot;: &quot;parquet&quot;,
+        &quot;columns&quot;: [
+          &quot;id&quot;,
+          &quot;name&quot;,
+          &quot;email&quot;,
+          &quot;amount&quot;
+        ],
+        &quot;metadata&quot;: {
+          &quot;quality_score&quot;: &quot;number&quot;,
+          &quot;cleaning_applied&quot;: &quot;array&quot;
+        }
+      },
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;File not found: step_1_output.cleaned_data_path&quot;,
+      &quot;data&quot;: {
+        &quot;success&quot;: false,
+        &quot;error&quot;: &quot;File not found: step_1_output.cleaned_data_path&quot;
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 2 to Module 4 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание сценария агрегации (Модуль 2)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;format_validation_m2_m4_{{timestamp}}&quot;,
+        &quot;description&quot;: &quot;Test format validation from M2 to M4&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;source_data&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales.csv&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;category&quot;,
+              &quot;region&quot;,
+              &quot;amount&quot;,
+              &quot;quantity&quot;
+            ]
+          }
+        ],
+        &quot;aggregations&quot;: [
+          {
+            &quot;type&quot;: &quot;group_by&quot;,
+            &quot;parameters&quot;: {
+              &quot;columns&quot;: [
+                &quot;category&quot;,
+                &quot;region&quot;
+              ],
+              &quot;aggregates&quot;: {
+                &quot;total_amount&quot;: &quot;sum(amount)&quot;,
+                &quot;transaction_count&quot;: &quot;count(quantity)&quot;
+              }
+            }
+          }
+        ],
+        &quot;target_requirements&quot;: {
+          &quot;expected_volume&quot;: &quot;&lt;1GB&quot;,
+          &quot;refresh_interval&quot;: &quot;daily&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;scenario_id&quot;: &quot;84&quot;,
+        &quot;name&quot;: &quot;format_validation_m2_m4_1759090970&quot;,
+        &quot;description&quot;: &quot;Test format validation from M2 to M4&quot;,
+        &quot;status&quot;: &quot;validated&quot;,
+        &quot;sources_analysis&quot;: [
+          {
+            &quot;source_id&quot;: &quot;source_data&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;columns&quot;: [],
+            &quot;row_count&quot;: 0,
+            &quot;data_size_bytes&quot;: null,
+            &quot;sample_data&quot;: [],
+            &quot;compatibility_issues&quot;: []
+          }
+        ],
+        &quot;estimated_output_size&quot;: 1000,
+        &quot;recommended_engine&quot;: &quot;postgres&quot;,
+        &quot;validation_errors&quot;: [],
+        &quot;created_at&quot;: &quot;2025-09-28T20:22:51.015172&quot;,
+        &quot;last_modified&quot;: &quot;2025-09-28T20:22:51.015176&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка формата агрегированных данных&quot;,
+      &quot;action&quot;: &quot;format_validation&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: null,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: &quot;step_1_output.output_path&quot;,
+      &quot;expected_schema&quot;: {
+        &quot;format&quot;: &quot;parquet&quot;,
+        &quot;columns&quot;: [
+          &quot;category&quot;,
+          &quot;region&quot;,
+          &quot;total_amount&quot;,
+          &quot;transaction_count&quot;
+        ],
+        &quot;metadata&quot;: {
+          &quot;aggregation_applied&quot;: &quot;array&quot;,
+          &quot;group_by_columns&quot;: &quot;array&quot;
+        }
+      },
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;File not found: step_1_output.output_path&quot;,
+      &quot;data&quot;: {
+        &quot;success&quot;: false,
+        &quot;error&quot;: &quot;File not found: step_1_output.output_path&quot;
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 3 to Module 4 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Анализ производительности (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250928_202251_458299&quot;,
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-28T20:22:51.460400&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-28T20:22:52.276552&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка формата рекомендаций оптимизации&quot;,
+      &quot;action&quot;: &quot;format_validation&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: null,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: &quot;step_1_output.recommendations&quot;,
+      &quot;expected_schema&quot;: {
+        &quot;format&quot;: &quot;json&quot;,
+        &quot;structure&quot;: {
+          &quot;optimization_type&quot;: &quot;string&quot;,
+          &quot;table_name&quot;: &quot;string&quot;,
+          &quot;recommendations&quot;: &quot;array&quot;,
+          &quot;estimated_improvement&quot;: &quot;number&quot;
+        }
+      },
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;File not found: []&quot;,
+      &quot;data&quot;: {
+        &quot;success&quot;: false,
+        &quot;error&quot;: &quot;File not found: []&quot;
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 5 to Module 1 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Сбор метрик по файлу через Module 5&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;metrics_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;file_count&quot;: 0,
+        &quot;avg_file_size&quot;: 0,
+        &quot;file_types&quot;: {},
+        &quot;data_type&quot;: &quot;csv&quot;,
+        &quot;format&quot;: &quot;csv&quot;,
+        &quot;detected_type&quot;: &quot;file&quot;,
+        &quot;schema&quot;: {
+          &quot;columns&quot;: [
+            {
+              &quot;name&quot;: &quot;id&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 0
+            },
+            {
+              &quot;name&quot;: &quot;product_name&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;index&quot;: 1
+            },
+            {
+              &quot;name&quot;: &quot;category&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;index&quot;: 2
+            },
+            {
+              &quot;name&quot;: &quot;price&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 3
+            },
+            {
+              &quot;name&quot;: &quot;quantity&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 4
+            },
+            {
+              &quot;name&quot;: &quot;sale_date&quot;,
+              &quot;type&quot;: &quot;date&quot;,
+              &quot;index&quot;: 5
+            },
+            {
+              &quot;name&quot;: &quot;customer_id&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 6
+            }
+          ],
+          &quot;column_count&quot;: 7
+        },
+        &quot;separator&quot;: &quot;,&quot;,
+        &quot;encoding&quot;: &quot;utf-8&quot;,
+        &quot;detection_details&quot;: {
+          &quot;type&quot;: &quot;file&quot;,
+          &quot;file_type&quot;: &quot;csv&quot;,
+          &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+          &quot;file_size&quot;: 557,
+          &quot;file_name&quot;: &quot;sales.csv&quot;,
+          &quot;format&quot;: &quot;csv&quot;,
+          &quot;separator&quot;: &quot;,&quot;,
+          &quot;encoding&quot;: &quot;utf-8&quot;,
+          &quot;schema&quot;: {
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;id&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 0
+              },
+              {
+                &quot;name&quot;: &quot;product_name&quot;,
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;index&quot;: 1
+              },
+              {
+                &quot;name&quot;: &quot;category&quot;,
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;index&quot;: 2
+              },
+              {
+                &quot;name&quot;: &quot;price&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 3
+              },
+              {
+                &quot;name&quot;: &quot;quantity&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 4
+              },
+              {
+                &quot;name&quot;: &quot;sale_date&quot;,
+                &quot;type&quot;: &quot;date&quot;,
+                &quot;index&quot;: 5
+              },
+              {
+                &quot;name&quot;: &quot;customer_id&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 6
+              }
+            ],
+            &quot;column_count&quot;: 7
+          },
+          &quot;sample_data&quot;: [
+            [
+              &quot;1&quot;,
+              &quot;Laptop Pro&quot;,
+              &quot;Electronics&quot;,
+              &quot;1299.99&quot;,
+              &quot;2&quot;,
+              &quot;2024-01-15&quot;,
+              &quot;101&quot;
+            ],
+            [
+              &quot;2&quot;,
+              &quot;Wireless Mouse&quot;,
+              &quot;Electronics&quot;,
+              &quot;29.99&quot;,
+              &quot;5&quot;,
+              &quot;2024-01-16&quot;,
+              &quot;102&quot;
+            ],
+            [
+              &quot;3&quot;,
+              &quot;Office Chair&quot;,
+              &quot;Furniture&quot;,
+              &quot;199.99&quot;,
+              &quot;1&quot;,
+              &quot;2024-01-17&quot;,
+              &quot;103&quot;
+            ]
+          ]
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Передача метрик в Module 1 для создания профиля валидации&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;create-profile-from-metrics&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;data&quot;: &quot;{{ metrics_output }}&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;profile_created&quot;: true
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 4 to Module 5 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание тестового хранилища в PostgreSQL через Module 4&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;design-and-confirm&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_data&quot;: &quot;/data/raw/users.json&quot;,
+        &quot;target_db&quot;: &quot;postgresql&quot;,
+        &quot;table_name&quot;: &quot;test_users_for_m5&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;warehouse_info&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Full Chain Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;M5: Профилирование исходных данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step1_out&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 405,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Method Not Allowed\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Error Format Handling</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Передача поврежденного JSON в Module 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/broken_data.json&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;bdb5a6c5-563a-417f-8013-cfd1fc9830bf&quot;,
+        &quot;status&quot;: &quot;failed&quot;,
+        &quot;quality_score&quot;: 0.0,
+        &quot;issues_count&quot;: 0,
+        &quot;issues&quot;: [],
+        &quot;recommendations_count&quot;: 0,
+        &quot;processing_time_ms&quot;: 0
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Передача CSV с неправильным количеством колонок в Module 2&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;sources&quot;: [
+          {
+            &quot;path&quot;: &quot;/data/raw/mismatched_columns.csv&quot;
+          }
+        ]
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 422,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:[{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;name\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;sources\&quot;:[{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}]}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;description\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;sources\&quot;:[{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}]}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;sources\&quot;,0,\&quot;source_id\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;sources\&quot;,0,\&quot;source_type\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;sources\&quot;,0,\&quot;selected_columns\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;aggregations\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;sources\&quot;:[{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}]}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;target_requirements\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;sources\&quot;:[{\&quot;path\&quot;:\&quot;/data/raw/mismatched_columns.csv\&quot;}]}}]}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Health Check All Modules</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка модуля 1 (Валидация)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5&quot;: &quot;not_checked&quot;,
+          &quot;data_landing_zone&quot;: &quot;available&quot;
+        },
+        &quot;last_check&quot;: &quot;2025-09-28T20:23:23.940746&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка модуля 2 (Агрегация)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5_metrics&quot;: true,
+          &quot;module_4_warehouse&quot;: true,
+          &quot;database&quot;: false
+        },
+        &quot;active_scenarios&quot;: 63,
+        &quot;last_execution&quot;: null,
+        &quot;error_details&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 3,
+      &quot;description&quot;: &quot;Проверка модуля 3 (Оптимизация)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;ok&quot;,
+        &quot;module&quot;: &quot;performance_optimizer&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module5_metrics&quot;: &quot;ok&quot;,
+          &quot;database&quot;: &quot;error&quot;
+        },
+        &quot;capabilities&quot;: [
+          &quot;auto_detect_data_types&quot;,
+          &quot;performance_analysis&quot;,
+          &quot;optimization_recommendations&quot;,
+          &quot;ddl_generation&quot;,
+          &quot;module4_integration&quot;,
+          &quot;module5_integration&quot;
+        ]
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 4,
+      &quot;description&quot;: &quot;Проверка модуля 4 (Хранилища)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 5,
+      &quot;description&quot;: &quot;Проверка модуля 5 (Мониторинг)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;module&quot;: &quot;metrics_collector&quot;,
+        &quot;supported_db_types&quot;: [
+          &quot;clickhouse&quot;,
+          &quot;postgres&quot;,
+          &quot;file_system&quot;
+        ],
+        &quot;version&quot;: &quot;1.0&quot;
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Dependency Check Between Modules</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка доступности Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 10,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5&quot;: &quot;not_checked&quot;,
+          &quot;data_landing_zone&quot;: &quot;available&quot;
+        },
+        &quot;last_check&quot;: &quot;2025-09-28T20:23:27.551449&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка доступности Модуля 2&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 10,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module_5_metrics&quot;: true,
+          &quot;module_4_warehouse&quot;: true,
+          &quot;database&quot;: false
+        },
+        &quot;active_scenarios&quot;: 63,
+        &quot;last_execution&quot;: null,
+        &quot;error_details&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 3,
+      &quot;description&quot;: &quot;Проверка доступности Модуля 3&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 10,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;ok&quot;,
+        &quot;module&quot;: &quot;performance_optimizer&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;integrations&quot;: {
+          &quot;module5_metrics&quot;: &quot;ok&quot;,
+          &quot;database&quot;: &quot;error&quot;
+        },
+        &quot;capabilities&quot;: [
+          &quot;auto_detect_data_types&quot;,
+          &quot;performance_analysis&quot;,
+          &quot;optimization_recommendations&quot;,
+          &quot;ddl_generation&quot;,
+          &quot;module4_integration&quot;,
+          &quot;module5_integration&quot;
+        ]
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 4,
+      &quot;description&quot;: &quot;Проверка доступности Модуля 4&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 10,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 5,
+      &quot;description&quot;: &quot;Проверка доступности Модуля 5&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 10,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;,
+        &quot;module&quot;: &quot;metrics_collector&quot;,
+        &quot;supported_db_types&quot;: [
+          &quot;clickhouse&quot;,
+          &quot;postgres&quot;,
+          &quot;file_system&quot;
+        ],
+        &quot;version&quot;: &quot;1.0&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 6,
+      &quot;description&quot;: &quot;Проверка интерфейса Модуль 5 → Модуль 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;data_type&quot;: &quot;csv&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;file_count&quot;: 0,
+        &quot;avg_file_size&quot;: 0,
+        &quot;file_types&quot;: {},
+        &quot;data_type&quot;: &quot;csv&quot;,
+        &quot;format&quot;: &quot;csv&quot;,
+        &quot;detected_type&quot;: &quot;file&quot;,
+        &quot;schema&quot;: {
+          &quot;columns&quot;: [
+            {
+              &quot;name&quot;: &quot;id&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 0
+            },
+            {
+              &quot;name&quot;: &quot;product_name&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;index&quot;: 1
+            },
+            {
+              &quot;name&quot;: &quot;category&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;index&quot;: 2
+            },
+            {
+              &quot;name&quot;: &quot;price&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 3
+            },
+            {
+              &quot;name&quot;: &quot;quantity&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 4
+            },
+            {
+              &quot;name&quot;: &quot;sale_date&quot;,
+              &quot;type&quot;: &quot;date&quot;,
+              &quot;index&quot;: 5
+            },
+            {
+              &quot;name&quot;: &quot;customer_id&quot;,
+              &quot;type&quot;: &quot;numeric&quot;,
+              &quot;index&quot;: 6
+            }
+          ],
+          &quot;column_count&quot;: 7
+        },
+        &quot;separator&quot;: &quot;,&quot;,
+        &quot;encoding&quot;: &quot;utf-8&quot;,
+        &quot;detection_details&quot;: {
+          &quot;type&quot;: &quot;file&quot;,
+          &quot;file_type&quot;: &quot;csv&quot;,
+          &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+          &quot;file_size&quot;: 557,
+          &quot;file_name&quot;: &quot;sales.csv&quot;,
+          &quot;format&quot;: &quot;csv&quot;,
+          &quot;separator&quot;: &quot;,&quot;,
+          &quot;encoding&quot;: &quot;utf-8&quot;,
+          &quot;schema&quot;: {
+            &quot;columns&quot;: [
+              {
+                &quot;name&quot;: &quot;id&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 0
+              },
+              {
+                &quot;name&quot;: &quot;product_name&quot;,
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;index&quot;: 1
+              },
+              {
+                &quot;name&quot;: &quot;category&quot;,
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;index&quot;: 2
+              },
+              {
+                &quot;name&quot;: &quot;price&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 3
+              },
+              {
+                &quot;name&quot;: &quot;quantity&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 4
+              },
+              {
+                &quot;name&quot;: &quot;sale_date&quot;,
+                &quot;type&quot;: &quot;date&quot;,
+                &quot;index&quot;: 5
+              },
+              {
+                &quot;name&quot;: &quot;customer_id&quot;,
+                &quot;type&quot;: &quot;numeric&quot;,
+                &quot;index&quot;: 6
+              }
+            ],
+            &quot;column_count&quot;: 7
+          },
+          &quot;sample_data&quot;: [
+            [
+              &quot;1&quot;,
+              &quot;Laptop Pro&quot;,
+              &quot;Electronics&quot;,
+              &quot;1299.99&quot;,
+              &quot;2&quot;,
+              &quot;2024-01-15&quot;,
+              &quot;101&quot;
+            ],
+            [
+              &quot;2&quot;,
+              &quot;Wireless Mouse&quot;,
+              &quot;Electronics&quot;,
+              &quot;29.99&quot;,
+              &quot;5&quot;,
+              &quot;2024-01-16&quot;,
+              &quot;102&quot;
+            ],
+            [
+              &quot;3&quot;,
+              &quot;Office Chair&quot;,
+              &quot;Furniture&quot;,
+              &quot;199.99&quot;,
+              &quot;1&quot;,
+              &quot;2024-01-17&quot;,
+              &quot;103&quot;
+            ]
+          ]
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 7,
+      &quot;description&quot;: &quot;Проверка интерфейса Модуль 1 → Модуль 2&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;validation_options&quot;: {
+          &quot;check_duplicates&quot;: true
+        }
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;validation_passed&quot;: true
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;c7e99de5-4c87-4778-b352-b6c9b594a7e4&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;quality_score&quot;: 0.9839999999999999,
+        &quot;issues_count&quot;: 9,
+        &quot;issues&quot;: [
+          {
+            &quot;issue_id&quot;: &quot;8ccdbba5-37bc-4f87-8473-1fbb45530db3&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 2,
+            &quot;percentage&quot;: 20.0,
+            &quot;description&quot;: &quot;Колонка &#x27;price&#x27; содержит 2 потенциальных выбросов (20.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;77e8cd2e-d756-40b5-b3b7-f01b51c28a53&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 10.0,
+            &quot;description&quot;: &quot;Колонка &#x27;quantity&#x27; содержит 1 потенциальных выбросов (10.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;multivariate_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;multivariate&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Многомерная аномалия в строке 0: необычная комбинация значений&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          }
+        ],
+        &quot;recommendations_count&quot;: 1,
+        &quot;processing_time_ms&quot;: 30345.619
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 8,
+      &quot;description&quot;: &quot;Проверка интерфейса Модуль 2 → Модуль 4&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;dependency_test_{{timestamp}}&quot;,
+        &quot;description&quot;: &quot;A test scenario to check dependency from M2 to M4&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_data&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales.csv&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;category&quot;,
+              &quot;price&quot;
+            ]
+          }
+        ],
+        &quot;aggregations&quot;: [
+          {
+            &quot;type&quot;: &quot;group_by&quot;,
+            &quot;parameters&quot;: {
+              &quot;columns&quot;: [
+                &quot;category&quot;
+              ],
+              &quot;aggregates&quot;: {
+                &quot;total_price&quot;: &quot;sum(price)&quot;
+              }
+            }
+          }
+        ],
+        &quot;target_requirements&quot;: {
+          &quot;expected_volume&quot;: &quot;&lt;1GB&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;scenario_created&quot;: true
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;scenario_id&quot;: &quot;85&quot;,
+        &quot;name&quot;: &quot;dependency_test_1759091041&quot;,
+        &quot;description&quot;: &quot;A test scenario to check dependency from M2 to M4&quot;,
+        &quot;status&quot;: &quot;validated&quot;,
+        &quot;sources_analysis&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_data&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;columns&quot;: [],
+            &quot;row_count&quot;: 0,
+            &quot;data_size_bytes&quot;: null,
+            &quot;sample_data&quot;: [],
+            &quot;compatibility_issues&quot;: []
+          }
+        ],
+        &quot;estimated_output_size&quot;: 1000,
+        &quot;recommended_engine&quot;: &quot;postgres&quot;,
+        &quot;validation_errors&quot;: [],
+        &quot;created_at&quot;: &quot;2025-09-28T20:24:01.849344&quot;,
+        &quot;last_modified&quot;: &quot;2025-09-28T20:24:01.849349&quot;
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 9,
+      &quot;description&quot;: &quot;Проверка интерфейса Модуль 3 → Модуль 4&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;analysis_completed&quot;: true
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250928_202402_351611&quot;,
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-28T20:24:02.351979&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-28T20:24:03.919183&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 10,
+      &quot;description&quot;: &quot;Проверка интерфейса Модуль 4 → Модуль 5&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;instances&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;instances&quot;: &quot;array&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: [
+        {
+          &quot;id&quot;: 4,
+          &quot;design_id&quot;: &quot;5a80f922-7753-4c81-8046-c4b2c8914ea1&quot;,
+          &quot;target_db_type&quot;: &quot;hdfs&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:44:58.208862&quot;
+        },
+        {
+          &quot;id&quot;: 5,
+          &quot;design_id&quot;: &quot;ea1bafb0-db1a-4f50-a84b-dca087c25bff&quot;,
+          &quot;target_db_type&quot;: &quot;clickhouse&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:45:45.280183&quot;
+        },
+        {
+          &quot;id&quot;: 6,
+          &quot;design_id&quot;: &quot;3d1e551d-9031-4f59-a626-6c6ec134102a&quot;,
+          &quot;target_db_type&quot;: &quot;postgres&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:46:09.723238&quot;
+        },
+        {
+          &quot;id&quot;: 7,
+          &quot;design_id&quot;: &quot;4e145fe5-00ea-4f72-b5ab-200754e74cbf&quot;,
+          &quot;target_db_type&quot;: &quot;hdfs&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:46:33.127361&quot;
+        },
+        {
+          &quot;id&quot;: 8,
+          &quot;design_id&quot;: &quot;de95013f-cd58-4e2e-a5ce-961790947386&quot;,
+          &quot;target_db_type&quot;: &quot;postgres&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:51:37.541914&quot;
+        },
+        {
+          &quot;id&quot;: 9,
+          &quot;design_id&quot;: &quot;0c225244-218a-4b06-81de-ff4c9d53b16b&quot;,
+          &quot;target_db_type&quot;: &quot;clickhouse&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:55:08.945914&quot;
+        },
+        {
+          &quot;id&quot;: 10,
+          &quot;design_id&quot;: &quot;5d7d78ca-6ccb-45e8-9f1f-9927aef4b796&quot;,
+          &quot;target_db_type&quot;: &quot;postgres&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:55:35.881974&quot;
+        },
+        {
+          &quot;id&quot;: 11,
+          &quot;design_id&quot;: &quot;e3c1bdff-03f0-4ff1-8d6b-5c1fbd837a6c&quot;,
+          &quot;target_db_type&quot;: &quot;hdfs&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T14:59:37.635456&quot;
+        },
+        {
+          &quot;id&quot;: 12,
+          &quot;design_id&quot;: &quot;f3749c6e-8943-42a4-8a47-4ee0026db0ce&quot;,
+          &quot;target_db_type&quot;: &quot;clickhouse&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T15:00:17.286983&quot;
+        },
+        {
+          &quot;id&quot;: 13,
+          &quot;design_id&quot;: &quot;bbb03a72-1bae-4a7a-910d-e1cbe63c455d&quot;,
+          &quot;target_db_type&quot;: &quot;postgres&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T15:00:38.199172&quot;
+        },
+        {
+          &quot;id&quot;: 1,
+          &quot;design_id&quot;: &quot;edb638fa-134d-47e9-b8f5-6b0b6dd7da55&quot;,
+          &quot;target_db_type&quot;: &quot;clickhouse&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {
+            &quot;row_count&quot;: 0,
+            &quot;size_in_bytes&quot;: 0
+          },
+          &quot;created_at&quot;: &quot;2025-09-25T14:32:45.690927&quot;
+        },
+        {
+          &quot;id&quot;: 2,
+          &quot;design_id&quot;: &quot;9c3d76f1-0e98-4ad2-b3d4-87a61811a5ad&quot;,
+          &quot;target_db_type&quot;: &quot;clickhouse&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {
+            &quot;row_count&quot;: 0,
+            &quot;size_in_bytes&quot;: 0
+          },
+          &quot;created_at&quot;: &quot;2025-09-25T14:36:32.305022&quot;
+        },
+        {
+          &quot;id&quot;: 14,
+          &quot;design_id&quot;: &quot;c9259623-4d28-4a5b-8ff3-fcd70443936a&quot;,
+          &quot;target_db_type&quot;: &quot;hdfs&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {},
+          &quot;created_at&quot;: &quot;2025-09-25T15:01:02.110004&quot;
+        },
+        {
+          &quot;id&quot;: 3,
+          &quot;design_id&quot;: &quot;b32a3876-b4ca-47e5-9d84-a2fe893c0bf4&quot;,
+          &quot;target_db_type&quot;: &quot;postgres&quot;,
+          &quot;db_name&quot;: &quot;analytics&quot;,
+          &quot;table_name&quot;: &quot;unknown&quot;,
+          &quot;metrics&quot;: {
+            &quot;row_count&quot;: 0,
+            &quot;size_in_bytes&quot;: 0
+          },
+          &quot;created_at&quot;: &quot;2025-09-25T14:43:32.655330&quot;
+        }
+      ]
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Database Connectivity Check</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка подключения к PostgreSQL&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;collect&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;db_type&quot;: &quot;postgres&quot;,
+        &quot;host&quot;: &quot;postgres&quot;,
+        &quot;port&quot;: 5432,
+        &quot;db_name&quot;: &quot;aieasydata_db&quot;,
+        &quot;user&quot;: &quot;admin&quot;,
+        &quot;password&quot;: &quot;admin&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;connection_status&quot;: &quot;successful&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;avg_query_duration_ms&quot;: null,
+        &quot;p95_query_duration_ms&quot;: null,
+        &quot;total_queries&quot;: null,
+        &quot;file_count&quot;: null,
+        &quot;avg_file_size&quot;: null,
+        &quot;file_types&quot;: null
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка подключения к ClickHouse&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;collect&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;db_type&quot;: &quot;clickhouse&quot;,
+        &quot;host&quot;: &quot;clickhouse&quot;,
+        &quot;port&quot;: 8123,
+        &quot;db_name&quot;: &quot;default&quot;,
+        &quot;user&quot;: &quot;default&quot;,
+        &quot;password&quot;: &quot;&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;connection_status&quot;: &quot;successful&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;avg_query_duration_ms&quot;: null,
+        &quot;p95_query_duration_ms&quot;: null,
+        &quot;total_queries&quot;: null,
+        &quot;file_count&quot;: null,
+        &quot;avg_file_size&quot;: null,
+        &quot;file_types&quot;: null
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>File System Access Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание тестового файла в raw&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;fs-check&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;operation&quot;: &quot;write&quot;,
+        &quot;path&quot;: &quot;/data/raw/fs_access_test.tmp&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;success&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Memory Usage Check</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Запуск интенсивной операции (валидация большого файла)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/large_dataset.csv&quot;
+      },
+      &quot;payload&quot;: {
+        &quot;validation_options&quot;: {
+          &quot;check_duplicates&quot;: true,
+          &quot;assess_quality&quot;: true
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;20c54f50-b33d-487e-bcf3-82b5ec9b22f0&quot;,
+        &quot;status&quot;: &quot;failed&quot;,
+        &quot;quality_score&quot;: 0.0,
+        &quot;issues_count&quot;: 0,
+        &quot;issues&quot;: [],
+        &quot;recommendations_count&quot;: 0,
+        &quot;processing_time_ms&quot;: 0
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>API Response Time Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка времени отклика Module 1 (validate-file)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;f571c42b-83a3-47f1-ada3-ee9ac185164d&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;quality_score&quot;: 0.9839999999999999,
+        &quot;issues_count&quot;: 9,
+        &quot;issues&quot;: [
+          {
+            &quot;issue_id&quot;: &quot;dfe8a29e-c29b-43ae-b32a-404cfdecdebb&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 2,
+            &quot;percentage&quot;: 20.0,
+            &quot;description&quot;: &quot;Колонка &#x27;price&#x27; содержит 2 потенциальных выбросов (20.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;8a8bd79c-ffad-4047-a0a0-86307b749304&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 10.0,
+            &quot;description&quot;: &quot;Колонка &#x27;quantity&#x27; содержит 1 потенциальных выбросов (10.0%)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте выбросы на корректность или примените методы нормализации&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_price_4&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;price&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;iqr_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;modified_z_quantity_7&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;medium&quot;,
+            &quot;column&quot;: &quot;quantity&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          },
+          {
+            &quot;issue_id&quot;: &quot;multivariate_0&quot;,
+            &quot;type&quot;: &quot;anomaly&quot;,
+            &quot;severity&quot;: &quot;low&quot;,
+            &quot;column&quot;: &quot;multivariate&quot;,
+            &quot;count&quot;: 1,
+            &quot;percentage&quot;: 0.1,
+            &quot;description&quot;: &quot;Многомерная аномалия в строке 0: необычная комбинация значений&quot;,
+            &quot;suggested_fix&quot;: &quot;Проверьте аномальное значение на корректность&quot;
+          }
+        ],
+        &quot;recommendations_count&quot;: 1,
+        &quot;processing_time_ms&quot;: 30302.433
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Проверка времени отклика Module 2 (create-scenario)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 422,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:[{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;name\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_path\&quot;:\&quot;/data/raw/sales.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;description\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_path\&quot;:\&quot;/data/raw/sales.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;sources\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_path\&quot;:\&quot;/data/raw/sales.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;aggregations\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_path\&quot;:\&quot;/data/raw/sales.csv\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;target_requirements\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_path\&quot;:\&quot;/data/raw/sales.csv\&quot;}}]}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Error Propagation Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 2 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Вызов Module 1 с несуществующим файлом&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/non_existent_file.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;validation_id&quot;: &quot;9b3a4903-868e-45f0-8cf5-6ec416f1c511&quot;,
+        &quot;status&quot;: &quot;failed&quot;,
+        &quot;quality_score&quot;: 0.0,
+        &quot;issues_count&quot;: 0,
+        &quot;issues&quot;: [],
+        &quot;recommendations_count&quot;: 0,
+        &quot;processing_time_ms&quot;: 0
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Вызов Module 4 с некорректным типом БД&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;design&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_data&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;target_db&quot;: &quot;invalid_db_type&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 422,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:[{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;source_profile_id\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_data\&quot;:\&quot;/data/raw/sales.csv\&quot;,\&quot;target_db\&quot;:\&quot;invalid_db_type\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;business_requirements\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_data\&quot;:\&quot;/data/raw/sales.csv\&quot;,\&quot;target_db\&quot;:\&quot;invalid_db_type\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;analytics_requirements\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_data\&quot;:\&quot;/data/raw/sales.csv\&quot;,\&quot;target_db\&quot;:\&quot;invalid_db_type\&quot;}},{\&quot;type\&quot;:\&quot;missing\&quot;,\&quot;loc\&quot;:[\&quot;body\&quot;,\&quot;constraints\&quot;],\&quot;msg\&quot;:\&quot;Field required\&quot;,\&quot;input\&quot;:{\&quot;source_data\&quot;:\&quot;/data/raw/sales.csv\&quot;,\&quot;target_db\&quot;:\&quot;invalid_db_type\&quot;}}]}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Recovery Scenarios Check</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Имитация временной недоступности Module 3 и вызов с retry&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;analysis_id&quot;: &quot;mock_123&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;analysis_id&quot;: &quot;analysis_20250928_202531_211920&quot;,
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;source_type&quot;: &quot;csv&quot;,
+        &quot;status&quot;: &quot;completed&quot;,
+        &quot;current_metrics&quot;: {
+          &quot;source_type&quot;: &quot;csv&quot;,
+          &quot;data_size_bytes&quot;: 0,
+          &quot;row_count&quot;: 0,
+          &quot;column_count&quot;: null,
+          &quot;processing_time_ms&quot;: 0.0,
+          &quot;avg_query_time_ms&quot;: null,
+          &quot;index_usage_stats&quot;: null,
+          &quot;partition_stats&quot;: null,
+          &quot;bottlenecks&quot;: [],
+          &quot;structure_info&quot;: {}
+        },
+        &quot;bottlenecks&quot;: [],
+        &quot;recommendations&quot;: [],
+        &quot;llm_analysis&quot;: &quot;Не удалось получить ответ от ИИ: Error code: 401 - {&#x27;error&#x27;: {&#x27;message&#x27;: &#x27;Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.&#x27;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: &#x27;invalid_api_key&#x27;}}&quot;,
+        &quot;created_at&quot;: &quot;2025-09-28T20:25:31.212473&quot;,
+        &quot;completed_at&quot;: &quot;2025-09-28T20:25:32.638371&quot;,
+        &quot;error_message&quot;: null
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+            </body></html>

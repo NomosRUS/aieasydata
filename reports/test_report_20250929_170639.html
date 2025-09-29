@@ -1,0 +1,80 @@
+        <html>
+        <head>
+            <title>Test Report - 2025-09-29 17:06:39</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 40px; }
+                .summary { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: .25rem; padding: 20px; margin-bottom: 20px; }
+                .scenario { border: 1px solid #dee2e6; border-radius: .25rem; margin-bottom: 10px; }
+                .scenario-header { padding: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+                .passed { border-left: 5px solid #28a745; }
+                .failed { border-left: 5px solid #dc3545; }
+                .passed .scenario-header { background-color: #d4edda; }
+                .failed .scenario-header { background-color: #f8d7da; }
+                .trajectory { display: none; padding: 10px; border-top: 1px solid #dee2e6; background-color: #fff; }
+                pre { background-color: #e9ecef; padding: 10px; border-radius: .25rem; white-space: pre-wrap; word-wrap: break-word; }
+            </style>
+            <script>
+                function toggleTrajectory(element) {
+                    var content = element.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                }
+            </script>
+        </head>
+        <body>
+            <h1>Test Execution Report</h1>
+            <div class='summary'>
+                <h2>Summary</h2>
+                <p>Total Scenarios: 1</p>
+                <p>Passed: 0</p>
+                <p>Failed: 1</p>
+                <p>Pass Rate: <strong>0.00%</strong></p>
+                <p>Total Execution Time: 8.43s</p>
+            </div>
+            <h2>Scenario Details</h2>
+                    <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Shared Components - Data Profiler Test</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Тест профилирования данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 0,
+      &quot;endpoint&quot;: &quot;/api/v1/data-profiles&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;profiling_result&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 30,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 500,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Failed to create data profile: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint \\\&quot;ix_data_profiles_source_path\\\&quot;\\nDETAIL:  Key (source_path)=(/data/raw/sales.csv) already exists.\\n\\n[SQL: INSERT INTO data_profiles (source_path, kind, total_row_count, file_count, columns, sample_data, llm_summary, error, created_at, updated_at) VALUES (%(source_path)s, %(kind)s, %(total_row_count)s, %(file_count)s, %(columns)s::JSONB, %(sample_data)s::JSONB, %(llm_summary)s, %(error)s, %(created_at)s, %(updated_at)s) RETURNING data_profiles.id]\\n[parameters: {&#x27;source_path&#x27;: &#x27;/data/raw/sales.csv&#x27;, &#x27;kind&#x27;: None, &#x27;total_row_count&#x27;: None, &#x27;file_count&#x27;: None, &#x27;columns&#x27;: &#x27;[{\\\&quot;name\\\&quot;: \\\&quot;id\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;Int64\\\&quot;}, {\\\&quot;name\\\&quot;: \\\&quot;product_name\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;String\\\&quot;}, {\\\&quot;name\\\&quot;: \\\&quot;category\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;String\\\&quot;}, {\\\&quot;name\\\&quot;: \\\&quot;price\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;Float64\\\&quot;}, {\\\&quot;name\\\&quot;: \\\&quot;quantity\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;Int64\\\&quot;}, {\\\&quot;name\\\&quot;: \\\&quot;sale_date\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;Date\\\&quot;}, {\\\&quot;name\\\&quot;: \\\&quot;customer_id\\\&quot;, \\\&quot;type\\\&quot;: \\\&quot;Int64\\\&quot;}]&#x27;, &#x27;sample_data&#x27;: &#x27;null&#x27;, &#x27;llm_summary&#x27;: None, &#x27;error&#x27;: None, &#x27;created_at&#x27;: datetime.datetime(2025, 9, 29, 14, 6, 39, 190588), &#x27;updated_at&#x27;: datetime.datetime(2025, 9, 29, 14, 6, 39, 190596)}]\\n(Background on this error at: https://sqlalche.me/e/20/gkpj)\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+            </body></html>

@@ -1,0 +1,25 @@
+{
+    "scenario_id": "M5_E003",
+    "name": "Module 5 - Collect Metrics",
+    "description": "Elementary test for collecting metrics.",
+    "category": "elementary/module5",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call collect endpoint",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "/api/v1/metrics/collect",
+            "method": "POST",
+            "payload": {
+                "db_type": "file_system",
+                "file_path": "/data/raw/sales.csv"
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

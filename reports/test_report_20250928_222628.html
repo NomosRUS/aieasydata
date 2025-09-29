@@ -1,0 +1,1239 @@
+        <html>
+        <head>
+            <title>Test Report - 2025-09-28 22:26:28</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 40px; }
+                .summary { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: .25rem; padding: 20px; margin-bottom: 20px; }
+                .scenario { border: 1px solid #dee2e6; border-radius: .25rem; margin-bottom: 10px; }
+                .scenario-header { padding: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+                .passed { border-left: 5px solid #28a745; }
+                .failed { border-left: 5px solid #dc3545; }
+                .passed .scenario-header { background-color: #d4edda; }
+                .failed .scenario-header { background-color: #f8d7da; }
+                .trajectory { display: none; padding: 10px; border-top: 1px solid #dee2e6; background-color: #fff; }
+                pre { background-color: #e9ecef; padding: 10px; border-radius: .25rem; white-space: pre-wrap; word-wrap: break-word; }
+            </style>
+            <script>
+                function toggleTrajectory(element) {
+                    var content = element.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                }
+            </script>
+        </head>
+        <body>
+            <h1>Test Execution Report</h1>
+            <div class='summary'>
+                <h2>Summary</h2>
+                <p>Total Scenarios: 27</p>
+                <p>Passed: 0</p>
+                <p>Failed: 27</p>
+                <p>Pass Rate: <strong>0.00%</strong></p>
+                <p>Total Execution Time: 210.45s</p>
+            </div>
+            <h2>Scenario Details</h2>
+                    <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>External API to PostgreSQL Full Cycle</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Health-check Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Daily ETL via Airflow</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Генерация Airflow DAG для ежедневного ETL&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 0,
+      &quot;endpoint&quot;: &quot;compile&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;daily_sales_etl_{{timestamp}}&quot;,
+        &quot;schedule&quot;: &quot;@daily&quot;,
+        &quot;source&quot;: {
+          &quot;type&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;/data/raw/sales.csv&quot;
+        },
+        &quot;target&quot;: {
+          &quot;type&quot;: &quot;clickhouse&quot;,
+          &quot;table&quot;: &quot;daily_sales_etl&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;Unexpected error&quot;,
+      &quot;details&quot;: &quot;Invalid port: &#x27;8000compile&#x27;&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Weekly Optimization via Airflow</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Анализ производительности хранилища (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/warehouses/sales_data&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Hourly Monitoring via Airflow</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Сбор метрик производительности (Модуль 5)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;latest&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Airflow Parallel DAGs Execution</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Одновременный запуск трех DAG&#x27;ов&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;Module None not configured&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Airflow Dynamic DAG Creation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание нового источника данных (например, новая таблица в БД)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;Module None not configured&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>External API to ClickHouse</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Health-check Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Filesystem to HDFS</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Health-check Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Full Batch Processing Cycle</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Пакетная валидация нескольких файлов&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;batch-validate&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;sales_part1&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales_part1.csv&quot;
+          },
+          {
+            &quot;source_id&quot;: &quot;sales_part2&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales_part2.csv&quot;
+          }
+        ]
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;validation_result&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Real-time Validation and Monitoring</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Отправка события для валидации в реальном времени&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-realtime&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;event_id&quot;: &quot;evt_12345&quot;,
+        &quot;source&quot;: &quot;payment_gateway&quot;,
+        &quot;data&quot;: {
+          &quot;amount&quot;: 100.5,
+          &quot;currency&quot;: &quot;USD&quot;,
+          &quot;user_id&quot;: &quot;user_abc&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;validation_event&quot;,
+      &quot;expected_response&quot;: {
+        &quot;validation_status&quot;: &quot;passed&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Multi-format Aggregation to Multi-DB</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Агрегация CSV, JSON и XML данных в Module 2&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;custom-dataset&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;scenario_name&quot;: &quot;multi_format_join&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;transactions&quot;,
+            &quot;path&quot;: &quot;/data/raw/transactions.csv&quot;
+          },
+          {
+            &quot;source_id&quot;: &quot;users&quot;,
+            &quot;path&quot;: &quot;/data/raw/users.json&quot;
+          },
+          {
+            &quot;source_id&quot;: &quot;products&quot;,
+            &quot;path&quot;: &quot;/data/raw/products.xml&quot;
+          }
+        ],
+        &quot;operations&quot;: [
+          {
+            &quot;type&quot;: &quot;join&quot;,
+            &quot;left&quot;: &quot;transactions&quot;,
+            &quot;right&quot;: &quot;users&quot;,
+            &quot;on&quot;: [
+              {
+                &quot;left_on&quot;: &quot;user_id&quot;,
+                &quot;right_on&quot;: &quot;id&quot;
+              }
+            ]
+          },
+          {
+            &quot;type&quot;: &quot;join&quot;,
+            &quot;left&quot;: &quot;transactions&quot;,
+            &quot;right&quot;: &quot;products&quot;,
+            &quot;on&quot;: [
+              {
+                &quot;left_on&quot;: &quot;product_id&quot;,
+                &quot;right_on&quot;: &quot;pid&quot;
+              }
+            ]
+          }
+        ]
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;aggregated_data&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 1 to Module 2 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Валидация и очистка тестовых данных (Модуль 1)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 1 to Module 2 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Валидация и очистка тестовых данных (Модуль 1)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;,
+        &quot;validation_options&quot;: {
+          &quot;check_duplicates&quot;: true,
+          &quot;assess_quality&quot;: true
+        }
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 2 to Module 4 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание сценария агрегации (Модуль 2)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 2,
+      &quot;endpoint&quot;: &quot;create-scenario&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;name&quot;: &quot;format_validation_m2_m4_{{timestamp}}&quot;,
+        &quot;description&quot;: &quot;Test format validation from M2 to M4&quot;,
+        &quot;sources&quot;: [
+          {
+            &quot;source_id&quot;: &quot;source_data&quot;,
+            &quot;source_type&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;/data/raw/sales.csv&quot;,
+            &quot;selected_columns&quot;: [
+              &quot;category&quot;,
+              &quot;region&quot;,
+              &quot;amount&quot;,
+              &quot;quantity&quot;
+            ]
+          }
+        ],
+        &quot;aggregations&quot;: [
+          {
+            &quot;type&quot;: &quot;group_by&quot;,
+            &quot;parameters&quot;: {
+              &quot;columns&quot;: [
+                &quot;category&quot;,
+                &quot;region&quot;
+              ],
+              &quot;aggregates&quot;: {
+                &quot;total_amount&quot;: &quot;sum(amount)&quot;,
+                &quot;transaction_count&quot;: &quot;count(quantity)&quot;
+              }
+            }
+          }
+        ],
+        &quot;target_requirements&quot;: {
+          &quot;expected_volume&quot;: &quot;&lt;1GB&quot;,
+          &quot;refresh_interval&quot;: &quot;daily&quot;
+        }
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 3 to Module 4 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Анализ производительности (Модуль 3)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step_1_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 5 to Module 1 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Сбор метрик по файлу через Module 5&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;metrics_output&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 4 to Module 5 Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание тестового хранилища в PostgreSQL через Module 4&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;design-and-confirm&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_data&quot;: &quot;/data/raw/users.json&quot;,
+        &quot;target_db&quot;: &quot;postgresql&quot;,
+        &quot;table_name&quot;: &quot;test_users_for_m5&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;warehouse_info&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Full Chain Format Validation</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;M5: Профилирование исходных данных&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;auto-detect&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;step1_out&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Error Format Handling</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Передача поврежденного JSON в Module 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/broken_data.json&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Health Check All Modules</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка модуля 1 (Валидация)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Dependency Check Between Modules</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка доступности Модуля 1&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;health-check&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;healthy&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 10,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Database Connectivity Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка подключения к PostgreSQL&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;collect&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;db_type&quot;: &quot;postgres&quot;,
+        &quot;host&quot;: &quot;postgres&quot;,
+        &quot;port&quot;: 5432,
+        &quot;db_name&quot;: &quot;aieasydata_db&quot;,
+        &quot;user&quot;: &quot;admin&quot;,
+        &quot;password&quot;: &quot;admin&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;connection_status&quot;: &quot;successful&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>File System Access Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Создание тестового файла в raw&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;fs-check&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;operation&quot;: &quot;write&quot;,
+        &quot;path&quot;: &quot;/data/raw/fs_access_test.tmp&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;status&quot;: &quot;success&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Memory Usage Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Получение базовых метрик памяти&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;system-wide&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;baseline_metrics&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>API Response Time Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проверка времени отклика Module 1 (validate-file)&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Error Propagation Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Вызов Module 1 с несуществующим файлом&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 1,
+      &quot;endpoint&quot;: &quot;validate-file&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;file_path&quot;: &quot;/data/raw/non_existent_file.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+                        <div class='scenario failed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Recovery Scenarios Check</strong> - FAILED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    <p><strong>Error:</strong> Step 1 failed</p>
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Имитация временной недоступности Module 3 и вызов с retry&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 3,
+      &quot;endpoint&quot;: &quot;analyze&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source&quot;: &quot;/data/raw/sales.csv&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;analysis_id&quot;: &quot;mock_123&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: false,
+      &quot;error&quot;: &quot;HTTP error&quot;,
+      &quot;status_code&quot;: 404,
+      &quot;details&quot;: &quot;{\&quot;detail\&quot;:\&quot;Not Found\&quot;}&quot;
+    }
+  }
+]</pre>
+                </div>
+            </div>
+            </body></html>

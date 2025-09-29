@@ -1,0 +1,75 @@
+{
+    "scenario_id": "S005",
+    "name": "Streaming Data Optimization",
+    "description": "Обработка и оптимизация потоковых данных (имитация через WebSocket)",
+    "category": "end_to_end_flows",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Подключение к WebSocket для получения потоковых данных",
+            "action": "external_api_call",
+            "endpoint": "events",
+            "method": "GET",
+            "duration_seconds": 10,
+            "save_to": "/data/raw/streaming_events.jsonl"
+        },
+        {
+            "step": 2,
+            "description": "Профилирование потоковых данных через Module 5",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "auto-detect",
+            "method": "GET",
+            "params": {
+                "source": "/data/raw/streaming_events.jsonl"
+            },
+            "save_to": "profiling_result"
+        },
+        {
+            "step": 3,
+            "description": "Анализ производительности и получение рекомендаций от Module 3",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "method": "POST",
+            "payload": {
+                "source": "/data/raw/streaming_events.jsonl",
+                "query_patterns": [
+                    "SELECT COUNT(*) FROM events WHERE event_type = 'click' GROUP BY user_id"
+                ]
+            },
+            "save_to": "analysis_result"
+        },
+        {
+            "step": 4,
+            "description": "Применение оптимизаций (создание материализованного представления)",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "/api/v1/performance/optimize/{{ analysis_result.analysis_id }}",
+            "method": "POST",
+            "payload": {
+                "target_db": "clickhouse",
+                "optimization_strategy": "materialized_view"
+            },
+            "expected_response": {
+                "optimization_applied": true
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "database_view_exists",
+                "db_type": "clickhouse",
+                "view_name": "mv_events_by_user"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Analyze and optimize a stream of data by creating a materialized view",
+        "success_pattern": "consume_stream -> profile_data -> analyze_performance -> apply_optimization",
+        "key_decisions": [
+            "optimization_strategy"
+        ]
+    }
+}

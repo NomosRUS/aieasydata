@@ -1,0 +1,54 @@
+{
+    "scenario_id": "S015",
+    "name": "Error Format Handling",
+    "description": "Тестирование обработки некорректных форматов данных и ошибок валидации",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Передача поврежденного JSON в Module 1",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "expected_error": {
+                "status_code": 422,
+                "error_message_contains": "Invalid JSON format"
+            },
+            "params": {
+                "file_path": "/data/raw/broken_data.json"
+            }
+        },
+        {
+            "step": 2,
+            "description": "Передача CSV с неправильным количеством колонок в Module 2",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "sources": [
+                    {
+                        "path": "/data/raw/mismatched_columns.csv"
+                    }
+                ]
+            },
+            "expected_error": {
+                "status_code": 400,
+                "error_message_contains": "column count mismatch"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_failed_as_expected"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify system's ability to handle and correctly report data format errors",
+        "success_pattern": "handle_broken_json -> handle_mismatched_csv",
+        "key_decisions": []
+    }
+}

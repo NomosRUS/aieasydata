@@ -13,6 +13,10 @@ import json
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
+# Импортируем новую систему путей
+from ..config import DataPaths, file_manager
+from ..shared.base_profiler import get_database_files, get_available_databases
+
 from .schemas import (
     AggregationScenarioRequest,
     AggregationScenarioResponse,
@@ -645,3 +649,148 @@ class DataAggregator:
             return True
         except:
             return False
+    
+    async def aggregate_database_data(self, database_name: str, scenario_request: AggregationScenarioRequest) -> ExecutionResult:
+        """
+        Агрегация данных из конкретной базы данных с использованием новой системы организации.
+        
+        Args:
+            database_name: Имя базы данных
+            scenario_request: Запрос на агрегацию
+        
+        Returns:
+            Результат выполнения агрегации
+        """
+        try:
+            # Получаем файлы из базы данных
+            cleaned_files = get_database_files(database_name, "cleaned")
+            
+            if not cleaned_files:
+                return ExecutionResult(
+                    scenario_id=scenario_request.scenario_id,
+                    status="error",
+                    message=f"No cleaned data found for database {database_name}",
+                    execution_time=0.0
+                )
+            
+            # Выполняем агрегацию
+            result = await self.execute_scenario(scenario_request)
+            
+            # Сохраняем результат с контролем размера файлов
+            if result.status == "completed" and result.output_files:
+                processed_files = []
+                for output_file in result.output_files:
+                    # Обрабатываем каждый выходной файл с контролем размера
+                    parts = file_manager.process_file(
+                        Path(output_file), database_name, scenario_request.scenario_id, "aggregated"
+                    )
+                    processed_files.extend([str(p) for p in parts])
+                
+                result.output_files = processed_files
+                result.message = f"Data aggregated and saved to database {database_name} in {len(processed_files)} parts"
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"Database aggregation failed: {e}")
+            return ExecutionResult(
+                scenario_id=scenario_request.scenario_id,
+                status="error",
+                message=f"Database aggregation failed: {str(e)}",
+                execution_time=0.0
+            )
+    
+    def get_database_sources(self, database_name: str) -> Dict[str, Any]:
+        """
+        Получить информацию об источниках данных в конкретной базе данных.
+        
+        Args:
+            database_name: Имя базы данных
+        
+        Returns:
+            Информация об источниках данных
+        """
+        try:
+            sources_info = {
+                "database_name": database_name,
+                "stages": {}
+            }
+            
+            stages = ["validated", "cleaned", "aggregated"]
+            
+            for stage in stages:
+                files = get_database_files(database_name, stage)
+                sources_info["stages"][stage] = {
+                    "files_count": len(files),
+                    "files": files[:10]  # Показываем первые 10 файлов
+                }
+            
+            return sources_info
+            
+        except Exception as e:
+            self.logger.error(f"Failed to get database sources: {e}")
+            return {
+                "database_name": database_name,
+                "error": str(e)
+            }
+    
+    def get_cross_database_compatibility(self) -> Dict[str, Any]:
+        """
+        Анализ совместимости данных между разными базами данных.
+        
+        Returns:
+            Анализ совместимости для кросс-базовых агрегаций
+        """
+        try:
+            databases = get_available_databases()
+            compatibility_matrix = {}
+            
+            for db1 in databases:
+                compatibility_matrix[db1] = {}
+                db1_sources = self.get_database_sources(db1)
+                
+                for db2 in databases:
+                    if db1 != db2:
+                        db2_sources = self.get_database_sources(db2)
+                        
+                        # Простой анализ совместимости по количеству файлов
+                        compatibility_score = self._calculate_compatibility_score(
+                            db1_sources, db2_sources
+                        )
+                        
+                        compatibility_matrix[db1][db2] = {
+                            "compatibility_score": compatibility_score,
+                            "can_join": compatibility_score > 0.5,
+                            "recommendation": "compatible" if compatibility_score > 0.7 else "partial" if compatibility_score > 0.3 else "incompatible"
+                        }
+            
+            return {
+                "databases": databases,
+                "compatibility_matrix": compatibility_matrix,
+                "cross_database_joins_supported": True
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Failed to analyze cross-database compatibility: {e}")
+            return {
+                "error": str(e),
+                "cross_database_joins_supported": False
+            }
+    
+    def _calculate_compatibility_score(self, db1_sources: Dict, db2_sources: Dict) -> float:
+        """Рассчитать оценку совместимости между двумя базами данных."""
+        try:
+            # Простая эвристика на основе наличия данных на разных этапах
+            score = 0.0
+            
+            for stage in ["validated", "cleaned", "aggregated"]:
+                db1_files = db1_sources.get("stages", {}).get(stage, {}).get("files_count", 0)
+                db2_files = db2_sources.get("stages", {}).get(stage, {}).get("files_count", 0)
+                
+                if db1_files > 0 and db2_files > 0:
+                    score += 0.33  # Каждый этап добавляет 33% совместимости
+            
+            return min(score, 1.0)
+            
+        except:
+            return 0.0

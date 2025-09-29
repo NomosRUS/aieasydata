@@ -1,0 +1,59 @@
+{
+    "scenario_id": "M1_E003",
+    "name": "Module 1 - Get Sources",
+    "category": "elementary/module1",
+    "timestamp": 1759133237,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call sources endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/sources",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "sources": [
+                        {
+                            "source_id": "cleaned_sales_cleaned",
+                            "source_type": "file",
+                            "path": "data_landing_zone/cleaned/sales/sales_cleaned.parquet",
+                            "format": "parquet",
+                            "size_bytes": 5511,
+                            "description": "Файл sales_cleaned.parquet из cleaned"
+                        },
+                        {
+                            "source_id": "postgresql_example",
+                            "source_type": "postgresql",
+                            "description": "Пример подключения к PostgreSQL",
+                            "connection": "postgresql://user:password@localhost:5432/database"
+                        },
+                        {
+                            "source_id": "clickhouse_example",
+                            "source_type": "clickhouse",
+                            "description": "Пример подключения к ClickHouse",
+                            "connection": "http://localhost:8123"
+                        }
+                    ],
+                    "total_count": 3,
+                    "scanned_at": "2025-09-29T08:07:17.400219"
+                }
+            }
+        }
+    ]
+}

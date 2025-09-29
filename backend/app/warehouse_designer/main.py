@@ -3,11 +3,16 @@ import json
 from datetime import date, datetime
 from sqlalchemy.orm import Session
 from typing import Dict, Any
+from pathlib import Path
 
 from ..database import DataProfile
 from ..shared.schemas import AggregationScenario, OptimizationRecommendation, WarehouseDesign
 from .. import agent
 from . import schemas
+
+# Импортируем новую систему управления данными
+from ..config import DataPaths, file_manager
+from ..shared.base_profiler import process_file_with_size_control, get_available_databases
 
 
 def run_design_process(request: schemas.DesignRequest, db: Session) -> WarehouseDesign:
@@ -63,9 +68,6 @@ def collect_input_data(source_profile_id: int, db: Session) -> Dict[str, Any]:
     if not profile:
         raise Exception(f"DataProfile with id {source_profile_id} not found.")
 
-    # 2. Получаем сценарии агрегации (от Задачи 2)
-    agg_scenarios = db.query(AggregationScenario).filter(AggregationScenario.source_id == source_profile_id).all()
-
     # 3. Получаем рекомендации по оптимизации (от Задачи 3)
     # В ТЗ указано, что рекомендации связаны с таблицей, поэтому ищем по имени источника
     opt_recommendations = db.query(OptimizationRecommendation).filter(OptimizationRecommendation.table_name == profile.source_path).all()
@@ -73,7 +75,6 @@ def collect_input_data(source_profile_id: int, db: Session) -> Dict[str, Any]:
     # 4. Собираем все в единый контекст
     context = {
         "data_profile": _serialize_sqlalchemy_instance(profile),
-        "aggregation_scenarios": [_serialize_sqlalchemy_instance(sc) for sc in agg_scenarios],
         "optimization_recommendations": [_serialize_sqlalchemy_instance(rec) for rec in opt_recommendations],
     }
 
@@ -778,5 +779,160 @@ def _get_connection_params(selected_db: str) -> Dict[str, str]:
         }
     else:
         return {}
+
+def create_warehouse_with_data_organization(design_id: str, database_name: str, db: Session) -> Dict[str, Any]:
+    """
+    Создание хранилища с использованием новой системы организации данных.
+    
+    Args:
+        design_id: ID проекта хранилища
+        database_name: Имя целевой базы данных
+        db: Сессия базы данных
+    
+    Returns:
+        Результат создания хранилища
+    """
+    try:
+        # Получаем проект хранилища
+        db_design = db.query(WarehouseDesign).filter(
+            WarehouseDesign.design_id == design_id
+        ).first()
+        
+        if not db_design:
+            return {"status": "error", "message": "Design not found"}
+        
+        # Создаем директорию для хранилища в новой системе
+        warehouse_path = DataPaths.get_warehouse_path(database_name)
+        warehouse_path.mkdir(parents=True, exist_ok=True)
+        
+        # Если есть DDL скрипт, сохраняем его в организованную структуру
+        if db_design.results and "ddl_script" in db_design.results:
+            ddl_script = db_design.results["ddl_script"]
+            
+            # Сохраняем DDL в warehouse директории
+            ddl_file = warehouse_path / f"{design_id}_ddl.sql"
+            with open(ddl_file, 'w', encoding='utf-8') as f:
+                f.write(ddl_script)
+            
+            # Регистрируем в метаданных
+            file_manager.register_artifact(
+                str(ddl_file), database_name, design_id, "ddl_script"
+            )
+        
+        # Обновляем статус проекта
+        db_design.status = "warehouse_created"
+        if not db_design.results:
+            db_design.results = {}
+        db_design.results["warehouse_path"] = str(warehouse_path)
+        db_design.results["created_with_data_organization"] = True
+        
+        db.commit()
+        
+        return {
+            "status": "success",
+            "design_id": design_id,
+            "database_name": database_name,
+            "warehouse_path": str(warehouse_path),
+            "ddl_saved": "ddl_script" in (db_design.results or {})
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Failed to create warehouse: {str(e)}"
+        }
+
+def get_warehouse_data_organization_status(database_name: str) -> Dict[str, Any]:
+    """
+    Получить статус организации данных для хранилища.
+    
+    Args:
+        database_name: Имя базы данных
+    
+    Returns:
+        Статус организации данных хранилища
+    """
+    try:
+        warehouse_path = DataPaths.get_warehouse_path(database_name)
+        
+        if not warehouse_path.exists():
+            return {
+                "database_name": database_name,
+                "status": "not_created",
+                "warehouse_path": str(warehouse_path)
+            }
+        
+        # Анализируем содержимое хранилища
+        ddl_files = list(warehouse_path.glob("*_ddl.sql"))
+        data_files = list(warehouse_path.glob("*.parquet"))
+        
+        return {
+            "database_name": database_name,
+            "status": "active",
+            "warehouse_path": str(warehouse_path),
+            "ddl_files": [str(f) for f in ddl_files],
+            "data_files": [str(f) for f in data_files],
+            "total_files": len(ddl_files) + len(data_files)
+        }
+        
+    except Exception as e:
+        return {
+            "database_name": database_name,
+            "status": "error",
+            "error": str(e)
+        }
+
+def migrate_existing_warehouses_to_new_organization(db: Session) -> Dict[str, Any]:
+    """
+    Миграция существующих хранилищ в новую систему организации.
+    
+    Args:
+        db: Сессия базы данных
+    
+    Returns:
+        Результат миграции
+    """
+    try:
+        # Получаем все существующие проекты хранилищ
+        existing_designs = db.query(WarehouseDesign).filter(
+            WarehouseDesign.status.in_(["ddl_generated", "completed"])
+        ).all()
+        
+        migrated_count = 0
+        errors = []
+        
+        for design in existing_designs:
+            try:
+                # Определяем имя базы данных из результатов
+                database_name = "default_warehouse"
+                if design.results and "selected_database" in design.results:
+                    database_name = f"{design.results['selected_database']}_warehouse"
+                
+                # Создаем хранилище в новой системе
+                result = create_warehouse_with_data_organization(
+                    design.design_id, database_name, db
+                )
+                
+                if result["status"] == "success":
+                    migrated_count += 1
+                else:
+                    errors.append(f"Design {design.design_id}: {result.get('message', 'Unknown error')}")
+                    
+            except Exception as e:
+                errors.append(f"Design {design.design_id}: {str(e)}")
+        
+        return {
+            "status": "completed",
+            "total_designs": len(existing_designs),
+            "migrated_count": migrated_count,
+            "errors_count": len(errors),
+            "errors": errors[:10]  # Показываем первые 10 ошибок
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Migration failed: {str(e)}"
+        }
 
 

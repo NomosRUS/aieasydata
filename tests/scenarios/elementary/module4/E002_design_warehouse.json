@@ -1,0 +1,27 @@
+{
+    "scenario_id": "M4_E002",
+    "name": "Module 4 - Design Warehouse",
+    "description": "Elementary test for designing a warehouse.",
+    "category": "elementary/module4",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call design endpoint",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "/api/v1/warehouse/design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Test business requirements",
+                "analytics_requirements": {},
+                "constraints": {}
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

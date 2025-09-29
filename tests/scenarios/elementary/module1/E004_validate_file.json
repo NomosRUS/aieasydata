@@ -1,0 +1,24 @@
+{
+    "scenario_id": "M1_E004",
+    "name": "Module 1 - Validate File",
+    "description": "Elementary test for file validation.",
+    "category": "elementary/module1",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call validate-file endpoint",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "/api/v1/data-quality/validate-file",
+            "method": "POST",
+            "params": {
+                "file_path": "/data/raw/sales.csv"
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

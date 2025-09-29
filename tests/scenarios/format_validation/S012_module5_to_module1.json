@@ -1,0 +1,32 @@
+{
+    "scenario_id": "S012",
+    "name": "Module 5 to Module 1 Format Validation",
+    "description": "Проверка корректности формата метрик, передаваемых из Module 5 в Module 1 для валидации",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Сбор метрик по файлу через Module 5",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "auto-detect",
+            "method": "GET",
+            "params": {
+                "source": "/data/raw/sales.csv"
+            },
+            "save_to": "metrics_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure metrics from Module 5 are correctly processed by Module 1",
+        "success_pattern": "collect_metrics_m5 -> create_profile_m1",
+        "key_decisions": []
+    }
+}

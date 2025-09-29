@@ -1,0 +1,59 @@
+{
+    "scenario_id": "S023",
+    "name": "Recovery Scenarios Check",
+    "description": "Проверка способности системы к восстановлению после временных сбоев (например, с использованием retry)",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Имитация временной недоступности Module 3 и вызов с retry",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "method": "POST",
+            "payload": {
+                "source": "/data/raw/sales.csv"
+            },
+            "retry_options": {
+                "max_retries": 3,
+                "delay_seconds": 5,
+                "transient_error_codes": [
+                    503,
+                    504
+                ]
+            },
+            "mock_response": [
+                {
+                    "status_code": 503,
+                    "body": {
+                        "error": "Service Unavailable"
+                    },
+                    "times": 2
+                },
+                {
+                    "status_code": 200,
+                    "body": {
+                        "analysis_id": "mock_123"
+                    }
+                }
+            ],
+            "expected_response": {
+                "analysis_id": "mock_123"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify system resilience and recovery using retry mechanisms",
+        "success_pattern": "attempt_with_transient_error -> retry_and_succeed",
+        "key_decisions": [
+            "retry_strategy"
+        ]
+    }
+}

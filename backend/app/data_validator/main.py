@@ -15,6 +15,10 @@ import requests
 from pathlib import Path
 import json
 
+# Импортируем новую систему путей
+from ..config import DataPaths, file_manager
+from ..shared.base_profiler import process_file_with_size_control, get_available_databases
+
 from .schemas import (
     DataSource, ValidationResult, ValidationRequest, CleaningRequest,
     ValidationStatus, ValidationMetadata, QualityAssessment,
@@ -544,14 +548,165 @@ class DataValidator:
             status["integrations"]["module_5"] = "unavailable"
             self.logger.debug(f"Module 5 unavailable: {str(e)}")  # Понижаем уровень логирования
         
-        # Проверяем доступность data_landing_zone (в контейнере это /data)
+        # Проверяем доступность новой системы организации данных
         try:
-            data_landing_zone = Path("/data")
-            if data_landing_zone.exists() and data_landing_zone.is_dir():
-                status["integrations"]["data_landing_zone"] = "available"
+            if DataPaths.BASE_DATA_DIR.exists() and DataPaths.BASE_DATA_DIR.is_dir():
+                status["integrations"]["data_organization"] = "available"
+                status["integrations"]["available_databases"] = get_available_databases()
+                status["integrations"]["base_data_dir"] = str(DataPaths.BASE_DATA_DIR)
             else:
-                status["integrations"]["data_landing_zone"] = "unavailable"
+                status["integrations"]["data_organization"] = "unavailable"
         except Exception:
-            status["integrations"]["data_landing_zone"] = "error"
+            status["integrations"]["data_organization"] = "error"
         
         return status
+    
+    def validate_file_with_database_organization(self, file_path: str, database_name: str, 
+                                               source_id: str = None) -> ValidationResult:
+        """
+        Валидация файла с использованием новой системы организации данных по базам.
+        
+        Args:
+            file_path: Путь к исходному файлу
+            database_name: Имя целевой базы данных
+            source_id: Идентификатор источника (если не указан, используется имя файла)
+        
+        Returns:
+            ValidationResult с информацией о сохраненных файлах
+        """
+        if source_id is None:
+            source_id = Path(file_path).stem
+        
+        # Выполняем стандартную валидацию
+        validation_result = self.validate_file(file_path)
+        
+        if validation_result.status == ValidationStatus.VALID:
+            try:
+                # Сохраняем валидированные данные с контролем размера
+                validated_files = process_file_with_size_control(
+                    file_path, database_name, source_id, "validated"
+                )
+                
+                # Обновляем результат валидации
+                validation_result.metadata.output_files = validated_files
+                validation_result.metadata.database_name = database_name
+                validation_result.metadata.stage = "validated"
+                
+                self.logger.info(f"File validated and saved to database {database_name}: {validated_files}")
+                
+            except Exception as e:
+                self.logger.error(f"Failed to save validated file: {e}")
+                validation_result.status = ValidationStatus.ERROR
+                validation_result.errors.append(f"Failed to save validated file: {str(e)}")
+        
+        return validation_result
+    
+    def clean_data_with_database_organization(self, source_id: str, database_name: str) -> Dict[str, Any]:
+        """
+        Очистка данных с сохранением в новой системе организации.
+        
+        Args:
+            source_id: Идентификатор источника
+            database_name: Имя базы данных
+        
+        Returns:
+            Результат очистки с путями к сохраненным файлам
+        """
+        try:
+            # Получаем валидированные файлы
+            validated_path = DataPaths.get_source_path(database_name, source_id, "validated")
+            
+            if not validated_path.exists():
+                raise ValueError(f"Validated data not found for {source_id} in {database_name}")
+            
+            # Находим файлы для очистки
+            validated_files = list(validated_path.glob("*.parquet"))
+            if not validated_files:
+                raise ValueError(f"No parquet files found in {validated_path}")
+            
+            cleaned_files = []
+            
+            for validated_file in validated_files:
+                # Загружаем данные
+                df = pd.read_parquet(validated_file)
+                
+                # Выполняем очистку
+                cleaned_df = self.data_cleaner.clean_dataframe(df)
+                
+                # Сохраняем очищенные данные с контролем размера
+                temp_cleaned_file = validated_path.parent / "temp_cleaned.parquet"
+                cleaned_df.to_parquet(temp_cleaned_file, index=False)
+                
+                # Обрабатываем с контролем размера
+                processed_files = process_file_with_size_control(
+                    str(temp_cleaned_file), database_name, source_id, "cleaned"
+                )
+                
+                cleaned_files.extend(processed_files)
+                
+                # Удаляем временный файл
+                temp_cleaned_file.unlink()
+            
+            return {
+                "status": "success",
+                "source_id": source_id,
+                "database_name": database_name,
+                "cleaned_files": cleaned_files,
+                "files_count": len(cleaned_files)
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Failed to clean data: {e}")
+            return {
+                "status": "error",
+                "source_id": source_id,
+                "database_name": database_name,
+                "error": str(e)
+            }
+    
+    def get_database_validation_status(self, database_name: str) -> Dict[str, Any]:
+        """
+        Получить статус валидации для конкретной базы данных.
+        
+        Args:
+            database_name: Имя базы данных
+        
+        Returns:
+            Статус валидации всех источников в базе данных
+        """
+        try:
+            db_path = DataPaths.get_database_intermediate_path(database_name, "validated")
+            
+            if not db_path.exists():
+                return {
+                    "database_name": database_name,
+                    "status": "no_data",
+                    "sources": []
+                }
+            
+            sources = []
+            for source_dir in db_path.iterdir():
+                if source_dir.is_dir():
+                    files = list(source_dir.glob("*.parquet"))
+                    total_size = sum(f.stat().st_size for f in files)
+                    
+                    sources.append({
+                        "source_id": source_dir.name,
+                        "files_count": len(files),
+                        "total_size_mb": round(total_size / (1024 * 1024), 2),
+                        "files": [str(f) for f in files]
+                    })
+            
+            return {
+                "database_name": database_name,
+                "status": "active" if sources else "empty",
+                "sources_count": len(sources),
+                "sources": sources
+            }
+            
+        except Exception as e:
+            return {
+                "database_name": database_name,
+                "status": "error",
+                "error": str(e)
+            }

@@ -23,12 +23,19 @@ venv/
 !/data_landing_zone/raw/
 /data_landing_zone/raw/*
 !/data_landing_zone/raw/.gitkeep
+!/data_landing_zone/raw/external/
 !/data_landing_zone/intermediate/
 /data_landing_zone/intermediate/*
 !/data_landing_zone/intermediate/.gitkeep
 !/data_landing_zone/warehouses/
 /data_landing_zone/warehouses/*
 !/data_landing_zone/warehouses/.gitkeep
+
+# Allow metadata exports to be tracked
+!/data_landing_zone/metadata/
+/data_landing_zone/metadata/*
+!/data_landing_zone/metadata/exports/
+!/data_landing_zone/metadata/.gitkeep
 
 # Raw data (Module input)
 /data_landing_zone/raw/uploads/

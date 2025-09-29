@@ -1,0 +1,21 @@
+{
+    "scenario_id": "M4_E003",
+    "name": "Module 4 - Get Instances",
+    "description": "Elementary test for getting warehouse instances.",
+    "category": "elementary/module4",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call instances endpoint",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "/api/v1/warehouse/instances",
+            "method": "GET"
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

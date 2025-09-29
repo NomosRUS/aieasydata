@@ -16,6 +16,8 @@ from .schemas import (
     ValidationResponse, CleaningResponse, HomogeneityCheckRequest,
     HomogeneityResult, HealthCheckResponse, ValidationStatus
 )
+from ..config import DataPaths
+from ..shared.base_profiler import get_available_databases
 
 logger = logging.getLogger(__name__)
 
@@ -606,3 +608,112 @@ async def get_supported_formats():
             }
         ]
     }
+
+# Новые API endpoints для работы с организацией данных по базам
+
+@router.post("/validate-with-database-organization")
+async def validate_file_with_database_organization(
+    file_path: str,
+    database_name: str,
+    source_id: Optional[str] = None
+):
+    """
+    Валидация файла с сохранением в новой системе организации данных по базам.
+    
+    Args:
+        file_path: Путь к файлу для валидации
+        database_name: Имя целевой базы данных
+        source_id: Идентификатор источника (опционально)
+    
+    Returns:
+        Результат валидации с информацией о сохраненных файлах
+    """
+    try:
+        result = data_validator.validate_file_with_database_organization(
+            file_path, database_name, source_id
+        )
+        return {
+            "status": "success",
+            "validation_result": result.dict(),
+            "message": f"File validated and saved to database {database_name}"
+        }
+    except Exception as e:
+        logger.error(f"Database validation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/clean-with-database-organization")
+async def clean_data_with_database_organization(
+    source_id: str,
+    database_name: str
+):
+    """
+    Очистка данных с сохранением в новой системе организации.
+    
+    Args:
+        source_id: Идентификатор источника
+        database_name: Имя базы данных
+    
+    Returns:
+        Результат очистки с путями к сохраненным файлам
+    """
+    try:
+        result = data_validator.clean_data_with_database_organization(
+            source_id, database_name
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Database cleaning failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/databases")
+async def get_available_databases_endpoint():
+    """Получить список доступных баз данных в системе."""
+    try:
+        databases = get_available_databases()
+        return {
+            "status": "success",
+            "databases": databases,
+            "count": len(databases)
+        }
+    except Exception as e:
+        logger.error(f"Failed to get databases: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/database/{database_name}/status")
+async def get_database_validation_status(database_name: str):
+    """
+    Получить статус валидации для конкретной базы данных.
+    
+    Args:
+        database_name: Имя базы данных
+    
+    Returns:
+        Статус валидации всех источников в базе данных
+    """
+    try:
+        status = data_validator.get_database_validation_status(database_name)
+        return status
+    except Exception as e:
+        logger.error(f"Failed to get database status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/system/organization-status")
+async def get_data_organization_status():
+    """Получить статус новой системы организации данных."""
+    try:
+        return {
+            "status": "active",
+            "base_data_dir": str(DataPaths.BASE_DATA_DIR),
+            "available_databases": get_available_databases(),
+            "max_file_size_mb": DataPaths.MAX_FILE_SIZE_MB,
+            "metadata_db": str(DataPaths.MAIN_METADATA_DB),
+            "directories": {
+                "raw": str(DataPaths.RAW_DATA_DIR),
+                "intermediate": str(DataPaths.INTERMEDIATE_DIR),
+                "warehouses": str(DataPaths.WAREHOUSES_DIR),
+                "metadata": str(DataPaths.METADATA_DIR)
+            }
+        }
+    except Exception as e:
+        logger.error(f"Failed to get organization status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

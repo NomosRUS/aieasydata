@@ -1,22 +1,39 @@
 """
-Базовое профилирование данных - общий компонент для всех модулей.
-Отвечает за базовый анализ структуры данных без специализированной логики.
+Базовый профилировщик данных для всех модулей системы.
+Предоставляет общие функции профилирования без специализации.
+Интегрирован с новой системой организации данных.
 """
 
 import os
-from typing import List, Dict, Any
-import polars as pl
-from lxml import etree
-import multiprocessing
+import json
 from pathlib import Path
+from typing import Dict, Any, List, Optional
+import pandas as pd
+from datetime import datetime
+
+# Импортируем новую систему путей
+try:
+    from ..config import DataPaths, file_manager
+except ImportError:
+    # Fallback для случаев, когда модуль config еще не готов
+    DataPaths = None
+    file_manager = None
 
 SUPPORTED_FORMATS = (".parquet", ".csv", ".json", ".jsonl", ".xlsx", ".tsv", ".xml")
 
-def scan_data_landing_zone(path: str) -> List[str]:
+def scan_data_zone(path: str = None) -> List[str]:
     """
     Рекурсивно сканирует зону данных и возвращает список поддерживаемых файлов.
     БАЗОВАЯ ФУНКЦИЯ - используется всеми модулями.
+    Теперь интегрирована с новой системой путей.
     """
+    if path is None and DataPaths:
+        # Используем новую систему путей
+        path = str(DataPaths.BASE_DATA_DIR)
+    elif path is None:
+        # Fallback к старому пути
+        path = "data_landing_zone"
+    
     found_files = []
     for root, _, files in os.walk(path):
         for file in files:
@@ -181,3 +198,83 @@ def classify_dataset_basic(files_info: List[Dict[str, Any]]) -> Dict[str, Any]:
         "size_category": size_category,
         "file_types_distribution": file_types
     }
+
+def get_database_files(database_name: str, stage: str = None) -> List[str]:
+    """
+    Получить файлы для конкретной базы данных из новой системы организации.
+    
+    Args:
+        database_name: Имя базы данных
+        stage: Этап обработки (raw, validated, cleaned, aggregated, optimized)
+    
+    Returns:
+        Список путей к файлам
+    """
+    if not DataPaths:
+        return []
+    
+    files = []
+    
+    if stage is None:
+        # Сканируем все этапы для данной БД
+        stages = ["validated", "cleaned", "aggregated", "optimized"]
+        for s in stages:
+            try:
+                stage_path = DataPaths.get_database_intermediate_path(database_name, s)
+                if stage_path.exists():
+                    files.extend(scan_data_zone(str(stage_path)))
+            except:
+                continue
+    else:
+        # Сканируем конкретный этап
+        try:
+            if stage == "raw":
+                stage_path = DataPaths.RAW_DATA_DIR
+            else:
+                stage_path = DataPaths.get_database_intermediate_path(database_name, stage)
+            
+            if stage_path.exists():
+                files.extend(scan_data_zone(str(stage_path)))
+        except:
+            pass
+    
+    return files
+
+def process_file_with_size_control(file_path: str, database_name: str, 
+                                 source_id: str, stage: str) -> List[str]:
+    """
+    Обработать файл с автоматическим контролем размера.
+    Интеграция с file_manager для разделения больших файлов.
+    
+    Args:
+        file_path: Путь к исходному файлу
+        database_name: Имя базы данных
+        source_id: Идентификатор источника
+        stage: Этап обработки
+    
+    Returns:
+        Список путей к обработанным файлам
+    """
+    if not file_manager:
+        # Fallback - просто возвращаем исходный файл
+        return [file_path]
+    
+    try:
+        # Используем file_manager для обработки с контролем размера
+        processed_files = file_manager.process_file(
+            Path(file_path), database_name, source_id, stage
+        )
+        return [str(f) for f in processed_files]
+    except Exception as e:
+        print(f"Warning: Failed to process file with size control: {e}")
+        return [file_path]
+
+def get_available_databases() -> List[str]:
+    """Получить список доступных баз данных в системе."""
+    if not DataPaths:
+        return []
+    
+    try:
+        return DataPaths.get_database_list()
+    except:
+        return []

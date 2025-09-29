@@ -4,10 +4,20 @@
 """
 
 import asyncio
-import uuid
 import logging
-from typing import Dict, List, Optional, Any
+import uuid
 from datetime import datetime
+from typing import Dict, List, Any, Optional
+from pathlib import Path
+import json
+import requests
+
+# Импортируем новую систему управления данными
+from ..config import DataPaths, file_manager
+from ..shared.base_profiler import get_database_files, get_available_databases, process_file_with_size_control
+from ..shared.schemas import OptimizationRecommendation as DBOptimizationRecommendation
+from ..warehouse_designer.main import _validate_ddl_script
+from ..database import get_db
 from sqlalchemy.orm import Session
 
 from .schemas import (
@@ -380,3 +390,244 @@ async def get_table_history(table_name: str) -> PerformanceHistory:
     Получение истории оптимизаций таблицы
     """
     return await performance_optimizer.get_performance_history(table_name)
+
+async def analyze_database_performance(database_name: str, stage: str = None) -> Dict[str, Any]:
+    """
+    Анализ производительности данных в организованной системе.
+    
+    Args:
+        database_name: Имя базы данных
+        stage: Этап обработки (validated, cleaned, aggregated, optimized)
+    
+    Returns:
+        Результат анализа производительности
+    """
+    try:
+        # Получаем файлы из организованной структуры
+        files = get_database_files(database_name, stage)
+        
+        if not files:
+            return {
+                "database_name": database_name,
+                "stage": stage,
+                "status": "no_data",
+                "message": "No files found for analysis"
+            }
+        
+        analysis_results = []
+        total_recommendations = 0
+        
+        for file_path in files[:5]:  # Анализируем первые 5 файлов
+            try:
+                # Создаем запрос на анализ
+                analysis_request = PerformanceAnalysisRequest(
+                    source=file_path,
+                    analysis_type="file_performance",
+                    target_database="auto_detect"
+                )
+                
+                # Выполняем анализ
+                result = await performance_optimizer.analyze_performance(analysis_request)
+                
+                if result.status == "completed":
+                    analysis_results.append({
+                        "file": str(Path(file_path).name),
+                        "recommendations_count": len(result.recommendations),
+                        "performance_score": result.performance_metrics.get("overall_score", 0),
+                        "recommendations": [r.dict() for r in result.recommendations[:3]]  # Первые 3
+                    })
+                    total_recommendations += len(result.recommendations)
+                
+            except Exception as e:
+                analysis_results.append({
+                    "file": str(Path(file_path).name),
+                    "error": str(e)
+                })
+        
+        return {
+            "database_name": database_name,
+            "stage": stage or "all_stages",
+            "status": "completed",
+            "files_analyzed": len(analysis_results),
+            "total_recommendations": total_recommendations,
+            "analysis_results": analysis_results
+        }
+        
+    except Exception as e:
+        return {
+            "database_name": database_name,
+            "stage": stage,
+            "status": "error",
+            "error": str(e)
+        }
+
+def optimize_database_organization(database_name: str) -> Dict[str, Any]:
+    """
+    Оптимизация организации данных для конкретной базы данных.
+    
+    Args:
+        database_name: Имя базы данных
+    
+    Returns:
+        Результат оптимизации организации
+    """
+    try:
+        optimization_results = {
+            "database_name": database_name,
+            "timestamp": datetime.now().isoformat(),
+            "optimizations_applied": [],
+            "recommendations": []
+        }
+        
+        # Анализируем все этапы обработки
+        stages = ["validated", "cleaned", "aggregated", "optimized"]
+        
+        for stage in stages:
+            try:
+                files = get_database_files(database_name, stage)
+                
+                if not files:
+                    continue
+                
+                stage_optimization = {
+                    "stage": stage,
+                    "files_count": len(files),
+                    "optimizations": []
+                }
+                
+                # Проверяем размеры файлов
+                large_files = []
+                for file_path in files:
+                    try:
+                        file_size = Path(file_path).stat().st_size
+                        if file_size > DataPaths.MAX_FILE_SIZE_MB * 1024 * 1024:
+                            large_files.append({
+                                "file": str(Path(file_path).name),
+                                "size_mb": round(file_size / (1024 * 1024), 2)
+                            })
+                    except:
+                        continue
+                
+                if large_files:
+                    stage_optimization["optimizations"].append({
+                        "type": "file_splitting",
+                        "description": f"Found {len(large_files)} files exceeding size limit",
+                        "large_files": large_files,
+                        "recommendation": "Split large files using file_manager"
+                    })
+                
+                # Рекомендации по формату файлов
+                non_parquet_files = [f for f in files if not f.endswith('.parquet')]
+                if non_parquet_files:
+                    stage_optimization["optimizations"].append({
+                        "type": "format_optimization",
+                        "description": f"Found {len(non_parquet_files)} non-Parquet files",
+                        "recommendation": "Convert to Parquet format for better performance"
+                    })
+                
+                if stage_optimization["optimizations"]:
+                    optimization_results["optimizations_applied"].append(stage_optimization)
+                
+            except Exception as e:
+                optimization_results["recommendations"].append({
+                    "stage": stage,
+                    "error": str(e),
+                    "recommendation": "Check stage directory structure"
+                })
+        
+        # Общие рекомендации
+        databases = get_available_databases()
+        if len(databases) > 10:
+            optimization_results["recommendations"].append({
+                "type": "database_consolidation",
+                "description": f"Found {len(databases)} databases",
+                "recommendation": "Consider consolidating similar databases"
+            })
+        
+        optimization_results["status"] = "completed"
+        optimization_results["total_optimizations"] = len(optimization_results["optimizations_applied"])
+        
+        return optimization_results
+        
+    except Exception as e:
+        return {
+            "database_name": database_name,
+            "status": "error",
+            "error": str(e)
+        }
+
+def get_cross_database_optimization_opportunities() -> Dict[str, Any]:
+    """
+    Поиск возможностей оптимизации между базами данных.
+    
+    Returns:
+        Возможности кросс-базовой оптимизации
+    """
+    try:
+        databases = get_available_databases()
+        
+        opportunities = {
+            "timestamp": datetime.now().isoformat(),
+            "total_databases": len(databases),
+            "opportunities": []
+        }
+        
+        # Анализ дублирования данных
+        database_stats = {}
+        for db_name in databases:
+            try:
+                files = get_database_files(db_name)
+                total_size = 0
+                file_count = 0
+                
+                for file_path in files:
+                    try:
+                        total_size += Path(file_path).stat().st_size
+                        file_count += 1
+                    except:
+                        continue
+                
+                database_stats[db_name] = {
+                    "files": file_count,
+                    "size_mb": round(total_size / (1024 * 1024), 2)
+                }
+                
+            except Exception as e:
+                database_stats[db_name] = {"error": str(e)}
+        
+        # Поиск возможностей консолидации
+        small_databases = [db for db, stats in database_stats.items() 
+                          if isinstance(stats, dict) and stats.get("size_mb", 0) < 100]
+        
+        if len(small_databases) > 3:
+            opportunities["opportunities"].append({
+                "type": "database_consolidation",
+                "description": f"Found {len(small_databases)} small databases (<100MB)",
+                "databases": small_databases,
+                "recommendation": "Consider consolidating small databases",
+                "potential_savings": "Reduced metadata overhead and improved management"
+            })
+        
+        # Поиск больших баз данных для разделения
+        large_databases = [db for db, stats in database_stats.items() 
+                          if isinstance(stats, dict) and stats.get("size_mb", 0) > 5000]
+        
+        if large_databases:
+            opportunities["opportunities"].append({
+                "type": "database_partitioning",
+                "description": f"Found {len(large_databases)} large databases (>5GB)",
+                "databases": large_databases,
+                "recommendation": "Consider partitioning large databases by time or category",
+                "potential_benefits": "Improved query performance and parallel processing"
+            })
+        
+        opportunities["database_stats"] = database_stats
+        opportunities["total_opportunities"] = len(opportunities["opportunities"])
+        
+        return opportunities
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e)
+        }

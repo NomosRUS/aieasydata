@@ -1,0 +1,782 @@
+{
+    "scenario_id": "S017",
+    "name": "Dependency Check Between Modules",
+    "category": "quick_diagnostics",
+    "timestamp": 1759086636,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Проверка доступности Модуля 1",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "status": "healthy"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 10,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5": "not_checked",
+                        "data_landing_zone": "available"
+                    },
+                    "last_check": "2025-09-28T19:09:59.965640"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 2,
+                "description": "Проверка доступности Модуля 2",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "status": "healthy"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 10,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5_metrics": true,
+                        "module_4_warehouse": true,
+                        "database": false
+                    },
+                    "active_scenarios": 34,
+                    "last_execution": null,
+                    "error_details": null
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 3,
+                "description": "Проверка доступности Модуля 3",
+                "action": "module_api_call",
+                "module": 3,
+                "endpoint": "/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "status": "healthy"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 10,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "ok",
+                    "module": "performance_optimizer",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module5_metrics": "ok",
+                        "database": "error"
+                    },
+                    "capabilities": [
+                        "auto_detect_data_types",
+                        "performance_analysis",
+                        "optimization_recommendations",
+                        "ddl_generation",
+                        "module4_integration",
+                        "module5_integration"
+                    ]
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 4,
+                "description": "Проверка доступности Модуля 4",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "status": "healthy"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 10,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 5,
+                "description": "Проверка доступности Модуля 5",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "status": "healthy"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 10,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "module": "metrics_collector",
+                    "supported_db_types": [
+                        "clickhouse",
+                        "postgres",
+                        "file_system"
+                    ],
+                    "version": "1.0"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 6,
+                "description": "Проверка интерфейса Модуль 5 → Модуль 1",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "/auto-detect",
+                "method": "GET",
+                "params": {
+                    "source": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "data_type": "csv"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "row_count": 0,
+                    "size_in_bytes": 0,
+                    "file_count": 0,
+                    "avg_file_size": 0,
+                    "file_types": {},
+                    "data_type": "csv",
+                    "format": "csv",
+                    "detected_type": "file",
+                    "schema": {
+                        "columns": [
+                            {
+                                "name": "id",
+                                "type": "numeric",
+                                "index": 0
+                            },
+                            {
+                                "name": "product_name",
+                                "type": "string",
+                                "index": 1
+                            },
+                            {
+                                "name": "category",
+                                "type": "string",
+                                "index": 2
+                            },
+                            {
+                                "name": "price",
+                                "type": "numeric",
+                                "index": 3
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "numeric",
+                                "index": 4
+                            },
+                            {
+                                "name": "sale_date",
+                                "type": "date",
+                                "index": 5
+                            },
+                            {
+                                "name": "customer_id",
+                                "type": "numeric",
+                                "index": 6
+                            }
+                        ],
+                        "column_count": 7
+                    },
+                    "separator": ",",
+                    "encoding": "utf-8",
+                    "detection_details": {
+                        "type": "file",
+                        "file_type": "csv",
+                        "source": "/data/raw/sales.csv",
+                        "file_size": 557,
+                        "file_name": "sales.csv",
+                        "format": "csv",
+                        "separator": ",",
+                        "encoding": "utf-8",
+                        "schema": {
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "type": "numeric",
+                                    "index": 0
+                                },
+                                {
+                                    "name": "product_name",
+                                    "type": "string",
+                                    "index": 1
+                                },
+                                {
+                                    "name": "category",
+                                    "type": "string",
+                                    "index": 2
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "numeric",
+                                    "index": 3
+                                },
+                                {
+                                    "name": "quantity",
+                                    "type": "numeric",
+                                    "index": 4
+                                },
+                                {
+                                    "name": "sale_date",
+                                    "type": "date",
+                                    "index": 5
+                                },
+                                {
+                                    "name": "customer_id",
+                                    "type": "numeric",
+                                    "index": 6
+                                }
+                            ],
+                            "column_count": 7
+                        },
+                        "sample_data": [
+                            [
+                                "1",
+                                "Laptop Pro",
+                                "Electronics",
+                                "1299.99",
+                                "2",
+                                "2024-01-15",
+                                "101"
+                            ],
+                            [
+                                "2",
+                                "Wireless Mouse",
+                                "Electronics",
+                                "29.99",
+                                "5",
+                                "2024-01-16",
+                                "102"
+                            ],
+                            [
+                                "3",
+                                "Office Chair",
+                                "Furniture",
+                                "199.99",
+                                "1",
+                                "2024-01-17",
+                                "103"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 7,
+                "description": "Проверка интерфейса Модуль 1 → Модуль 2",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/validate-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/sales.csv",
+                    "validation_options": {
+                        "check_duplicates": true
+                    }
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "validation_passed": true
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "validation_id": "db51810e-c405-4fae-bcfd-f90f04293908",
+                    "status": "completed",
+                    "quality_score": 0.9839999999999999,
+                    "issues_count": 9,
+                    "issues": [
+                        {
+                            "issue_id": "a2e7ee71-5a2e-431f-a39c-f0f831aec0d7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 2,
+                            "percentage": 20.0,
+                            "description": "Колонка 'price' содержит 2 потенциальных выбросов (20.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "25938585-160b-4894-81ba-16093ea8bce5",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 10.0,
+                            "description": "Колонка 'quantity' содержит 1 потенциальных выбросов (10.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "iqr_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_price_4",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_4",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_quantity_7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_quantity_7",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "multivariate_0",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "multivariate",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Многомерная аномалия в строке 0: необычная комбинация значений",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        }
+                    ],
+                    "recommendations_count": 1,
+                    "processing_time_ms": 30296.494
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 8,
+                "description": "Проверка интерфейса Модуль 2 → Модуль 4",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "/create-scenario",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "dependency_test_{{timestamp}}",
+                    "description": "A test scenario to check dependency from M2 to M4",
+                    "sources": [
+                        {
+                            "source_id": "sales_data",
+                            "source_type": "file",
+                            "path": "/data/raw/sales.csv",
+                            "selected_columns": [
+                                "category",
+                                "price"
+                            ]
+                        }
+                    ],
+                    "aggregations": [
+                        {
+                            "type": "group_by",
+                            "parameters": {
+                                "columns": [
+                                    "category"
+                                ],
+                                "aggregates": {
+                                    "total_price": "sum(price)"
+                                }
+                            }
+                        }
+                    ],
+                    "target_requirements": {
+                        "expected_volume": "<1GB"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "scenario_created": true
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "scenario_id": "56",
+                    "name": "dependency_test_1759086632",
+                    "description": "A test scenario to check dependency from M2 to M4",
+                    "status": "validated",
+                    "sources_analysis": [
+                        {
+                            "source_id": "sales_data",
+                            "source_type": "file",
+                            "columns": [],
+                            "row_count": 0,
+                            "data_size_bytes": null,
+                            "sample_data": [],
+                            "compatibility_issues": []
+                        }
+                    ],
+                    "estimated_output_size": 1000,
+                    "recommended_engine": "postgres",
+                    "validation_errors": [],
+                    "created_at": "2025-09-28T19:10:33.393794",
+                    "last_modified": "2025-09-28T19:10:33.393798"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 9,
+                "description": "Проверка интерфейса Модуль 3 → Модуль 4",
+                "action": "module_api_call",
+                "module": 3,
+                "endpoint": "/analyze",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "source": "/data/raw/sales.csv"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "analysis_completed": true
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "analysis_id": "analysis_20250928_191033_763056",
+                    "source": "/data/raw/sales.csv",
+                    "source_type": "csv",
+                    "status": "completed",
+                    "current_metrics": {
+                        "source_type": "csv",
+                        "data_size_bytes": 0,
+                        "row_count": 0,
+                        "column_count": null,
+                        "processing_time_ms": 0.0,
+                        "avg_query_time_ms": null,
+                        "index_usage_stats": null,
+                        "partition_stats": null,
+                        "bottlenecks": [],
+                        "structure_info": {}
+                    },
+                    "bottlenecks": [],
+                    "recommendations": [],
+                    "llm_analysis": "Не удалось получить ответ от ИИ: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+                    "created_at": "2025-09-28T19:10:33.763316",
+                    "completed_at": "2025-09-28T19:10:35.637486",
+                    "error_message": null
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 10,
+                "description": "Проверка интерфейса Модуль 4 → Модуль 5",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "/instances",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "instances": "array"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": [
+                    {
+                        "id": 4,
+                        "design_id": "5a80f922-7753-4c81-8046-c4b2c8914ea1",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:44:58.208862"
+                    },
+                    {
+                        "id": 5,
+                        "design_id": "ea1bafb0-db1a-4f50-a84b-dca087c25bff",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:45:45.280183"
+                    },
+                    {
+                        "id": 6,
+                        "design_id": "3d1e551d-9031-4f59-a626-6c6ec134102a",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:46:09.723238"
+                    },
+                    {
+                        "id": 7,
+                        "design_id": "4e145fe5-00ea-4f72-b5ab-200754e74cbf",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:46:33.127361"
+                    },
+                    {
+                        "id": 8,
+                        "design_id": "de95013f-cd58-4e2e-a5ce-961790947386",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:51:37.541914"
+                    },
+                    {
+                        "id": 9,
+                        "design_id": "0c225244-218a-4b06-81de-ff4c9d53b16b",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:55:08.945914"
+                    },
+                    {
+                        "id": 10,
+                        "design_id": "5d7d78ca-6ccb-45e8-9f1f-9927aef4b796",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:55:35.881974"
+                    },
+                    {
+                        "id": 11,
+                        "design_id": "e3c1bdff-03f0-4ff1-8d6b-5c1fbd837a6c",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:59:37.635456"
+                    },
+                    {
+                        "id": 12,
+                        "design_id": "f3749c6e-8943-42a4-8a47-4ee0026db0ce",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T15:00:17.286983"
+                    },
+                    {
+                        "id": 13,
+                        "design_id": "bbb03a72-1bae-4a7a-910d-e1cbe63c455d",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T15:00:38.199172"
+                    },
+                    {
+                        "id": 1,
+                        "design_id": "edb638fa-134d-47e9-b8f5-6b0b6dd7da55",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {
+                            "row_count": 0,
+                            "size_in_bytes": 0
+                        },
+                        "created_at": "2025-09-25T14:32:45.690927"
+                    },
+                    {
+                        "id": 2,
+                        "design_id": "9c3d76f1-0e98-4ad2-b3d4-87a61811a5ad",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {
+                            "row_count": 0,
+                            "size_in_bytes": 0
+                        },
+                        "created_at": "2025-09-25T14:36:32.305022"
+                    },
+                    {
+                        "id": 14,
+                        "design_id": "c9259623-4d28-4a5b-8ff3-fcd70443936a",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T15:01:02.110004"
+                    },
+                    {
+                        "id": 3,
+                        "design_id": "b32a3876-b4ca-47e5-9d84-a2fe893c0bf4",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {
+                            "row_count": 0,
+                            "size_in_bytes": 0
+                        },
+                        "created_at": "2025-09-25T14:43:32.655330"
+                    }
+                ]
+            }
+        }
+    ]
+}

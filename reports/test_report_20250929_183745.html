@@ -1,0 +1,346 @@
+        <html>
+        <head>
+            <title>Test Report - 2025-09-29 18:37:45</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 40px; }
+                .summary { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: .25rem; padding: 20px; margin-bottom: 20px; }
+                .scenario { border: 1px solid #dee2e6; border-radius: .25rem; margin-bottom: 10px; }
+                .scenario-header { padding: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+                .passed { border-left: 5px solid #28a745; }
+                .failed { border-left: 5px solid #dc3545; }
+                .passed .scenario-header { background-color: #d4edda; }
+                .failed .scenario-header { background-color: #f8d7da; }
+                .trajectory { display: none; padding: 10px; border-top: 1px solid #dee2e6; background-color: #fff; }
+                pre { background-color: #e9ecef; padding: 10px; border-radius: .25rem; white-space: pre-wrap; word-wrap: break-word; }
+            </style>
+            <script>
+                function toggleTrajectory(element) {
+                    var content = element.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                }
+            </script>
+        </head>
+        <body>
+            <h1>Test Execution Report</h1>
+            <div class='summary'>
+                <h2>Summary</h2>
+                <p>Total Scenarios: 1</p>
+                <p>Passed: 1</p>
+                <p>Failed: 0</p>
+                <p>Pass Rate: <strong>100.00%</strong></p>
+                <p>Total Execution Time: 19.80s</p>
+            </div>
+            <h2>Scenario Details</h2>
+                    <div class='scenario passed'>
+                <div class='scenario-header' onclick='toggleTrajectory(this)'>
+                    <span><strong>Module 4 to Module 5 Format Validation</strong> - PASSED</span>
+                    <span>Click to expand</span>
+                </div>
+                <div class='trajectory'>
+                    
+                    <h4>Execution Trajectory:</h4>
+                    <pre>[
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 1,
+      &quot;description&quot;: &quot;Проектирование хранилища PostgreSQL в Module 4&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;design&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;source_profile_id&quot;: 1,
+        &quot;business_requirements&quot;: &quot;Test for M5 connection&quot;,
+        &quot;analytics_requirements&quot;: {},
+        &quot;constraints&quot;: {}
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;design_info&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;design_id&quot;: &quot;856c704a-0c8a-4db1-92ee-c9f1d27693af&quot;,
+        &quot;status&quot;: &quot;awaiting_user_confirmation&quot;,
+        &quot;results&quot;: {
+          &quot;context&quot;: {
+            &quot;data_profile&quot;: {
+              &quot;id&quot;: 1,
+              &quot;source_path&quot;: &quot;/data/raw/sales.csv&quot;,
+              &quot;kind&quot;: null,
+              &quot;total_row_count&quot;: null,
+              &quot;file_count&quot;: null,
+              &quot;columns&quot;: [
+                {
+                  &quot;name&quot;: &quot;dt&quot;,
+                  &quot;type&quot;: &quot;Date&quot;
+                },
+                {
+                  &quot;name&quot;: &quot;amount&quot;,
+                  &quot;type&quot;: &quot;Int64&quot;
+                }
+              ],
+              &quot;sample_data&quot;: null,
+              &quot;llm_summary&quot;: null,
+              &quot;error&quot;: null,
+              &quot;created_at&quot;: &quot;2025-09-25T13:34:05.487325&quot;,
+              &quot;updated_at&quot;: &quot;2025-09-25T13:34:05.487330&quot;
+            },
+            &quot;optimization_recommendations&quot;: [
+              {
+                &quot;id&quot;: 1,
+                &quot;table_name&quot;: &quot;/data/raw/sales.csv&quot;,
+                &quot;recommendation_type&quot;: &quot;partition&quot;,
+                &quot;recommendation_details&quot;: {
+                  &quot;partition_by&quot;: &quot;toYYYYMM(dt)&quot;
+                },
+                &quot;created_at&quot;: null,
+                &quot;updated_at&quot;: null
+              }
+            ],
+            &quot;request&quot;: {
+              &quot;source_profile_id&quot;: 1,
+              &quot;business_requirements&quot;: &quot;Test for M5 connection&quot;,
+              &quot;analytics_requirements&quot;: {},
+              &quot;constraints&quot;: {}
+            }
+          },
+          &quot;heuristic_decision&quot;: {
+            &quot;candidate&quot;: &quot;postgres&quot;,
+            &quot;scores&quot;: {
+              &quot;clickhouse&quot;: 0,
+              &quot;postgres&quot;: 1,
+              &quot;hdfs&quot;: 0
+            },
+            &quot;reasons&quot;: [
+              &quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.&quot;
+            ],
+            &quot;evaluated_facts&quot;: {
+              &quot;total_row_count&quot;: 0,
+              &quot;quality_score&quot;: null,
+              &quot;aggregation_types&quot;: [],
+              &quot;analytics_requirements&quot;: {},
+              &quot;constraints&quot;: {}
+            }
+          },
+          &quot;llm_analysis&quot;: {
+            &quot;final_choice&quot;: &quot;postgres&quot;,
+            &quot;summary&quot;: &quot;```json\n{\n  \&quot;final_choice\&quot;: \&quot;clickhouse\&quot;,\n  \&quot;summary\&quot;: \&quot;ClickHouse лучше подходит для аналитических задач с большими объемами данных и поддерживает эффективную агрегацию, что соответствует требованиям анализа.\&quot;,\n  \&quot;critical_arguments\&quot;: [\n    \&quot;Аналитическая нагрузка на данные\&quot;,\n    \&quot;Обработка больших объемов данных\&quot;,\n    \&quot;Потребность в высокоскоростных запросах\&quot;,\n    \&quot;Рекомендация по партиционированию данных\&quot;\n  ],\n  \&quot;confidence\&quot;: \&quot;высокая\&quot;,\n  \&quot;notes\&quot;: \&quot;Рекомендуется использовать ClickHouse для улучшения производительности при аналитических запросах. Если архитектура допускает использование OLAP-систем, это может существенно повысить скорость обработки данных.\&quot;\n}\n```&quot;,
+            &quot;critical_arguments&quot;: [
+              &quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.&quot;
+            ],
+            &quot;confidence&quot;: &quot;средняя&quot;,
+            &quot;notes&quot;: &quot;Ответ LLM не в формате JSON; использовано содержание как есть.&quot;,
+            &quot;debug_log&quot;: {
+              &quot;base_url&quot;: &quot;https://api.openai.com/v1/&quot;,
+              &quot;model&quot;: &quot;gpt-4o-mini&quot;,
+              &quot;prompt&quot;: &quot;Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \&quot;context\&quot;: {\n    \&quot;data_profile\&quot;: {\n      \&quot;id\&quot;: 1,\n      \&quot;source_path\&quot;: \&quot;/data/raw/sales.csv\&quot;,\n      \&quot;kind\&quot;: null,\n      \&quot;total_row_count\&quot;: null,\n      \&quot;file_count\&quot;: null,\n      \&quot;columns\&quot;: [\n        {\n          \&quot;name\&quot;: \&quot;dt\&quot;,\n          \&quot;type\&quot;: \&quot;Date\&quot;\n        },\n        {\n          \&quot;name\&quot;: \&quot;amount\&quot;,\n          \&quot;type\&quot;: \&quot;Int64\&quot;\n        }\n      ],\n      \&quot;sample_data\&quot;: null,\n      \&quot;llm_summary\&quot;: null,\n      \&quot;error\&quot;: null,\n      \&quot;created_at\&quot;: \&quot;2025-09-25T13:34:05.487325\&quot;,\n      \&quot;updated_at\&quot;: \&quot;2025-09-25T13:34:05.487330\&quot;\n    },\n    \&quot;optimization_recommendations\&quot;: [\n      {\n        \&quot;id\&quot;: 1,\n        \&quot;table_name\&quot;: \&quot;/data/raw/sales.csv\&quot;,\n        \&quot;recommendation_type\&quot;: \&quot;partition\&quot;,\n        \&quot;recommendation_details\&quot;: {\n          \&quot;partition_by\&quot;: \&quot;toYYYYMM(dt)\&quot;\n        },\n        \&quot;created_at\&quot;: null,\n        \&quot;updated_at\&quot;: null\n      }\n    ],\n    \&quot;request\&quot;: {\n      \&quot;source_profile_id\&quot;: 1,\n      \&quot;business_requirements\&quot;: \&quot;Test for M5 connection\&quot;,\n      \&quot;analytics_requirements\&quot;: {},\n      \&quot;constraints\&quot;: {}\n    }\n  },\n  \&quot;heuristic\&quot;: {\n    \&quot;candidate\&quot;: \&quot;postgres\&quot;,\n    \&quot;scores\&quot;: {\n      \&quot;clickhouse\&quot;: 0,\n      \&quot;postgres\&quot;: 1,\n      \&quot;hdfs\&quot;: 0\n    },\n    \&quot;reasons\&quot;: [\n      \&quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\&quot;\n    ],\n    \&quot;evaluated_facts\&quot;: {\n      \&quot;total_row_count\&quot;: 0,\n      \&quot;quality_score\&quot;: null,\n      \&quot;aggregation_types\&quot;: [],\n      \&quot;analytics_requirements\&quot;: {},\n      \&quot;constraints\&quot;: {}\n    }\n  }\n}&quot;,
+              &quot;response&quot;: &quot;```json\n{\n  \&quot;final_choice\&quot;: \&quot;clickhouse\&quot;,\n  \&quot;summary\&quot;: \&quot;ClickHouse лучше подходит для аналитических задач с большими объемами данных и поддерживает эффективную агрегацию, что соответствует требованиям анализа.\&quot;,\n  \&quot;critical_arguments\&quot;: [\n    \&quot;Аналитическая нагрузка на данные\&quot;,\n    \&quot;Обработка больших объемов данных\&quot;,\n    \&quot;Потребность в высокоскоростных запросах\&quot;,\n    \&quot;Рекомендация по партиционированию данных\&quot;\n  ],\n  \&quot;confidence\&quot;: \&quot;высокая\&quot;,\n  \&quot;notes\&quot;: \&quot;Рекомендуется использовать ClickHouse для улучшения производительности при аналитических запросах. Если архитектура допускает использование OLAP-систем, это может существенно повысить скорость обработки данных.\&quot;\n}\n```&quot;,
+              &quot;error&quot;: null
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 2,
+      &quot;description&quot;: &quot;Подтверждение дизайна PostgreSQL&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 4,
+      &quot;endpoint&quot;: &quot;/design/{{design_info.design_id}}/confirm&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: {
+        &quot;chosen_db&quot;: &quot;postgresql&quot;
+      },
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: &quot;warehouse_info&quot;,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;design_id&quot;: &quot;856c704a-0c8a-4db1-92ee-c9f1d27693af&quot;,
+        &quot;status&quot;: &quot;ddl_generated&quot;,
+        &quot;results&quot;: {
+          &quot;context&quot;: {
+            &quot;data_profile&quot;: {
+              &quot;id&quot;: 1,
+              &quot;source_path&quot;: &quot;/data/raw/sales.csv&quot;,
+              &quot;kind&quot;: null,
+              &quot;total_row_count&quot;: null,
+              &quot;file_count&quot;: null,
+              &quot;columns&quot;: [
+                {
+                  &quot;name&quot;: &quot;dt&quot;,
+                  &quot;type&quot;: &quot;Date&quot;
+                },
+                {
+                  &quot;name&quot;: &quot;amount&quot;,
+                  &quot;type&quot;: &quot;Int64&quot;
+                }
+              ],
+              &quot;sample_data&quot;: null,
+              &quot;llm_summary&quot;: null,
+              &quot;error&quot;: null,
+              &quot;created_at&quot;: &quot;2025-09-25T13:34:05.487325&quot;,
+              &quot;updated_at&quot;: &quot;2025-09-25T13:34:05.487330&quot;
+            },
+            &quot;optimization_recommendations&quot;: [
+              {
+                &quot;id&quot;: 1,
+                &quot;table_name&quot;: &quot;/data/raw/sales.csv&quot;,
+                &quot;recommendation_type&quot;: &quot;partition&quot;,
+                &quot;recommendation_details&quot;: {
+                  &quot;partition_by&quot;: &quot;toYYYYMM(dt)&quot;
+                },
+                &quot;created_at&quot;: null,
+                &quot;updated_at&quot;: null
+              }
+            ],
+            &quot;request&quot;: {
+              &quot;source_profile_id&quot;: 1,
+              &quot;business_requirements&quot;: &quot;Test for M5 connection&quot;,
+              &quot;analytics_requirements&quot;: {},
+              &quot;constraints&quot;: {}
+            }
+          },
+          &quot;heuristic_decision&quot;: {
+            &quot;candidate&quot;: &quot;postgres&quot;,
+            &quot;scores&quot;: {
+              &quot;clickhouse&quot;: 0,
+              &quot;postgres&quot;: 1,
+              &quot;hdfs&quot;: 0
+            },
+            &quot;reasons&quot;: [
+              &quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.&quot;
+            ],
+            &quot;evaluated_facts&quot;: {
+              &quot;total_row_count&quot;: 0,
+              &quot;quality_score&quot;: null,
+              &quot;aggregation_types&quot;: [],
+              &quot;analytics_requirements&quot;: {},
+              &quot;constraints&quot;: {}
+            }
+          },
+          &quot;llm_analysis&quot;: {
+            &quot;final_choice&quot;: &quot;postgres&quot;,
+            &quot;summary&quot;: &quot;```json\n{\n  \&quot;final_choice\&quot;: \&quot;clickhouse\&quot;,\n  \&quot;summary\&quot;: \&quot;ClickHouse лучше подходит для аналитических задач с большими объемами данных и поддерживает эффективную агрегацию, что соответствует требованиям анализа.\&quot;,\n  \&quot;critical_arguments\&quot;: [\n    \&quot;Аналитическая нагрузка на данные\&quot;,\n    \&quot;Обработка больших объемов данных\&quot;,\n    \&quot;Потребность в высокоскоростных запросах\&quot;,\n    \&quot;Рекомендация по партиционированию данных\&quot;\n  ],\n  \&quot;confidence\&quot;: \&quot;высокая\&quot;,\n  \&quot;notes\&quot;: \&quot;Рекомендуется использовать ClickHouse для улучшения производительности при аналитических запросах. Если архитектура допускает использование OLAP-систем, это может существенно повысить скорость обработки данных.\&quot;\n}\n```&quot;,
+            &quot;critical_arguments&quot;: [
+              &quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.&quot;
+            ],
+            &quot;confidence&quot;: &quot;средняя&quot;,
+            &quot;notes&quot;: &quot;Ответ LLM не в формате JSON; использовано содержание как есть.&quot;,
+            &quot;debug_log&quot;: {
+              &quot;base_url&quot;: &quot;https://api.openai.com/v1/&quot;,
+              &quot;model&quot;: &quot;gpt-4o-mini&quot;,
+              &quot;prompt&quot;: &quot;Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \&quot;context\&quot;: {\n    \&quot;data_profile\&quot;: {\n      \&quot;id\&quot;: 1,\n      \&quot;source_path\&quot;: \&quot;/data/raw/sales.csv\&quot;,\n      \&quot;kind\&quot;: null,\n      \&quot;total_row_count\&quot;: null,\n      \&quot;file_count\&quot;: null,\n      \&quot;columns\&quot;: [\n        {\n          \&quot;name\&quot;: \&quot;dt\&quot;,\n          \&quot;type\&quot;: \&quot;Date\&quot;\n        },\n        {\n          \&quot;name\&quot;: \&quot;amount\&quot;,\n          \&quot;type\&quot;: \&quot;Int64\&quot;\n        }\n      ],\n      \&quot;sample_data\&quot;: null,\n      \&quot;llm_summary\&quot;: null,\n      \&quot;error\&quot;: null,\n      \&quot;created_at\&quot;: \&quot;2025-09-25T13:34:05.487325\&quot;,\n      \&quot;updated_at\&quot;: \&quot;2025-09-25T13:34:05.487330\&quot;\n    },\n    \&quot;optimization_recommendations\&quot;: [\n      {\n        \&quot;id\&quot;: 1,\n        \&quot;table_name\&quot;: \&quot;/data/raw/sales.csv\&quot;,\n        \&quot;recommendation_type\&quot;: \&quot;partition\&quot;,\n        \&quot;recommendation_details\&quot;: {\n          \&quot;partition_by\&quot;: \&quot;toYYYYMM(dt)\&quot;\n        },\n        \&quot;created_at\&quot;: null,\n        \&quot;updated_at\&quot;: null\n      }\n    ],\n    \&quot;request\&quot;: {\n      \&quot;source_profile_id\&quot;: 1,\n      \&quot;business_requirements\&quot;: \&quot;Test for M5 connection\&quot;,\n      \&quot;analytics_requirements\&quot;: {},\n      \&quot;constraints\&quot;: {}\n    }\n  },\n  \&quot;heuristic\&quot;: {\n    \&quot;candidate\&quot;: \&quot;postgres\&quot;,\n    \&quot;scores\&quot;: {\n      \&quot;clickhouse\&quot;: 0,\n      \&quot;postgres\&quot;: 1,\n      \&quot;hdfs\&quot;: 0\n    },\n    \&quot;reasons\&quot;: [\n      \&quot;Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\&quot;\n    ],\n    \&quot;evaluated_facts\&quot;: {\n      \&quot;total_row_count\&quot;: 0,\n      \&quot;quality_score\&quot;: null,\n      \&quot;aggregation_types\&quot;: [],\n      \&quot;analytics_requirements\&quot;: {},\n      \&quot;constraints\&quot;: {}\n    }\n  }\n}&quot;,
+              &quot;response&quot;: &quot;```json\n{\n  \&quot;final_choice\&quot;: \&quot;clickhouse\&quot;,\n  \&quot;summary\&quot;: \&quot;ClickHouse лучше подходит для аналитических задач с большими объемами данных и поддерживает эффективную агрегацию, что соответствует требованиям анализа.\&quot;,\n  \&quot;critical_arguments\&quot;: [\n    \&quot;Аналитическая нагрузка на данные\&quot;,\n    \&quot;Обработка больших объемов данных\&quot;,\n    \&quot;Потребность в высокоскоростных запросах\&quot;,\n    \&quot;Рекомендация по партиционированию данных\&quot;\n  ],\n  \&quot;confidence\&quot;: \&quot;высокая\&quot;,\n  \&quot;notes\&quot;: \&quot;Рекомендуется использовать ClickHouse для улучшения производительности при аналитических запросах. Если архитектура допускает использование OLAP-систем, это может существенно повысить скорость обработки данных.\&quot;\n}\n```&quot;,
+              &quot;error&quot;: null
+            }
+          },
+          &quot;final_selection&quot;: {
+            &quot;chosen_db&quot;: &quot;postgresql&quot;,
+            &quot;accepted_llm&quot;: true,
+            &quot;user_notes&quot;: null,
+            &quot;confirmation_timestamp&quot;: &quot;2025-09-29T15:37:31.861409&quot;,
+            &quot;explanation&quot;: &quot;```json\n{\n  \&quot;final_choice\&quot;: \&quot;clickhouse\&quot;,\n  \&quot;summary\&quot;: \&quot;ClickHouse лучше подходит для аналитических задач с большими объемами данных и поддерживает эффективную агрегацию, что соответствует требованиям анализа.\&quot;,\n  \&quot;critical_arguments\&quot;: [\n    \&quot;Аналитическая нагрузка на данные\&quot;,\n    \&quot;Обработка больших объемов данных\&quot;,\n    \&quot;Потребность в высокоскоростных запросах\&quot;,\n    \&quot;Рекомендация по партиционированию данных\&quot;\n  ],\n  \&quot;confidence\&quot;: \&quot;высокая\&quot;,\n  \&quot;notes\&quot;: \&quot;Рекомендуется использовать ClickHouse для улучшения производительности при аналитических запросах. Если архитектура допускает использование OLAP-систем, это может существенно повысить скорость обработки данных.\&quot;\n}\n```&quot;
+          },
+          &quot;ddl_script&quot;: &quot;-- PostgreSQL DDL\nCREATE SCHEMA IF NOT EXISTS analytics;\nCREATE TABLE IF NOT EXISTS analytics.sales (\ndt STRING,amount STRING);\n&quot;,
+          &quot;ddl_generated_at&quot;: &quot;2025-09-29T15:37:39.672336&quot;
+        }
+      }
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 3,
+      &quot;description&quot;: &quot;Пауза для фиксации транзакции в БД&quot;,
+      &quot;action&quot;: &quot;sleep&quot;,
+      &quot;module&quot;: null,
+      &quot;endpoint&quot;: null,
+      &quot;method&quot;: null,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: null,
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 300,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: 5
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;data&quot;: &quot;Slept for 5 seconds.&quot;
+    }
+  },
+  {
+    &quot;step&quot;: {
+      &quot;step&quot;: 4,
+      &quot;description&quot;: &quot;Сбор метрик из созданного хранилища через Module 5&quot;,
+      &quot;action&quot;: &quot;module_api_call&quot;,
+      &quot;module&quot;: 5,
+      &quot;endpoint&quot;: &quot;/api/v1/metrics/collect-by-design/{{ warehouse_info.design_id }}&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;params&quot;: null,
+      &quot;payload&quot;: null,
+      &quot;headers&quot;: null,
+      &quot;expected_format&quot;: null,
+      &quot;save_to&quot;: null,
+      &quot;expected_response&quot;: {
+        &quot;collection_status&quot;: &quot;success&quot;
+      },
+      &quot;source&quot;: null,
+      &quot;expected_schema&quot;: null,
+      &quot;timeout&quot;: 60,
+      &quot;dag_id&quot;: null,
+      &quot;condition&quot;: null,
+      &quot;duration&quot;: null
+    },
+    &quot;result&quot;: {
+      &quot;success&quot;: true,
+      &quot;status_code&quot;: 200,
+      &quot;data&quot;: {
+        &quot;row_count&quot;: 0,
+        &quot;size_in_bytes&quot;: 0,
+        &quot;avg_query_duration_ms&quot;: null,
+        &quot;p95_query_duration_ms&quot;: null,
+        &quot;total_queries&quot;: null,
+        &quot;file_count&quot;: null,
+        &quot;avg_file_size&quot;: null,
+        &quot;file_types&quot;: null
+      }
+    }
+  }
+]</pre>
+                </div>
+            </div>
+            </body></html>

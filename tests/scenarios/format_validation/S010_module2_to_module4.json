@@ -1,0 +1,138 @@
+{
+    "scenario_id": "S010",
+    "name": "Module 2 to Module 4 Format Validation",
+    "description": "Проверка корректности формата агрегированных данных между модулями",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Создание сценария агрегации (Модуль 2)",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "format_validation_m2_m4_{{timestamp}}",
+                "description": "Test format validation from M2 to M4",
+                "sources": [
+                    {
+                        "source_id": "source_data",
+                        "source_type": "file",
+                        "path": "/data/raw/sales.csv",
+                        "selected_columns": [
+                            "category",
+                            "region",
+                            "amount",
+                            "quantity"
+                        ]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": [
+                                "category",
+                                "region"
+                            ],
+                            "aggregates": {
+                                "total_amount": "sum(amount)",
+                                "transaction_count": "count(quantity)"
+                            }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1GB",
+                    "refresh_interval": "daily"
+                }
+            },
+            "save_to": "step_1_output"
+        },
+        {
+            "step": 2,
+            "description": "Проверка формата агрегированных данных",
+            "action": "format_validation",
+            "source": "step_1_output.output_path",
+            "expected_schema": {
+                "format": "parquet",
+                "columns": [
+                    "category",
+                    "region",
+                    "total_amount",
+                    "transaction_count"
+                ],
+                "metadata": {
+                    "aggregation_applied": "array",
+                    "group_by_columns": "array"
+                }
+            }
+        },
+        {
+            "step": 3,
+            "description": "Поиск существующего профиля данных",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "data-inventory",
+            "method": "GET",
+            "save_to": "step_3_output"
+        },
+        {
+            "step": 4,
+            "description": "Создание профиля, если не найден",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "data-profiles",
+            "method": "POST",
+            "payload": {
+                "source_path": "{{ step_1_output.output_path }}"
+            },
+            "save_to": "step_4_output",
+            "condition": "not any(p['source_path'] == '{{ step_1_output.output_path }}' for p in step_3_output['data'])"
+        },
+        {
+            "step": 5,
+            "description": "Проектирование хранилища (Модуль 4)",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": "{{ [p['id'] for p in step_3_output['data'] if p['source_path'] == '{{ step_1_output.output_path }}'][0] if not step_4_output else step_4_output['id'] }}",
+                "business_requirements": "OLAP analysis for aggregated sales data",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "step_5_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "format_compatibility",
+                "modules": [
+                    2,
+                    4
+                ]
+            },
+            {
+                "type": "schema_compatibility",
+                "source_schema": "step_2_output",
+                "target_schema": "clickhouse_schema"
+            },
+            {
+                "type": "data_integrity_preserved",
+                "threshold": 1.0
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure data format compatibility between aggregation and warehouse modules",
+        "success_pattern": "aggregate -> format_check -> profile -> design",
+        "key_decisions": [
+            "aggregation_strategy",
+            "schema_mapping",
+            "optimization_level"
+        ]
+    }
+}

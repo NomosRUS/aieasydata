@@ -1,0 +1,86 @@
+{
+    "scenario_id": "M2_E002",
+    "name": "Module 2 - Create Scenario",
+    "category": "elementary/module2",
+    "timestamp": 1759154490,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call create-scenario endpoint",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "/api/v1/aggregation/create-scenario",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "test_scenario_{{timestamp}}",
+                    "description": "Test description",
+                    "sources": [
+                        {
+                            "source_id": "sales",
+                            "source_type": "file",
+                            "path": "/data/raw/sales.csv",
+                            "selected_columns": [
+                                "product_name",
+                                "price"
+                            ]
+                        }
+                    ],
+                    "aggregations": [
+                        {
+                            "type": "group_by",
+                            "parameters": {
+                                "columns": [
+                                    "product_name"
+                                ],
+                                "aggregates": {
+                                    "avg_price": "avg(price)"
+                                }
+                            }
+                        }
+                    ],
+                    "target_requirements": {
+                        "expected_volume": "<1GB"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "scenario_id": "256",
+                    "name": "test_scenario_1759154489",
+                    "description": "Test description",
+                    "status": "validated",
+                    "sources_analysis": [
+                        {
+                            "source_id": "sales",
+                            "source_type": "file",
+                            "columns": [],
+                            "row_count": 0,
+                            "data_size_bytes": null,
+                            "sample_data": [],
+                            "compatibility_issues": []
+                        }
+                    ],
+                    "estimated_output_size": 1000,
+                    "recommended_engine": "postgres",
+                    "validation_errors": [],
+                    "created_at": "2025-09-29T14:01:30.285516",
+                    "last_modified": "2025-09-29T14:01:30.285520"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,191 @@
+{
+    "scenario_id": "S017",
+    "name": "Dependency Check Between Modules",
+    "description": "Проверка зависимостей и корректной работы интерфейсов между модулями",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Проверка доступности Модуля 1",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "health-check",
+            "method": "GET",
+            "timeout": 10,
+            "expected_response": {
+                "status": "healthy"
+            }
+        },
+        {
+            "step": 2,
+            "description": "Проверка доступности Модуля 2",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "health-check",
+            "method": "GET",
+            "timeout": 10,
+            "expected_response": {
+                "status": "healthy"
+            }
+        },
+        {
+            "step": 3,
+            "description": "Проверка доступности Модуля 3",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "health-check",
+            "method": "GET",
+            "timeout": 10,
+            "expected_response": {
+                "status": "healthy"
+            }
+        },
+        {
+            "step": 4,
+            "description": "Проверка доступности Модуля 4",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "health-check",
+            "method": "GET",
+            "timeout": 10,
+            "expected_response": {
+                "status": "healthy"
+            }
+        },
+        {
+            "step": 5,
+            "description": "Проверка доступности Модуля 5",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "health-check",
+            "method": "GET",
+            "timeout": 10,
+            "expected_response": {
+                "status": "healthy"
+            }
+        },
+        {
+            "step": 6,
+            "description": "Проверка интерфейса Модуль 5 → Модуль 1",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "auto-detect",
+            "method": "GET",
+            "params": {
+                "source": "/data/raw/sales.csv"
+            },
+            "expected_response": {
+                "data_type": "csv"
+            }
+        },
+        {
+            "step": 7,
+            "description": "Проверка интерфейса Модуль 1 → Модуль 2",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "params": {
+                "file_path": "/data/raw/sales.csv",
+                "validation_options": {
+                    "check_duplicates": true
+                }
+            },
+            "expected_response": {
+                "validation_passed": true
+            }
+        },
+        {
+            "step": 8,
+            "description": "Проверка интерфейса Модуль 2 → Модуль 4",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "dependency_test_{{timestamp}}",
+                "description": "A test scenario to check dependency from M2 to M4",
+                "sources": [
+                    {
+                        "source_id": "sales_data",
+                        "source_type": "file",
+                        "path": "/data/raw/sales.csv",
+                        "selected_columns": [
+                            "category",
+                            "price"
+                        ]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": [
+                                "category"
+                            ],
+                            "aggregates": {
+                                "total_price": "sum(price)"
+                            }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1GB"
+                }
+            },
+            "expected_response": {
+                "scenario_created": true
+            }
+        },
+        {
+            "step": 9,
+            "description": "Проверка интерфейса Модуль 3 → Модуль 4",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "method": "POST",
+            "payload": {
+                "source": "/data/raw/sales.csv"
+            },
+            "expected_response": {
+                "analysis_completed": true
+            }
+        },
+        {
+            "step": 10,
+            "description": "Проверка интерфейса Модуль 4 → Модуль 5",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "instances",
+            "method": "GET",
+            "expected_response": {
+                "instances": "array"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_modules_healthy",
+                "threshold": 1.0
+            },
+            {
+                "type": "all_interfaces_working",
+                "threshold": 1.0
+            },
+            {
+                "type": "response_time_acceptable",
+                "max_time": 30
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify all module dependencies and interfaces are working correctly",
+        "success_pattern": "health_checks -> interface_tests -> dependency_verification",
+        "key_decisions": [
+            "timeout_settings",
+            "retry_strategy",
+            "error_handling"
+        ]
+    }
+}

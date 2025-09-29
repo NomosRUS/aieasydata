@@ -80,10 +80,13 @@ def collect_metrics_by_design_id(design_id: str, db: Session = Depends(get_db)):
         db.refresh(db_instance)
         
         return WarehouseMetrics(**metrics_data)
-        
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
+        # Отладка: печатаем тип исключения, чтобы понять, почему оно не распознается как HTTPException
+        print(f"DEBUG: Caught exception in metrics collector: {repr(e)}, type: {type(e)}")
+        if isinstance(e, HTTPException):
+            raise e
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
 
 @router.get("/data-landing-zone", response_model=WarehouseMetrics)

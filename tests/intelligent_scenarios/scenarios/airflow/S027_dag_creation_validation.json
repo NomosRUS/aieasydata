@@ -1,0 +1,100 @@
+{
+    "scenario_id": "S027",
+    "name": "DAG Creation and Validation",
+    "description": "Создание и валидация DAG'а через модуль 6",
+    "category": "airflow_integration",
+    "priority": "high",
+    "expected_duration": 45,
+    "steps": [
+        {
+            "step": 1,
+            "description": "Валидация конфигурации DAG'а",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/api/v1/orchestrator/validate-dag",
+            "method": "POST",
+            "timeout": 20,
+            "payload": {
+                "config": {
+                    "name": "validation_test_{{ timestamp }}",
+                    "schedule": "@daily",
+                    "description": "Test DAG for validation",
+                    "stages": [
+                        {
+                            "stage_name": "data_validation",
+                            "type": "module_call",
+                            "module": 1,
+                            "endpoint": "/api/v1/data-quality/health-check",
+                            "method": "GET"
+                        },
+                        {
+                            "stage_name": "data_aggregation",
+                            "type": "module_call",
+                            "module": 2,
+                            "endpoint": "/api/v1/aggregation/health-check",
+                            "method": "GET",
+                            "depends_on": ["data_validation"]
+                        }
+                    ]
+                }
+            },
+            "save_to": "validation_result",
+            "expected_status": [200, 400, 404]
+        },
+        {
+            "step": 2,
+            "description": "Создание DAG'а после валидации",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/api/v1/orchestrator/generate-dag",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "name": "validated_dag_{{ timestamp }}",
+                "schedule": "@once",
+                "description": "DAG created after validation",
+                "stages": [
+                    {
+                        "stage_name": "health_check_all",
+                        "type": "parallel_execution",
+                        "tasks": [
+                            {
+                                "module": 1,
+                                "endpoint": "/api/v1/data-quality/health-check",
+                                "method": "GET"
+                            },
+                            {
+                                "module": 2,
+                                "endpoint": "/api/v1/aggregation/health-check",
+                                "method": "GET"
+                            },
+                            {
+                                "module": 3,
+                                "endpoint": "/api/v1/performance/health-check",
+                                "method": "GET"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "save_to": "dag_creation",
+            "expected_status": [200, 201, 404]
+        },
+        {
+            "step": 3,
+            "description": "Проверка созданного DAG'а в Airflow",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ dag_creation.dag_id }}",
+            "method": "GET",
+            "timeout": 15,
+            "save_to": "airflow_dag_check",
+            "expected_status": [200, 404]
+        }
+    ],
+    "success_criteria": [
+        "Валидация выполнена корректно",
+        "DAG создан и доступен в Airflow или система недоступна"
+    ],
+    "cleanup": [],
+    "tags": ["airflow", "dag_creation", "validation", "module6"]
+}

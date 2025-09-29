@@ -1,0 +1,324 @@
+{
+    "scenario_id": "S021",
+    "name": "API Response Time Check",
+    "category": "quick_diagnostics",
+    "timestamp": 1759139996,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Проверка времени отклика Module 1 (validate-file)",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "validate-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "validation_id": "4bcb6f9b-0334-441c-8b85-3840af0cf6d1",
+                    "status": "completed",
+                    "quality_score": 0.9839999999999999,
+                    "issues_count": 9,
+                    "issues": [
+                        {
+                            "issue_id": "e22a3ec8-3387-4780-b533-1c2ba039984c",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 2,
+                            "percentage": 20.0,
+                            "description": "Колонка 'price' содержит 2 потенциальных выбросов (20.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "66e2d315-ac28-4574-b1ea-99640c4d5a49",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 10.0,
+                            "description": "Колонка 'quantity' содержит 1 потенциальных выбросов (10.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "iqr_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_price_4",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_4",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_quantity_7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_quantity_7",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "multivariate_0",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "multivariate",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Многомерная аномалия в строке 0: необычная комбинация значений",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        }
+                    ],
+                    "recommendations_count": 1,
+                    "processing_time_ms": 30226.423
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 2,
+                "description": "Проверка времени отклика Module 2 (create-scenario)",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "create-scenario",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "response_time_test_{{timestamp}}",
+                    "description": "Test description",
+                    "sources": [
+                        {
+                            "source_id": "sales",
+                            "source_type": "file",
+                            "path": "/data/raw/sales.csv",
+                            "selected_columns": [
+                                "product_name",
+                                "price"
+                            ]
+                        }
+                    ],
+                    "aggregations": [
+                        {
+                            "type": "group_by",
+                            "parameters": {
+                                "columns": [
+                                    "product_name"
+                                ],
+                                "aggregates": {
+                                    "avg_price": "avg(price)"
+                                }
+                            }
+                        }
+                    ],
+                    "target_requirements": {
+                        "expected_volume": "<1GB"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "scenario_id": "195",
+                    "name": "response_time_test_1759139994",
+                    "description": "Test description",
+                    "status": "validated",
+                    "sources_analysis": [
+                        {
+                            "source_id": "sales",
+                            "source_type": "file",
+                            "columns": [],
+                            "row_count": 0,
+                            "data_size_bytes": null,
+                            "sample_data": [],
+                            "compatibility_issues": []
+                        }
+                    ],
+                    "estimated_output_size": 1000,
+                    "recommended_engine": "postgres",
+                    "validation_errors": [],
+                    "created_at": "2025-09-29T09:59:55.173179",
+                    "last_modified": "2025-09-29T09:59:55.173182"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 3,
+                "description": "Проверка времени отклика Module 4 (design)",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "design",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "source_profile_id": 1,
+                    "business_requirements": "Response time test",
+                    "analytics_requirements": {},
+                    "constraints": {}
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "design_id": "afd7c726-7272-4ba7-be59-421eb3058381",
+                    "status": "awaiting_user_confirmation",
+                    "results": {
+                        "context": {
+                            "data_profile": {
+                                "id": 1,
+                                "source_path": "/data/raw/sales.csv",
+                                "kind": null,
+                                "total_row_count": null,
+                                "file_count": null,
+                                "columns": [
+                                    {
+                                        "name": "dt",
+                                        "type": "Date"
+                                    },
+                                    {
+                                        "name": "amount",
+                                        "type": "Int64"
+                                    }
+                                ],
+                                "sample_data": null,
+                                "llm_summary": null,
+                                "error": null,
+                                "created_at": "2025-09-25T13:34:05.487325",
+                                "updated_at": "2025-09-25T13:34:05.487330"
+                            },
+                            "optimization_recommendations": [
+                                {
+                                    "id": 1,
+                                    "table_name": "/data/raw/sales.csv",
+                                    "recommendation_type": "partition",
+                                    "recommendation_details": {
+                                        "partition_by": "toYYYYMM(dt)"
+                                    },
+                                    "created_at": null,
+                                    "updated_at": null
+                                }
+                            ],
+                            "request": {
+                                "source_profile_id": 1,
+                                "business_requirements": "Response time test",
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "heuristic_decision": {
+                            "candidate": "postgres",
+                            "scores": {
+                                "clickhouse": 0,
+                                "postgres": 1,
+                                "hdfs": 0
+                            },
+                            "reasons": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "evaluated_facts": {
+                                "total_row_count": 0,
+                                "quality_score": null,
+                                "aggregation_types": [],
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "llm_analysis": {
+                            "final_choice": "postgres",
+                            "summary": "Не удалось получить ответ от ИИ: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+                            "critical_arguments": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "confidence": "средняя",
+                            "notes": "Ответ LLM не в формате JSON; использовано содержание как есть.",
+                            "debug_log": {
+                                "base_url": "https://api.openai.com/v1/",
+                                "model": "gpt-4o-mini",
+                                "prompt": "Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \"context\": {\n    \"data_profile\": {\n      \"id\": 1,\n      \"source_path\": \"/data/raw/sales.csv\",\n      \"kind\": null,\n      \"total_row_count\": null,\n      \"file_count\": null,\n      \"columns\": [\n        {\n          \"name\": \"dt\",\n          \"type\": \"Date\"\n        },\n        {\n          \"name\": \"amount\",\n          \"type\": \"Int64\"\n        }\n      ],\n      \"sample_data\": null,\n      \"llm_summary\": null,\n      \"error\": null,\n      \"created_at\": \"2025-09-25T13:34:05.487325\",\n      \"updated_at\": \"2025-09-25T13:34:05.487330\"\n    },\n    \"optimization_recommendations\": [\n      {\n        \"id\": 1,\n        \"table_name\": \"/data/raw/sales.csv\",\n        \"recommendation_type\": \"partition\",\n        \"recommendation_details\": {\n          \"partition_by\": \"toYYYYMM(dt)\"\n        },\n        \"created_at\": null,\n        \"updated_at\": null\n      }\n    ],\n    \"request\": {\n      \"source_profile_id\": 1,\n      \"business_requirements\": \"Response time test\",\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  },\n  \"heuristic\": {\n    \"candidate\": \"postgres\",\n    \"scores\": {\n      \"clickhouse\": 0,\n      \"postgres\": 1,\n      \"hdfs\": 0\n    },\n    \"reasons\": [\n      \"Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\"\n    ],\n    \"evaluated_facts\": {\n      \"total_row_count\": 0,\n      \"quality_score\": null,\n      \"aggregation_types\": [],\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  }\n}",
+                                "response": null,
+                                "error": "Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,98 @@
+{
+    "scenario_id": "S018",
+    "name": "Database Connectivity Check",
+    "category": "quick_diagnostics",
+    "timestamp": 1759150922,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Проверка подключения к PostgreSQL",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "collect",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "db_type": "postgres",
+                    "host": "postgres",
+                    "port": 5432,
+                    "db_name": "aieasydata_db",
+                    "user": "admin",
+                    "password": "admin"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "connection_status": "successful"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "row_count": 0,
+                    "size_in_bytes": 0,
+                    "avg_query_duration_ms": null,
+                    "p95_query_duration_ms": null,
+                    "total_queries": null,
+                    "file_count": null,
+                    "avg_file_size": null,
+                    "file_types": null
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 2,
+                "description": "Проверка подключения к ClickHouse",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "collect",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "db_type": "clickhouse",
+                    "host": "clickhouse",
+                    "port": 8123,
+                    "db_name": "default",
+                    "user": "default",
+                    "password": ""
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "connection_status": "successful"
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "row_count": 0,
+                    "size_in_bytes": 0,
+                    "avg_query_duration_ms": null,
+                    "p95_query_duration_ms": null,
+                    "total_queries": null,
+                    "file_count": null,
+                    "avg_file_size": null,
+                    "file_types": null
+                }
+            }
+        }
+    ]
+}

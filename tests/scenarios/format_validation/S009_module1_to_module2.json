@@ -1,0 +1,110 @@
+{
+    "scenario_id": "S009",
+    "name": "Module 1 to Module 2 Format Validation",
+    "description": "Проверка корректности формата очищенных данных между модулями",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Валидация и очистка тестовых данных (Модуль 1)",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "params": {
+                "file_path": "/data/raw/sales.csv",
+                "validation_options": {
+                    "check_duplicates": true,
+                    "assess_quality": true
+                }
+            },
+            "save_to": "step_1_output"
+        },
+        {
+            "step": 2,
+            "description": "Проверка формата очищенных данных",
+            "action": "format_validation",
+            "source": "step_1_output.cleaned_data_path",
+            "expected_schema": {
+                "format": "parquet",
+                "columns": [
+                    "id",
+                    "name",
+                    "email",
+                    "amount"
+                ],
+                "metadata": {
+                    "quality_score": "number",
+                    "cleaning_applied": "array"
+                }
+            }
+        },
+        {
+            "step": 3,
+            "description": "Передача данных в модуль агрегации",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "format_validation_test_{{timestamp}}",
+                "description": "Test format validation from M1 to M2",
+                "sources": [
+                    {
+                        "source_id": "cleaned_data_from_m1",
+                        "source_type": "file",
+                        "path": "{{ step_1_output.cleaned_data_path }}",
+                        "selected_columns": [
+                            "id",
+                            "name",
+                            "email",
+                            "amount"
+                        ]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": [
+                                "name"
+                            ],
+                            "aggregates": {
+                                "total_amount": "sum(amount)",
+                                "email_count": "count(email)"
+                            }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1GB",
+                    "refresh_interval": "daily"
+                }
+            },
+            "save_to": "step_3_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "format_compatibility",
+                "modules": [
+                    1,
+                    2
+                ]
+            },
+            {
+                "type": "data_integrity_preserved",
+                "threshold": 1.0
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure data format compatibility between validation and aggregation modules",
+        "success_pattern": "validate_clean -> format_check -> aggregate",
+        "key_decisions": [
+            "cleaning_strategy",
+            "format_validation_rules"
+        ]
+    }
+}

@@ -1,0 +1,65 @@
+{
+    "scenario_id": "S009",
+    "name": "Module 1 to Module 2 Format Validation",
+    "description": "Проверка корректности формата очищенных данных между модулями",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Валидация и очистка тестовых данных (Модуль 1)",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "params": {
+                "file_path": "/data/raw/sales.csv"
+            },
+            "save_to": "step_1_output"
+        },
+        {
+            "step": 2,
+            "description": "Передача очищенных данных в модуль агрегации (Модуль 2)",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "format_validation_test_{{timestamp}}",
+                "description": "Test format validation from M1 to M2",
+                "sources": [
+                    {
+                        "source_id": "cleaned_data_from_m1",
+                        "source_type": "file",
+                        "path": "{{ step_1_output.cleaned_data_path }}",
+                        "selected_columns": [
+                            "dt",
+                            "amount"
+                        ]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": [
+                                "dt"
+                            ],
+                            "aggregates": {
+                                "total_amount": "sum(amount)"
+                            }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1MB"
+                }
+            },
+            "save_to": "step_2_output"
+        }
+    ],
+    "ai_training": {
+        "goal": "Ensure data format compatibility between validation and aggregation modules",
+        "success_pattern": "validate_clean -> aggregate",
+        "key_decisions": []
+    }
+}

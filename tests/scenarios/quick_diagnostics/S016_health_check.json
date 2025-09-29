@@ -1,0 +1,53 @@
+{
+    "scenario_id": "S016",
+    "name": "Health Check All Modules",
+    "description": "Быстрая проверка доступности всех API endpoints",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Проверка модуля 1 (Валидация)",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "health-check",
+            "method": "GET"
+        },
+        {
+            "step": 2,
+            "description": "Проверка модуля 2 (Агрегация)",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "health-check",
+            "method": "GET"
+        },
+        {
+            "step": 3,
+            "description": "Проверка модуля 3 (Оптимизация)",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "health-check",
+            "method": "GET"
+        },
+        {
+            "step": 4,
+            "description": "Проверка модуля 4 (Хранилища)",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "health-check",
+            "method": "GET"
+        },
+        {
+            "step": 5,
+            "description": "Проверка модуля 5 (Мониторинг)",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "health-check",
+            "method": "GET"
+        }
+    ],
+    "ai_training": {
+        "goal": "Verify all system modules are operational",
+        "success_pattern": "health_check_all_modules",
+        "key_decisions": []
+    }
+}
