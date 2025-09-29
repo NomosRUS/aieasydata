@@ -17,12 +17,23 @@ venv/
 
 
 # Data files - New organization schema
-# Ignore all content inside data_landing_zone, but keep directory structure with .gitkeep files
-/data_landing_zone/*
-!/data_landing_zone/**/.gitkeep
+# Track directory structure but ignore content
+data_landing_zone/**
+!data_landing_zone/
+!data_landing_zone/*/
+!data_landing_zone/*/*/
+!data_landing_zone/*/*/*/
+!data_landing_zone/*/*/*/*/
+!data_landing_zone/*/*/*/*/*/
+!data_landing_zone/*/*/*/*/*/*/
+!data_landing_zone/*/*/*/*/*/*/*/
+!data_landing_zone/*/*/*/*/*/*/*/*/
 
-# Allow specific metadata files to be tracked
-!/data_landing_zone/metadata/exports/external_api_sources.json
+# Allow .gitkeep files
+!data_landing_zone/**/.gitkeep
+
+# Allow specific metadata files
+!data_landing_zone/metadata/exports/external_api_sources.json
 
 # Large data files and metadata
 *.parquet
