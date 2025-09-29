@@ -17,43 +17,12 @@ venv/
 
 
 # Data files - New organization schema
-# Ignore all content inside data_landing_zone, but track the directory structure via .gitkeep files
+# Ignore all content inside data_landing_zone, but keep directory structure with .gitkeep files
 /data_landing_zone/*
-!/data_landing_zone/.gitkeep
-!/data_landing_zone/raw/
-/data_landing_zone/raw/*
-!/data_landing_zone/raw/.gitkeep
-!/data_landing_zone/raw/external/
-!/data_landing_zone/intermediate/
-/data_landing_zone/intermediate/*
-!/data_landing_zone/intermediate/.gitkeep
-!/data_landing_zone/warehouses/
-/data_landing_zone/warehouses/*
-!/data_landing_zone/warehouses/.gitkeep
+!/data_landing_zone/**/.gitkeep
 
-# Allow metadata exports to be tracked
-!/data_landing_zone/metadata/
-/data_landing_zone/metadata/*
-!/data_landing_zone/metadata/exports/
-!/data_landing_zone/metadata/.gitkeep
-
-# Raw data (Module input)
-/data_landing_zone/raw/uploads/
-/data_landing_zone/raw/database_exports/
-/data_landing_zone/raw/file_imports/
-/data_landing_zone/raw/staging/
-
-# Intermediate data (Module processing)
-/data_landing_zone/intermediate/*/validated/
-/data_landing_zone/intermediate/*/cleaned/
-/data_landing_zone/intermediate/*/aggregated/
-/data_landing_zone/intermediate/*/optimized/
-
-# Warehouse data (Module 4 output)
-/data_landing_zone/warehouses/*/postgresql/
-/data_landing_zone/warehouses/*/clickhouse/
-/data_landing_zone/warehouses/*/hdfs/
-/data_landing_zone/warehouses/*/exports/
+# Allow specific metadata files to be tracked
+!/data_landing_zone/metadata/exports/external_api_sources.json
 
 # Large data files and metadata
 *.parquet
@@ -75,7 +44,6 @@ metadata.db
 
 # Temporary files
 /data_landing_zone/_temp/
-**/staging/
 **/{session_id}/
 **/{process_id}/
 
