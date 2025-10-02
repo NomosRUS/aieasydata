@@ -12,7 +12,7 @@ class LocalLLMSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='LOCAL_LLM_')
 
     base_url: str = "http://ollama:11434"
-    model: str = "gemma:2b"
+    model: str = "aboba/saiga_mistral_13b"  # aboba/saiga_mistral_13b - отличная русская модель на базе Mistral
     api_key: str = "ollama"  # Required by openai client, but not used by ollama
 
 class AppSettings(BaseSettings):
