@@ -1,0 +1,51 @@
+{
+    "scenario_id": "S022",
+    "name": "Error Propagation Check",
+    "description": "Тестирование корректной передачи и обработки ошибок между модулями",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Вызов Module 1 с несуществующим файлом",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "expected_error": {
+                "status_code": 404,
+                "error_message_contains": "File not found"
+            },
+            "params": {
+                "file_path": "/data/raw/non_existent_file.csv"
+            }
+        },
+        {
+            "step": 2,
+            "description": "Вызов Module 4 с некорректным типом БД",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_data": "/data/raw/sales.csv",
+                "target_db": "invalid_db_type"
+            },
+            "expected_error": {
+                "status_code": 422,
+                "error_message_contains": "Invalid database type"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_failed_as_expected"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify that modules correctly propagate and handle errors",
+        "success_pattern": "trigger_file_not_found_error -> trigger_validation_error",
+        "key_decisions": []
+    }
+}

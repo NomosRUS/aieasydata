@@ -1,0 +1,41 @@
+{
+    "scenario_id": "M6_E003",
+    "name": "Module 6 - Validate DAG Configuration",
+    "description": "Тест валидации конфигурации DAG'а",
+    "category": "elementary",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Компиляция второго тестового DAG'а для проверки компилятора",
+            "action": "module_api_call",
+            "module": 0, 
+            "endpoint": "/dag/compile",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "name": "validation_dag_compile_test_{{ timestamp }}",
+                "schedule": "@hourly",
+                "source": {
+                    "type": "file",
+                    "path": "/data/raw/sales.csv"
+                },
+                "transforms": [
+                    {
+                        "action": "clean",
+                        "task_id": "clean_source_data"
+                    }
+                ],
+                "target": {
+                    "type": "clickhouse",
+                    "table_name": "validation_dag_output_{{ timestamp }}"
+                }
+            },
+            "save_to": "compilation_result"
+        }
+    ],
+    "ai_training": {
+        "goal": "Test DAG configuration validation",
+        "success_pattern": "validation_response_correct",
+        "key_decisions": []
+    }
+}

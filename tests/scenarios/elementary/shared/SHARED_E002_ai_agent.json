@@ -1,0 +1,36 @@
+{
+    "scenario_id": "SHARED_E002",
+    "name": "Shared Components - AI Agent Test",
+    "description": "Тест ИИ-агента для анализа данных",
+    "category": "elementary",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Создание профиля данных для анализа",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/api/v1/data-profiles",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "source_path": "/data/raw/sales.csv"
+            },
+            "save_to": "profile_info"
+        },
+        {
+            "step": 2,
+            "description": "Анализ созданного профиля с помощью ИИ-агента",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/api/analyze-profile/{{profile_info.id}}",
+            "method": "POST",
+            "timeout": 60,
+            "save_to": "ai_analysis_result"
+        }
+    ],
+    "ai_training": {
+        "goal": "Test AI agent for data analysis",
+        "success_pattern": "agent_response_valid",
+        "key_decisions": []
+    }
+}

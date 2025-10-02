@@ -1,0 +1,95 @@
+{
+    "scenario_id": "M2_E003",
+    "name": "Module 2 - Custom Dataset",
+    "category": "elementary/module2",
+    "timestamp": 1759148506,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call custom-dataset endpoint",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "/api/v1/aggregation/custom-dataset",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "dataset_name": "test_dataset",
+                    "sources": [
+                        {
+                            "source_id": "sales",
+                            "source_type": "file",
+                            "path": "/data/raw/sales.csv",
+                            "selected_columns": [
+                                "product_name",
+                                "price"
+                            ]
+                        }
+                    ]
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "success": true,
+                    "dataset_name": "test_dataset",
+                    "output_path": "data_landing_zone/aggregated/test_dataset/test_dataset.parquet",
+                    "metadata": {
+                        "dataset_info": {
+                            "name": "test_dataset",
+                            "description": "Custom dataset created from 1 sources",
+                            "created_at": "2025-09-29T12:21:46.447171",
+                            "format": "parquet"
+                        },
+                        "sources": [
+                            {
+                                "source_id": "sales",
+                                "columns_used": 0,
+                                "estimated_rows": 0
+                            }
+                        ],
+                        "schema": {
+                            "columns": [
+                                {
+                                    "name": "product_name",
+                                    "type": "object",
+                                    "null_count": 0,
+                                    "unique_count": 10
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "float32",
+                                    "null_count": 0,
+                                    "unique_count": 10
+                                }
+                            ],
+                            "total_rows": 10,
+                            "total_columns": 2,
+                            "memory_usage_bytes": 859
+                        },
+                        "quality_metrics": {
+                            "completeness": 1.0,
+                            "duplicate_rows": 0,
+                            "data_types_consistent": true
+                        }
+                    },
+                    "row_count": 10,
+                    "column_count": 2,
+                    "data_size_bytes": 859,
+                    "created_at": "2025-09-29T12:21:46.451726"
+                }
+            }
+        }
+    ]
+}

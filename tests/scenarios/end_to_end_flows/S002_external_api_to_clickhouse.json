@@ -1,0 +1,197 @@
+{
+    "scenario_id": "S002",
+    "name": "External API to ClickHouse",
+    "description": "Загрузка данных из внешнего API через все модули в ClickHouse",
+    "category": "end_to_end_flows",
+    "prerequisites": {
+        "external_api": "jsonplaceholder_api",
+        "target_db": "clickhouse_test"
+    },
+    "steps": [
+        {
+            "step": 1,
+            "description": "Health-check Модуля 1",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "health-check",
+            "method": "GET",
+            "save_to": "step_1_output"
+        },
+        {
+            "step": 2,
+            "description": "Автоопределение типа данных (Модуль 5)",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "auto-detect",
+            "method": "GET",
+            "params": {
+                "source": "https://jsonplaceholder.typicode.com/posts"
+            },
+            "save_to": "step_2_output"
+        },
+        {
+            "step": 3,
+            "description": "Валидация загруженных данных (Модуль 1)",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "params": {
+                "file_path": "https://jsonplaceholder.typicode.com/posts",
+                "validation_options": {
+                    "check_duplicates": true,
+                    "assess_quality": true
+                }
+            },
+            "save_to": "step_3_output"
+        },
+        {
+            "step": 4,
+            "description": "Создание сценария агрегации (Модуль 2)",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "posts_aggregation_test_{{timestamp}}",
+                "description": "Test aggregation scenario for posts data",
+                "sources": [
+                    {
+                        "source_id": "posts_api",
+                        "source_type": "file",
+                        "path": "https://jsonplaceholder.typicode.com/posts",
+                        "selected_columns": [
+                            "userId",
+                            "id",
+                            "title",
+                            "body"
+                        ]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": [
+                                "userId"
+                            ],
+                            "aggregates": {
+                                "post_count": "count(id)",
+                                "avg_title_length": "avg(len(title))"
+                            }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1GB",
+                    "refresh_interval": "hourly"
+                }
+            },
+            "save_to": "step_4_output"
+        },
+        {
+            "step": 5,
+            "description": "Анализ производительности (Модуль 3)",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "method": "POST",
+            "payload": {
+                "source": "https://jsonplaceholder.typicode.com/posts"
+            },
+            "save_to": "step_5_output"
+        },
+        {
+            "step": 6,
+            "description": "Поиск существующего профиля данных",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/api/data-inventory",
+            "method": "GET",
+            "save_to": "step_6_output"
+        },
+        {
+            "step": 7,
+            "description": "Создание профиля, если не найден",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/api/v1/data-profiles",
+            "method": "POST",
+            "payload": {
+                "source_path": "https://jsonplaceholder.typicode.com/posts"
+            },
+            "save_to": "step_7_output",
+            "condition": "not any(p['source_path'] == 'https://jsonplaceholder.typicode.com/posts' for p in step_6_output.data)"
+        },
+        {
+            "step": 8,
+            "description": "Извлечение ID существующего профиля",
+            "action": "json_path_extract",
+            "source": "{{step_6_output.data}}",
+            "expression": "$[?(@.source_path=='https://jsonplaceholder.typicode.com/posts')].id | [0]",
+            "save_to": "existing_profile_id",
+            "condition": "not step_7_output"
+        },
+        {
+            "step": 9,
+            "description": "Выбор корректного profile_id",
+            "action": "set_variable",
+            "name": "source_profile_id",
+            "value": "{{ step_7_output.id if step_7_output else existing_profile_id }}",
+            "save_to": "step_9_output"
+        },
+        {
+            "step": 10,
+            "description": "Проектирование хранилища (Модуль 4)",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": "{{step_9_output.source_profile_id}}",
+                "business_requirements": "OLAP analysis for blog posts data",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "step_10_output"
+        },
+        {
+            "step": 11,
+            "description": "Подтверждение дизайна хранилища для ClickHouse (Модуль 4)",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "/design/{{step_10_output.design_id}}/confirm",
+            "method": "POST",
+            "payload": {
+                "chosen_db": "clickhouse"
+            },
+            "save_to": "step_11_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "database_table_exists",
+                "table": "posts_analytics"
+            },
+            {
+                "type": "data_count_match",
+                "source": "external_api",
+                "target": "clickhouse_table"
+            },
+            {
+                "type": "data_quality_preserved",
+                "threshold": 0.95
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Load external API data into ClickHouse with full pipeline",
+        "success_pattern": "health_check -> auto_detect -> validate -> aggregate -> analyze -> profile -> design -> confirm",
+        "key_decisions": [
+            "target_db_selection",
+            "aggregation_strategy",
+            "optimization_level"
+        ]
+    }
+}

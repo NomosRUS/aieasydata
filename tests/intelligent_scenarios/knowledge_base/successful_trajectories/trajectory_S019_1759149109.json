@@ -1,0 +1,48 @@
+{
+    "scenario_id": "S019",
+    "name": "Module 1 Health Check (Simplified)",
+    "category": "quick_diagnostics",
+    "timestamp": 1759149109,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Вызов health-check для Модуля 1",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": {
+                    "status_code": 200,
+                    "body": {
+                        "status": "ok"
+                    }
+                },
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5": "not_checked",
+                        "data_landing_zone": "available"
+                    },
+                    "last_check": "2025-09-29T12:31:49.415290"
+                }
+            }
+        }
+    ]
+}

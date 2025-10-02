@@ -1,0 +1,40 @@
+{
+    "scenario_id": "S027",
+    "name": "Airflow DAG Error Handling and Retry",
+    "description": "Проверка логики обработки ошибок и повторных попыток в Airflow DAG",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Запуск DAG, который должен упасть и перезапуститься",
+            "action": "airflow_dag_trigger",
+            "dag_id": "test_error_handling_dag",
+            "conf": {
+                "simulate_failure_times": 2
+            },
+            "wait_for_completion": true
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "dag_run_status",
+                "dag_id": "test_error_handling_dag",
+                "expected_status": "success"
+            },
+            {
+                "type": "dag_task_retries",
+                "dag_id": "test_error_handling_dag",
+                "task_id": "failing_task",
+                "expected_retries": 2
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify that Airflow DAGs correctly handle transient errors with retries",
+        "success_pattern": "trigger_failing_dag -> wait_for_completion -> check_retries_and_success",
+        "key_decisions": [
+            "retry_policy"
+        ]
+    }
+}

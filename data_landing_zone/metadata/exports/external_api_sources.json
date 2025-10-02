@@ -1,0 +1,12 @@
+[
+  {
+    "name": "External PostgreSQL DB",
+    "type": "api",
+    "uri": "http://fake-api:8001/postgres_db"
+  },
+  {
+    "name": "External ClickHouse DB",
+    "type": "api",
+    "uri": "http://fake-api:8001/clickhouse_db"
+  }
+]

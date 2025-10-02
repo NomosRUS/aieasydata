@@ -1,0 +1,138 @@
+{
+    "scenario_id": "S028",
+    "name": "Complex Multi-Module Workflow",
+    "description": "Сложный workflow с интеграцией всех модулей через Airflow",
+    "category": "airflow_integration",
+    "priority": "high",
+    "expected_duration": 180,
+    "steps": [
+        {
+            "step": 1,
+            "description": "Создание комплексного workflow DAG'а",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/api/v1/orchestrator/generate-dag",
+            "method": "POST",
+            "timeout": 60,
+            "payload": {
+                "name": "complex_workflow_{{ timestamp }}",
+                "schedule": "@once",
+                "description": "Complex multi-module workflow",
+                "stages": [
+                    {
+                        "stage_name": "stage_1_discovery",
+                        "type": "module_call",
+                        "module": 5,
+                        "endpoint": "/api/v1/metrics/auto-detect",
+                        "method": "GET",
+                        "params": {
+                            "source": "/data/raw"
+                        }
+                    },
+                    {
+                        "stage_name": "stage_2_validation",
+                        "type": "module_call",
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/batch-validate",
+                        "method": "POST",
+                        "depends_on": ["stage_1_discovery"],
+                        "params": {
+                            "sources": [
+                                {
+                                    "source_id": "raw_data",
+                                    "source_type": "file",
+                                    "path": "/data/raw/sales.csv"
+                                }
+                            ],
+                            "validation_options": {
+                                "check_duplicates": true,
+                                "assess_quality": true,
+                                "detect_anomalies": true
+                            }
+                        }
+                    },
+                    {
+                        "stage_name": "stage_3_aggregation",
+                        "type": "module_call",
+                        "module": 2,
+                        "endpoint": "/api/v1/aggregation/create-scenario",
+                        "method": "POST",
+                        "depends_on": ["stage_2_validation"],
+                        "params": {
+                            "name": "workflow_aggregation",
+                            "description": "Aggregation for complex workflow"
+                        }
+                    },
+                    {
+                        "stage_name": "stage_4_optimization",
+                        "type": "module_call",
+                        "module": 3,
+                        "endpoint": "/api/v1/performance/analyze",
+                        "method": "POST",
+                        "depends_on": ["stage_3_aggregation"],
+                        "params": {
+                            "source": "/data/aggregated/workflow_result"
+                        }
+                    },
+                    {
+                        "stage_name": "stage_5_warehouse_design",
+                        "type": "module_call",
+                        "module": 4,
+                        "endpoint": "/api/v1/warehouse/analyze-requirements",
+                        "method": "POST",
+                        "depends_on": ["stage_4_optimization"],
+                        "params": {
+                            "data_profile": {
+                                "source_path": "/data/aggregated/workflow_result",
+                                "estimated_size": "large"
+                            }
+                        }
+                    }
+                ]
+            },
+            "save_to": "complex_dag_creation",
+            "expected_status": [200, 201, 404]
+        },
+        {
+            "step": 2,
+            "description": "Запуск комплексного workflow",
+            "action": "airflow_dag_trigger",
+            "dag_id": "{{ complex_dag_creation.dag_id }}",
+            "conf": {
+                "workflow_type": "complex_etl",
+                "data_source": "/data/raw/sales.csv",
+                "target_warehouse": "clickhouse"
+            },
+            "timeout": 120,
+            "save_to": "workflow_execution",
+            "expected_status": [200, 404, 500]
+        },
+        {
+            "step": 3,
+            "description": "Мониторинг выполнения workflow",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ complex_dag_creation.dag_id }}/dagRuns",
+            "method": "GET",
+            "timeout": 30,
+            "save_to": "workflow_status",
+            "expected_status": [200, 404]
+        },
+        {
+            "step": 4,
+            "description": "Получение детальной информации о задачах",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ complex_dag_creation.dag_id }}/tasks",
+            "method": "GET",
+            "timeout": 20,
+            "save_to": "workflow_tasks",
+            "expected_status": [200, 404]
+        }
+    ],
+    "success_criteria": [
+        "Комплексный workflow создан и запущен",
+        "Все этапы workflow выполнены или система недоступна",
+        "Получена детальная информация о выполнении"
+    ],
+    "cleanup": [],
+    "tags": ["airflow", "complex_workflow", "multi_module", "integration"]
+}

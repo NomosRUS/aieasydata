@@ -1,0 +1,25 @@
+﻿{
+    "source_profile_id":  6,
+    "business_requirements":  "Р’С‹СЃРѕРєРѕРїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅР°СЏ Р°РЅР°Р»РёС‚РёРєР° РїСЂРѕРґР°Р¶ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РґРµС‚Р°Р»СЊРЅРѕРіРѕ Р°РЅР°Р»РёР·Р° РїРѕ СЂРµРіРёРѕРЅР°Рј Рё РєР°С‚РµРіРѕСЂРёСЏРј С‚РѕРІР°СЂРѕРІ",
+    "analytics_requirements":  {
+                                   "refresh_interval":  "hourly",
+                                   "metrics":  [
+                                                   "revenue",
+                                                   "orders",
+                                                   "customer_segments",
+                                                   "regional_performance"
+                                               ],
+                                   "expected_volume":  "high",
+                                   "query_patterns":  [
+                                                          "time_series",
+                                                          "aggregations",
+                                                          "filtering"
+                                                      ]
+                               },
+    "constraints":  {
+                        "sla":  "99.9",
+                        "budget":  "high",
+                        "performance_priority":  "speed",
+                        "storage_optimization":  true
+                    }
+}

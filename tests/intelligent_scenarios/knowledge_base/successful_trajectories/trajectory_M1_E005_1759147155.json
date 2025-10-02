@@ -1,0 +1,60 @@
+{
+    "scenario_id": "M1_E005",
+    "name": "Module 1 - Clean File",
+    "category": "elementary/module1",
+    "timestamp": 1759147155,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call clean-file endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/clean-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/sales.csv"
+                },
+                "payload": {
+                    "cleaning_strategy": "auto"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "success",
+                    "cleaned_file_path": "data_landing_zone/cleaned/sales/sales_cleaned.parquet",
+                    "metadata": {
+                        "schema_version": "1.0",
+                        "cleaning_timestamp": "2025-09-29T11:59:15.721085",
+                        "quality_score": 0.973,
+                        "row_count_before": 10,
+                        "row_count_after": 10,
+                        "column_count": 7,
+                        "applied_fixes": [
+                            "Нормализован регистр в колонке 'product_name'",
+                            "Нормализован регистр в колонке 'category'",
+                            "Нормализованы телефонные номера в колонке 'sale_date'",
+                            "Ограничены 2 выбросов в колонке 'price' (winsorization)",
+                            "Ограничены 1 выбросов в колонке 'quantity' (winsorization)"
+                        ],
+                        "processing_time_ms": 0.0
+                    },
+                    "quality_improvement": 0.0,
+                    "applied_fixes": []
+                }
+            }
+        }
+    ]
+}

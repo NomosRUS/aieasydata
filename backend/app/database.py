@@ -76,4 +76,10 @@ def get_db():
 
 # Утилита для создания таблицы (можно вызывать отдельно при инициализации приложения)
 def create_tables():
+    from .shared.schemas import (  # noqa: F401 — импорт нужен ради регистрации моделей
+        AggregationScenario, 
+        OptimizationRecommendation, 
+        WarehouseDesign, 
+        WarehouseInstance
+    )
     Base.metadata.create_all(bind=engine)

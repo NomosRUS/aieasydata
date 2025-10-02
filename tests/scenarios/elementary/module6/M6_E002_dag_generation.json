@@ -1,0 +1,41 @@
+{
+    "scenario_id": "M6_E002",
+    "name": "Module 6 - Generate Simple DAG",
+    "description": "Тест генерации простого DAG'а через модуль оркестрации",
+    "category": "elementary",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Генерация тестового DAG'а",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/dag/compile",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "name": "test_dag_from_scenario_{{ timestamp }}",
+                "schedule": "@daily",
+                "source": {
+                    "type": "file",
+                    "path": "/data/raw/sales.csv"
+                },
+                "transforms": [
+                    {
+                        "action": "validate",
+                        "task_id": "validate_source_data"
+                    }
+                ],
+                "target": {
+                    "type": "postgres",
+                    "table_name": "test_dag_output_{{ timestamp }}"
+                }
+            },
+            "save_to": "dag_generation_result"
+        }
+    ],
+    "ai_training": {
+        "goal": "Test simple DAG generation via Module 6",
+        "success_pattern": "dag_generation_ok",
+        "key_decisions": []
+    }
+}

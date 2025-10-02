@@ -1,0 +1,136 @@
+{
+    "scenario_id": "M1_E004",
+    "name": "Module 1 - Validate File",
+    "category": "elementary/module1",
+    "timestamp": 1759148259,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call validate-file endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/validate-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "validation_id": "9aa482eb-e639-465b-8cd2-798d1d0c0d20",
+                    "status": "completed",
+                    "quality_score": 0.9839999999999999,
+                    "issues_count": 9,
+                    "issues": [
+                        {
+                            "issue_id": "31c5e202-9f9f-4333-8e12-c3a8fe4193f4",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 2,
+                            "percentage": 20.0,
+                            "description": "Колонка 'price' содержит 2 потенциальных выбросов (20.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "c4694aa4-79e0-41ff-a91b-dfd47b3fc27f",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 10.0,
+                            "description": "Колонка 'quantity' содержит 1 потенциальных выбросов (10.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "iqr_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_price_4",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_4",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_quantity_7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_quantity_7",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "multivariate_0",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "multivariate",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Многомерная аномалия в строке 0: необычная комбинация значений",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        }
+                    ],
+                    "recommendations_count": 1,
+                    "processing_time_ms": 30185.784000000003
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,86 @@
+{
+    "scenario_id": "S006",
+    "name": "Full Batch Processing Cycle",
+    "description": "Полный цикл пакетной обработки: валидация, очистка, агрегация, оптимизация и загрузка в HDFS",
+    "category": "end_to_end_flows",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Пакетная валидация нескольких файлов",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "batch-validate",
+            "method": "POST",
+            "payload": {
+                "sources": [
+                    {
+                        "source_id": "sales_part1",
+                        "path": "/data/raw/sales_part1.csv"
+                    },
+                    {
+                        "source_id": "sales_part2",
+                        "path": "/data/raw/sales_part2.csv"
+                    }
+                ]
+            },
+            "save_to": "validation_result"
+        },
+        {
+            "step": 2,
+            "description": "Агрегация очищенных данных",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "custom-dataset",
+            "method": "POST",
+            "payload": {
+                "sources": "{{ cleaned_data.output_paths }}",
+                "aggregation_logic": {
+                    "type": "union"
+                }
+            },
+            "save_to": "aggregated_data"
+        },
+        {
+            "step": 4,
+            "description": "Проектирование хранилища HDFS",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Batch processing to HDFS",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "warehouse_design"
+        },
+        {
+            "step": 5,
+            "description": "Создание структуры в HDFS",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "confirm-design",
+            "method": "POST",
+            "payload": {
+                "design_id": "{{ warehouse_design.design_id }}"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "hdfs_path_exists",
+                "path": "/warehouse/batch_sales_hdfs"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Execute a full batch processing pipeline from validation to HDFS loading",
+        "success_pattern": "batch_validate -> batch_clean -> aggregate -> design_hdfs -> create_hdfs_structure",
+        "key_decisions": [
+            "cleaning_strategy",
+            "hdfs_optimizations"
+        ]
+    }
+}

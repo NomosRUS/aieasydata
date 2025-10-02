@@ -1,0 +1,176 @@
+"""
+Мастер-оркестратор DAG
+Создан автоматически: {{ created_at }}
+Пайплайн: {{ config.pipeline_name }}
+"""
+
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+# Убираем SimpleHttpOperator - используем requests напрямую
+import logging
+import requests
+
+logger = logging.getLogger(__name__)
+
+# Конфигурация DAG'а
+default_args = {
+    'owner': 'AiEasyData-Orchestrator',
+    'depends_on_past': False,
+    'start_date': datetime(2025, 9, 27),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+# Создаем мастер-DAG
+dag = DAG(
+    '{{ master_dag_id }}',
+    default_args=default_args,
+    schedule_interval='{{ config.schedule }}',
+    catchup=False,
+    tags=['master', 'orchestrator', 'aieasydata'],
+)
+
+def execute_module_call(module: int, endpoint: str, method: str, parameters, **context):
+    """Выполнение вызова модуля"""
+    # В Docker контейнере используем имя сервиса API
+    base_url = "http://api:8000"
+    url = f"{base_url}{endpoint}"
+    
+    try:
+        logger.info(f"Executing module {module} call: {method} {url}")
+        
+        if method.upper() == "GET":
+            response = requests.get(url, params=parameters, timeout=300)
+        elif method.upper() == "POST":
+            # Специальная обработка для bulk-analyze - передаем массив напрямую
+            if endpoint == "/api/v1/performance/bulk-analyze":
+                response = requests.post(url, json=parameters, timeout=300)
+            else:
+                # Обычная обработка - параметры как JSON объект
+                response = requests.post(url, json=parameters, timeout=300)
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
+        
+        response.raise_for_status()
+        
+        logger.info(f"Module {module} call completed successfully")
+        return response.json()
+        
+    except Exception as e:
+        logger.error(f"Module {module} call failed: {str(e)}")
+        raise
+
+def execute_function_call(function: str, endpoint: str, method: str, parameters: dict, **context):
+    """Выполнение вызова функции"""
+    # В Docker контейнере используем имя сервиса API
+    base_url = "http://api:8000"
+    
+    # Обработка path parameters для функций
+    if function == "apply_optimizations" and "{analysis_id}" in endpoint:
+        analysis_id = parameters.get("analysis_id", "default_analysis")
+        endpoint = endpoint.replace("{analysis_id}", analysis_id)
+        # Убираем analysis_id из параметров, так как он уже в URL
+        parameters = {k: v for k, v in parameters.items() if k != "analysis_id"}
+    elif function == "execute_scenario" and "{scenario_id}" in endpoint:
+        scenario_id = parameters.get("scenario_id", "default_scenario")
+        endpoint = endpoint.replace("{scenario_id}", scenario_id)
+        # Убираем scenario_id из параметров, так как он уже в URL
+        parameters = {k: v for k, v in parameters.items() if k != "scenario_id"}
+    
+    url = f"{base_url}{endpoint}"
+    
+    try:
+        logger.info(f"Executing function {function}: {method} {url}")
+        
+        if method.upper() == "GET":
+            response = requests.get(url, params=parameters, timeout=300)
+        elif method.upper() == "POST":
+            # Для некоторых endpoints параметры передаются как query params, а не JSON
+            if function in ["validate_file_direct"]:
+                # Для validate-file передаем file_path как query param
+                query_params = {}
+                
+                if "file_path" in parameters:
+                    query_params["file_path"] = parameters["file_path"]
+                if "validation_options" in parameters:
+                    query_params["validation_options"] = parameters["validation_options"]
+                
+                response = requests.post(url, params=query_params, timeout=300)
+            elif function in ["check_folder_homogeneity", "monitor_specific_source"]:
+                # Для check-homogeneity и monitor_specific_source передаем как JSON body
+                response = requests.post(url, json=parameters, timeout=300)
+            else:
+                # По умолчанию передаем как JSON
+                response = requests.post(url, json=parameters, timeout=300)
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
+        
+        response.raise_for_status()
+        
+        logger.info(f"Function {function} completed successfully")
+        return response.json()
+        
+    except Exception as e:
+        logger.error(f"Function {function} failed: {str(e)}")
+        raise
+
+# Создание задач DAG'а
+tasks = {}
+
+{% for stage in config.stages %}
+{% if stage.stage_type.value == "module_call" %}
+tasks['{{ stage.stage_name }}'] = PythonOperator(
+    task_id='{{ stage.stage_name }}',
+    python_callable=execute_module_call,
+    op_kwargs={
+        'module': {{ stage.module }},
+        'endpoint': '{{ stage.endpoint or "" }}',
+        'method': '{{ "POST" if stage.module in [1, 2, 3] else "GET" }}',
+        'parameters': {{ stage.parameters | tojson | replace('true', 'True') | replace('false', 'False') | replace('null', 'None') }}
+    },
+    retries={{ stage.retry_count }},
+    execution_timeout=timedelta(seconds={{ stage.timeout }}),
+    dag=dag,
+)
+
+{% elif stage.stage_type.value == "function_call" %}
+tasks['{{ stage.stage_name }}'] = PythonOperator(
+    task_id='{{ stage.stage_name }}',
+    python_callable=execute_function_call,
+    op_kwargs={
+        'function': '{{ stage.function }}',
+        'endpoint': '{{ stage.endpoint or "" }}',
+        'method': '{{ "GET" if stage.function in ["auto_detect_source", "get_recommendations"] else "POST" }}',
+        'parameters': {{ stage.parameters | tojson | replace('true', 'True') | replace('false', 'False') | replace('null', 'None') }}
+    },
+    retries={{ stage.retry_count }},
+    execution_timeout=timedelta(seconds={{ stage.timeout }}),
+    dag=dag,
+)
+
+{% elif stage.stage_type.value == "dag_execution" %}
+tasks['{{ stage.stage_name }}'] = TriggerDagRunOperator(
+    task_id='{{ stage.stage_name }}',
+    trigger_dag_id='{{ stage.dag_id }}',
+    wait_for_completion=True,
+    poke_interval=30,
+    timeout={{ stage.timeout }},
+    retries={{ stage.retry_count }},
+    dag=dag,
+)
+{% endif %}
+
+{% endfor %}
+
+# Устанавливаем зависимости
+{% for stage_name, dependencies in dependencies_graph.items() %}
+{% if dependencies %}
+{% for dep in dependencies %}
+tasks['{{ dep }}'] >> tasks['{{ stage_name }}']
+{% endfor %}
+{% endif %}
+{% endfor %}

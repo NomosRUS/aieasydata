@@ -1,0 +1,56 @@
+{
+    "scenario_id": "SHARED_E003",
+    "name": "Shared Components - DSL Compiler Test",
+    "description": "Тест компилятора DSL в Airflow DAG",
+    "category": "elementary",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Компиляция DSL в DAG",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/dag/compile",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "name": "test_etl_pipeline_{{ timestamp }}",
+                "schedule": "@daily",
+                "description": "Test ETL pipeline from DSL",
+                "tasks": [
+                    {
+                        "task_id": "extract_data",
+                        "type": "module_call",
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/validate-file",
+                        "method": "POST",
+                        "params": {
+                            "file_path": "/data/raw/sales.csv",
+                            "validation_options": {
+                                "check_duplicates": true,
+                                "assess_quality": true
+                            }
+                        }
+                    },
+                    {
+                        "task_id": "transform_data",
+                        "type": "module_call",
+                        "module": 2,
+                        "endpoint": "/api/v1/aggregation/create-scenario",
+                        "method": "POST",
+                        "depends_on": ["extract_data"],
+                        "params": {
+                            "name": "simple_aggregation",
+                            "description": "Simple data aggregation"
+                        }
+                    }
+                ]
+            },
+            "save_to": "dsl_compilation_result"
+        }
+    ],
+    "ai_training": {
+        "goal": "Test DSL compiler shared component",
+        "success_pattern": "compilation_valid",
+        "key_decisions": []
+    }
+}

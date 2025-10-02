@@ -1,0 +1,298 @@
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.operators.empty import EmptyOperator
+from datetime import datetime, timedelta
+import io
+import os
+from urllib.parse import urlparse
+
+import pandas as pd
+import requests
+import psycopg2
+from sqlalchemy import create_engine
+
+default_args = {
+    "owner": "warehouse_designer",
+    "retries": 1,
+    "retry_delay": timedelta(minutes=5),
+    "depends_on_past": False
+}
+
+def _read_file_from_hdfs(hdfs_path: str) -> bytes:
+    """Загружает файл из HDFS через WebHDFS API и возвращает байтовые данные."""
+    hdfs_web = os.environ.get("HDFS_WEB", "http://hdfs-namenode:9870")
+    parsed = urlparse(hdfs_path)
+    webhdfs_url = f"{hdfs_web}/webhdfs/v1{parsed.path}?op=OPEN&user.name=root"
+
+    response = requests.get(webhdfs_url, stream=True)
+    response.raise_for_status()
+    return response.content
+
+
+def extract_data(**context):
+    """Извлекает данные из источника."""
+    source_config = {{ source | tojson }}
+    
+    file_path = source_config["path"]
+    file_format = source_config["format"]
+    
+    # Определяем источник чтения
+    is_hdfs = file_path.startswith("hdfs://")
+    file_bytes = None
+
+    if is_hdfs:
+        file_bytes = _read_file_from_hdfs(file_path)
+
+    # Читаем данные в зависимости от формата
+    if file_format == "csv":
+        if is_hdfs:
+            df = pd.read_csv(io.BytesIO(file_bytes))
+        else:
+            df = pd.read_csv(file_path)
+    elif file_format == "json":
+        if is_hdfs:
+            df = pd.read_json(io.BytesIO(file_bytes))
+        else:
+            df = pd.read_json(file_path)
+    elif file_format in ["excel", "xlsx"]:
+        if is_hdfs:
+            df = pd.read_excel(io.BytesIO(file_bytes))
+        else:
+            df = pd.read_excel(file_path)
+    elif file_format == "parquet":
+        if is_hdfs:
+            df = pd.read_parquet(io.BytesIO(file_bytes))
+        else:
+            df = pd.read_parquet(file_path)
+    else:
+        raise ValueError(f"Unsupported file format: {file_format}")
+    
+    print(f"Extracted {len(df)} rows from {file_path}")
+    
+    # Сохраняем данные во временный файл для следующего шага
+    temp_file = f"/tmp/extracted_data_{context['run_id']}.parquet"
+    df.to_parquet(temp_file, index=False)
+    
+    return temp_file
+
+def transform_data(**context):
+    """Преобразует данные согласно схеме целевой СУБД."""
+    target_config = {{ target | tojson }}
+    
+    # Получаем путь к временному файлу
+    temp_file = context['task_instance'].xcom_pull(task_ids='extract')
+    df = pd.read_parquet(temp_file)
+    
+    print(f"Transforming {len(df)} rows for {target_config['type']}")
+    
+    # Применяем преобразования типов данных
+    target_type = target_config["type"]
+    
+    if target_type == "clickhouse":
+        # Преобразования для ClickHouse
+        for col in df.columns:
+            if df[col].dtype == 'object':
+                df[col] = df[col].astype(str)
+            elif df[col].dtype == 'bool':
+                df[col] = df[col].astype('uint8')
+    
+    elif target_type == "postgres":
+        # Преобразования для PostgreSQL
+        for col in df.columns:
+            if df[col].dtype == 'object':
+                df[col] = df[col].astype(str)
+    
+    # Сохраняем преобразованные данные
+    transformed_file = f"/tmp/transformed_data_{context['run_id']}.parquet"
+    df.to_parquet(transformed_file, index=False)
+    
+    return transformed_file
+
+def load_data(**context):
+    """Загружает данные в целевую СУБД."""
+    target_config = {{ target | tojson }}
+    
+    # Получаем путь к преобразованным данным
+    transformed_file = context['task_instance'].xcom_pull(task_ids='transform')
+    df = pd.read_parquet(transformed_file)
+    
+    target_type = target_config["type"]
+    table_name = target_config["table_name"]
+    database = target_config["database"]
+    connection_params = target_config["connection_params"]
+    
+    print(f"Loading {len(df)} rows to {target_type}.{database}.{table_name}")
+    
+    if target_type == "postgres":
+        # Загрузка в PostgreSQL
+        dsn = connection_params["dsn"]
+        engine = create_engine(dsn)
+        
+        df.to_sql(
+            table_name,
+            engine,
+            schema=database,
+            if_exists='append',
+            index=False,
+            method='multi'
+        )
+        
+    elif target_type == "clickhouse":
+        # Загрузка в ClickHouse через HTTP API
+        http_url = connection_params["http_url"]
+        
+        # Конвертируем DataFrame в CSV для отправки
+        csv_data = df.to_csv(index=False, sep='\t', header=True)
+        
+        # Отправляем данные в ClickHouse
+        insert_query = f"INSERT INTO {database}.{table_name} FORMAT TabSeparatedWithNames"
+        
+        user = os.environ.get("CLICKHOUSE_USER", "default")
+        password = os.environ.get("CLICKHOUSE_PASSWORD", "password")
+
+        response = requests.post(
+            f"{http_url}/?query={insert_query}",
+            data=csv_data,
+            headers={
+                "Content-Type": "text/plain",
+                "X-ClickHouse-User": user,
+                "X-ClickHouse-Key": password
+            }
+        )
+        
+        if response.status_code != 200:
+            raise Exception(f"ClickHouse insert failed: {response.text}")
+            
+    elif target_type == "hdfs":
+        # Загрузка в HDFS
+        namenode_url = connection_params["namenode_url"]
+        base_path = connection_params["base_path"]
+        
+        # Сохраняем как Parquet файл в HDFS
+        hdfs_path = f"{base_path}/{table_name}/data.parquet"
+        
+        # Конвертируем в байты для загрузки
+        parquet_data = df.to_parquet(index=False)
+        
+        # Загружаем через WebHDFS API
+        response = requests.put(
+            f"{namenode_url}/webhdfs/v1{hdfs_path}?op=CREATE&overwrite=true",
+            data=parquet_data,
+            headers={"Content-Type": "application/octet-stream"}
+        )
+        
+        if response.status_code not in [200, 201]:
+            raise Exception(f"HDFS upload failed: {response.text}")
+    
+    else:
+        raise ValueError(f"Unsupported target type: {target_type}")
+    
+    print(f"Successfully loaded data to {target_type}")
+    
+    # Очищаем временные файлы
+    try:
+        os.remove(context['task_instance'].xcom_pull(task_ids='extract'))
+        os.remove(context['task_instance'].xcom_pull(task_ids='transform'))
+    except:
+        pass  # Игнорируем ошибки очистки
+
+def validate_load(**context):
+    """Проверяет успешность загрузки данных."""
+    target_config = {{ target | tojson }}
+    
+    target_type = target_config["type"]
+    table_name = target_config["table_name"]
+    database = target_config["database"]
+    connection_params = target_config["connection_params"]
+    
+    if target_type == "postgres":
+        # Проверяем количество записей в PostgreSQL
+        dsn = connection_params["dsn"]
+        conn = psycopg2.connect(dsn)
+        cursor = conn.cursor()
+        
+        cursor.execute(f"SELECT COUNT(*) FROM {database}.{table_name}")
+        row_count = cursor.fetchone()[0]
+        
+        cursor.close()
+        conn.close()
+        
+        print(f"Validation: {row_count} rows in PostgreSQL table")
+        
+    elif target_type == "clickhouse":
+        # Проверяем количество записей в ClickHouse
+        http_url = connection_params["http_url"]
+        
+        user = os.environ.get("CLICKHOUSE_USER", "default")
+        password = os.environ.get("CLICKHOUSE_PASSWORD", "password")
+        
+        response = requests.get(
+            f"{http_url}/?query=SELECT COUNT(*) FROM {database}.{table_name}",
+            headers={
+                "X-ClickHouse-User": user,
+                "X-ClickHouse-Key": password
+            }
+        )
+        
+        if response.status_code == 200:
+            row_count = int(response.text.strip())
+            print(f"Validation: {row_count} rows in ClickHouse table")
+        else:
+            raise Exception(f"ClickHouse validation failed: {response.text}")
+    
+    elif target_type == "hdfs":
+        # Для HDFS проверяем наличие файла
+        namenode_url = connection_params["namenode_url"]
+        base_path = connection_params["base_path"]
+        hdfs_path = f"{base_path}/{table_name}/data.parquet"
+        
+        response = requests.get(
+            f"{namenode_url}/webhdfs/v1{hdfs_path}?op=GETFILESTATUS"
+        )
+        
+        if response.status_code == 200:
+            file_info = response.json()
+            file_size = file_info["FileStatus"]["length"]
+            print(f"Validation: HDFS file size {file_size} bytes")
+        else:
+            raise Exception(f"HDFS validation failed: {response.text}")
+
+with DAG(
+    dag_id="{{ name }}",
+    start_date=datetime(2025, 9, 1),
+    schedule_interval=None,
+    catchup=False,
+    tags=["warehouse", "etl", "generated"],
+    default_args=default_args,
+    description="ETL pipeline for warehouse data loading (design_id: {{ design_id }})"
+) as dag:
+    start = EmptyOperator(task_id="start")
+    
+    extract = PythonOperator(
+        task_id="extract",
+        python_callable=extract_data,
+        provide_context=True
+    )
+    
+    transform = PythonOperator(
+        task_id="transform", 
+        python_callable=transform_data,
+        provide_context=True
+    )
+    
+    load = PythonOperator(
+        task_id="load",
+        python_callable=load_data,
+        provide_context=True
+    )
+    
+    validate = PythonOperator(
+        task_id="validate",
+        python_callable=validate_load,
+        provide_context=True
+    )
+    
+    end = EmptyOperator(task_id="end")
+
+    start >> extract >> transform >> load >> validate >> end
+

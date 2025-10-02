@@ -1,0 +1,73 @@
+{
+    "scenario_id": "M1_E007",
+    "name": "Module 1 - Batch Validate",
+    "category": "elementary/module1",
+    "timestamp": 1759149445,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call batch-validate endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/batch-validate",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "sources": [
+                        {
+                            "source_id": "sales1",
+                            "path": "/data/raw/sales.csv"
+                        },
+                        {
+                            "source_id": "sales2",
+                            "path": "/data/raw/sales_part1.csv"
+                        }
+                    ]
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "batch_results": [
+                        {
+                            "source_id": "sales1",
+                            "validation_id": "a1404d88-7159-476a-bf3e-4bd8af71c8a8",
+                            "status": "completed",
+                            "quality_score": 0.9839999999999999,
+                            "issues_count": 9,
+                            "recommendations_count": 1
+                        },
+                        {
+                            "source_id": "sales2",
+                            "validation_id": "44ff109b-04d0-4e6b-864b-9e793e468a09",
+                            "status": "failed",
+                            "quality_score": 0.0,
+                            "issues_count": 0,
+                            "recommendations_count": 0,
+                            "error": "Не удалось загрузить данные из источника"
+                        }
+                    ],
+                    "summary": {
+                        "total_sources": 2,
+                        "successful_validations": 1,
+                        "failed_validations": 1,
+                        "average_quality_score": 0.9839999999999999
+                    },
+                    "processed_at": "2025-09-29T12:37:25.841500"
+                }
+            }
+        }
+    ]
+}

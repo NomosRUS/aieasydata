@@ -1,0 +1,49 @@
+{
+    "scenario_id": "S020",
+    "name": "Memory Usage Check",
+    "category": "quick_diagnostics",
+    "timestamp": 1759143671,
+    "trajectory": [
+        {
+            "step": {
+                "step": 2,
+                "description": "Запуск интенсивной операции (валидация большого файла)",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "validate-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/large_dataset.csv"
+                },
+                "payload": {
+                    "validation_options": {
+                        "check_duplicates": true,
+                        "assess_quality": true
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "validation_id": "cb06a8a3-c919-4694-9634-8f39d1b4f32c",
+                    "status": "failed",
+                    "quality_score": 0.0,
+                    "issues_count": 0,
+                    "issues": [],
+                    "recommendations_count": 0,
+                    "processing_time_ms": 0
+                }
+            }
+        }
+    ]
+}

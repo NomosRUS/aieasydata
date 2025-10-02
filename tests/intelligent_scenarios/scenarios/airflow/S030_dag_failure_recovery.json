@@ -1,0 +1,71 @@
+{
+    "scenario_id": "S030",
+    "name": "DAG Failure and Recovery Test",
+    "description": "Тест на восстановление после сбоя DAG'а в Airflow",
+    "category": "airflow_integration",
+    "priority": "critical",
+    "expected_duration": 90,
+    "steps": [
+        {
+            "step": 1,
+            "description": "Создание DAG'а с заведомо неверным шагом",
+            "action": "module_api_call",
+            "module": 6,
+            "endpoint": "/api/v1/orchestrator/generate-dag",
+            "method": "POST",
+            "timeout": 30,
+            "payload": {
+                "name": "failing_dag_{{ timestamp }}",
+                "schedule": "@once",
+                "description": "Test DAG designed to fail",
+                "stages": [
+                    {
+                        "stage_name": "failing_stage",
+                        "type": "module_call",
+                        "module": 99, 
+                        "endpoint": "/non/existent/endpoint",
+                        "method": "GET"
+                    }
+                ]
+            },
+            "save_to": "failing_dag_creation",
+            "expected_status": [200, 201, 404]
+        },
+        {
+            "step": 2,
+            "description": "Запуск 'падающего' DAG'а",
+            "action": "airflow_dag_trigger",
+            "dag_id": "{{ failing_dag_creation.dag_id }}",
+            "conf": {},
+            "timeout": 60,
+            "save_to": "failing_dag_execution",
+            "expected_status": [200, 404, 500]
+        },
+        {
+            "step": 3,
+            "description": "Проверка статуса выполнения (ожидается 'failed')",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ failing_dag_creation.dag_id }}/dagRuns",
+            "method": "GET",
+            "timeout": 20,
+            "save_to": "failure_status",
+            "expected_status": [200, 404]
+        },
+        {
+            "step": 4,
+            "description": "Проверка логов задачи для анализа ошибки",
+            "action": "external_api_call",
+            "endpoint": "http://localhost:8080/api/v1/dags/{{ failing_dag_creation.dag_id }}/dagRuns/{{ failure_status.dag_runs[0].dag_run_id }}/taskInstances/failing_stage/logs/1",
+            "method": "GET",
+            "timeout": 15,
+            "save_to": "task_logs",
+            "expected_status": [200, 404]
+        }
+    ],
+    "success_criteria": [
+        "DAG запущен и его статус 'failed'",
+        "Получены логи для анализа причины сбоя"
+    ],
+    "cleanup": [],
+    "tags": ["airflow", "failure_recovery", "error_handling", "integration"]
+}

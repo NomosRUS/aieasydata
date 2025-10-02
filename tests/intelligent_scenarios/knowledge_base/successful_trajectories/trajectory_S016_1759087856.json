@@ -1,0 +1,184 @@
+{
+    "scenario_id": "S016",
+    "name": "Health Check All Modules",
+    "category": "quick_diagnostics",
+    "timestamp": 1759087856,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Проверка модуля 1 (Валидация)",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5": "not_checked",
+                        "data_landing_zone": "available"
+                    },
+                    "last_check": "2025-09-28T19:30:55.025126"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 2,
+                "description": "Проверка модуля 2 (Агрегация)",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5_metrics": true,
+                        "module_4_warehouse": true,
+                        "database": false
+                    },
+                    "active_scenarios": 39,
+                    "last_execution": null,
+                    "error_details": null
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 3,
+                "description": "Проверка модуля 3 (Оптимизация)",
+                "action": "module_api_call",
+                "module": 3,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "ok",
+                    "module": "performance_optimizer",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module5_metrics": "ok",
+                        "database": "error"
+                    },
+                    "capabilities": [
+                        "auto_detect_data_types",
+                        "performance_analysis",
+                        "optimization_recommendations",
+                        "ddl_generation",
+                        "module4_integration",
+                        "module5_integration"
+                    ]
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 4,
+                "description": "Проверка модуля 4 (Хранилища)",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 5,
+                "description": "Проверка модуля 5 (Мониторинг)",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "module": "metrics_collector",
+                    "supported_db_types": [
+                        "clickhouse",
+                        "postgres",
+                        "file_system"
+                    ],
+                    "version": "1.0"
+                }
+            }
+        }
+    ]
+}

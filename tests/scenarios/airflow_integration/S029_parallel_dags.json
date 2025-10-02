@@ -1,0 +1,52 @@
+{
+    "scenario_id": "S029",
+    "name": "Airflow Parallel DAGs Execution",
+    "description": "Проверка параллельного выполнения нескольких независимых DAG'ов",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Одновременный запуск трех DAG'ов",
+            "action": "module_api_call",
+            "tasks": [
+                {
+                    "action": "airflow_dag_trigger",
+                    "dag_id": "parallel_dag_1"
+                },
+                {
+                    "action": "airflow_dag_trigger",
+                    "dag_id": "parallel_dag_2"
+                },
+                {
+                    "action": "airflow_dag_trigger",
+                    "dag_id": "parallel_dag_3"
+                }
+            ],
+            "method": "POST"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "dag_run_status",
+                "dag_id": "parallel_dag_1",
+                "expected_status": "success"
+            },
+            {
+                "type": "dag_run_status",
+                "dag_id": "parallel_dag_2",
+                "expected_status": "success"
+            },
+            {
+                "type": "dag_run_status",
+                "dag_id": "parallel_dag_3",
+                "expected_status": "success"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify parallel execution of multiple DAGs in Airflow",
+        "success_pattern": "trigger_parallel_dags -> check_all_statuses",
+        "key_decisions": []
+    }
+}

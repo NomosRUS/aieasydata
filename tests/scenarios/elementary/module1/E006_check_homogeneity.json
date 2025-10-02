@@ -1,0 +1,24 @@
+{
+    "scenario_id": "M1_E006",
+    "name": "Module 1 - Check Homogeneity",
+    "description": "Elementary test for folder homogeneity check.",
+    "category": "elementary/module1",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call check-homogeneity endpoint",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "/api/v1/data-quality/check-homogeneity",
+            "method": "POST",
+            "payload": {
+                "folder_path": "/data/raw"
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

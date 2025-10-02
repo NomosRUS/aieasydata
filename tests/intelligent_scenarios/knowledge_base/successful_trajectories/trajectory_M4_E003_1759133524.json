@@ -1,0 +1,170 @@
+{
+    "scenario_id": "M4_E003",
+    "name": "Module 4 - Get Instances",
+    "category": "elementary/module4",
+    "timestamp": 1759133524,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call instances endpoint",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "/api/v1/warehouse/instances",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": [
+                    {
+                        "id": 4,
+                        "design_id": "5a80f922-7753-4c81-8046-c4b2c8914ea1",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:44:58.208862"
+                    },
+                    {
+                        "id": 5,
+                        "design_id": "ea1bafb0-db1a-4f50-a84b-dca087c25bff",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:45:45.280183"
+                    },
+                    {
+                        "id": 6,
+                        "design_id": "3d1e551d-9031-4f59-a626-6c6ec134102a",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:46:09.723238"
+                    },
+                    {
+                        "id": 7,
+                        "design_id": "4e145fe5-00ea-4f72-b5ab-200754e74cbf",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:46:33.127361"
+                    },
+                    {
+                        "id": 8,
+                        "design_id": "de95013f-cd58-4e2e-a5ce-961790947386",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:51:37.541914"
+                    },
+                    {
+                        "id": 9,
+                        "design_id": "0c225244-218a-4b06-81de-ff4c9d53b16b",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:55:08.945914"
+                    },
+                    {
+                        "id": 10,
+                        "design_id": "5d7d78ca-6ccb-45e8-9f1f-9927aef4b796",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:55:35.881974"
+                    },
+                    {
+                        "id": 11,
+                        "design_id": "e3c1bdff-03f0-4ff1-8d6b-5c1fbd837a6c",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T14:59:37.635456"
+                    },
+                    {
+                        "id": 12,
+                        "design_id": "f3749c6e-8943-42a4-8a47-4ee0026db0ce",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T15:00:17.286983"
+                    },
+                    {
+                        "id": 13,
+                        "design_id": "bbb03a72-1bae-4a7a-910d-e1cbe63c455d",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T15:00:38.199172"
+                    },
+                    {
+                        "id": 1,
+                        "design_id": "edb638fa-134d-47e9-b8f5-6b0b6dd7da55",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {
+                            "row_count": 0,
+                            "size_in_bytes": 0
+                        },
+                        "created_at": "2025-09-25T14:32:45.690927"
+                    },
+                    {
+                        "id": 2,
+                        "design_id": "9c3d76f1-0e98-4ad2-b3d4-87a61811a5ad",
+                        "target_db_type": "clickhouse",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {
+                            "row_count": 0,
+                            "size_in_bytes": 0
+                        },
+                        "created_at": "2025-09-25T14:36:32.305022"
+                    },
+                    {
+                        "id": 14,
+                        "design_id": "c9259623-4d28-4a5b-8ff3-fcd70443936a",
+                        "target_db_type": "hdfs",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {},
+                        "created_at": "2025-09-25T15:01:02.110004"
+                    },
+                    {
+                        "id": 3,
+                        "design_id": "b32a3876-b4ca-47e5-9d84-a2fe893c0bf4",
+                        "target_db_type": "postgres",
+                        "db_name": "analytics",
+                        "table_name": "unknown",
+                        "metrics": {
+                            "row_count": 0,
+                            "size_in_bytes": 0
+                        },
+                        "created_at": "2025-09-25T14:43:32.655330"
+                    }
+                ]
+            }
+        }
+    ]
+}

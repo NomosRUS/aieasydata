@@ -1,0 +1,89 @@
+{
+    "scenario_id": "S011",
+    "name": "Module 3 to Module 4 Format Validation",
+    "description": "Проверка корректности рекомендаций оптимизации между модулями",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Анализ производительности (Модуль 3)",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "method": "POST",
+            "payload": {
+                "source": "/data/raw/sales.csv"
+            },
+            "save_to": "step_1_output"
+        },
+        {
+            "step": 2,
+            "description": "Получение результатов анализа по ID",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analysis/{{step_1_output.analysis_id}}",
+            "method": "GET",
+            "save_to": "analysis_results"
+        },
+        {
+            "step": 3,
+            "description": "Проверка формата рекомендаций оптимизации",
+            "action": "format_validation",
+            "source": "{{analysis_results.recommendations}}",
+            "expected_schema": {
+                "format": "json",
+                "structure": {
+                    "optimization_type": "string",
+                    "table_name": "string",
+                    "recommendations": "array",
+                    "estimated_improvement": "number"
+                }
+            }
+        },
+        {
+            "step": 4,
+            "description": "Проектирование хранилища с оптимизациями (Модуль 4)",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "High-performance OLAP for sales data",
+                "analytics_requirements": {},
+                "constraints": {},
+                "optimization_recommendations": "{{ analysis_results.recommendations }}"
+            },
+            "save_to": "step_8_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "format_compatibility",
+                "modules": [
+                    3,
+                    4
+                ]
+            },
+            {
+                "type": "optimization_applied",
+                "recommendations": "{{analysis_results}}",
+                "design": "{{step_8_output}}"
+            },
+            {
+                "type": "performance_improvement_verified",
+                "threshold": 0.1
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure optimization recommendations are correctly applied in warehouse design",
+        "success_pattern": "analyze -> get_results -> format_check -> profile -> design_with_optimizations",
+        "key_decisions": [
+            "optimization_strategy",
+            "performance_thresholds",
+            "resource_allocation"
+        ]
+    }
+}

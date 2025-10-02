@@ -1,0 +1,72 @@
+{
+    "scenario_id": "M1_E007",
+    "name": "Module 1 - Batch Validate",
+    "category": "elementary/module1",
+    "timestamp": 1759145210,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call batch-validate endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/batch-validate",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "sources": [
+                        {
+                            "source_id": "sales1",
+                            "path": "/data/raw/sales.csv"
+                        },
+                        {
+                            "source_id": "sales2",
+                            "path": "/data/raw/sales_part1.csv"
+                        }
+                    ]
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "batch_results": [
+                        {
+                            "source_id": "sales1",
+                            "validation_id": "61d72554-bcc9-4ccd-8646-8a6914912488",
+                            "status": "completed",
+                            "quality_score": 0.9839999999999999,
+                            "issues_count": 9,
+                            "recommendations_count": 1
+                        },
+                        {
+                            "source_id": "sales2",
+                            "validation_id": "8666a4c8-2ad3-4922-afd5-ab3dc20458ac",
+                            "status": "failed",
+                            "quality_score": 0.0,
+                            "issues_count": 0,
+                            "recommendations_count": 0,
+                            "error": "Не удалось загрузить данные из источника"
+                        }
+                    ],
+                    "summary": {
+                        "total_sources": 2,
+                        "successful_validations": 1,
+                        "failed_validations": 1,
+                        "average_quality_score": 0.9839999999999999
+                    },
+                    "processed_at": "2025-09-29T11:26:50.403775"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,365 @@
+{
+    "metadata": {
+        "generated_at": "2025-09-28T21:20:00+03:00",
+        "total_trajectories": 35,
+        "source": "AiEasyData intelligent testing system",
+        "format_version": "1.0"
+    },
+    "training_examples": [
+        {
+            "scenario_id": "S001",
+            "goal": "Load external API data into PostgreSQL with validation",
+            "success_pattern": "external_api -> auto_detect -> validate -> design -> create_table",
+            "nodes": [
+                {
+                    "id": "step_1",
+                    "type": "action",
+                    "action": "external_api_call",
+                    "parameters": {
+                        "endpoint": "https://jsonplaceholder.typicode.com/posts",
+                        "method": "GET"
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "count": 100,
+                            "format": "json"
+                        }
+                    },
+                    "thought": "I need to fetch data from external API"
+                },
+                {
+                    "id": "step_2",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 5,
+                        "endpoint": "/api/v1/metrics/auto-detect",
+                        "method": "GET",
+                        "params": {
+                            "source": "/data/raw/external_posts.json"
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "data_type": "json",
+                            "format": "array"
+                        }
+                    },
+                    "thought": "I need to auto-detect the data type"
+                },
+                {
+                    "id": "step_3",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/validate-file",
+                        "method": "POST",
+                        "payload": {
+                            "file_path": "/data/raw/external_posts.json",
+                            "validation_options": {
+                                "check_duplicates": true,
+                                "assess_quality": true
+                            }
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "validation_passed": true
+                        }
+                    },
+                    "thought": "I need to validate the loaded data"
+                },
+                {
+                    "id": "step_4",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 4,
+                        "endpoint": "/api/v1/warehouse/design",
+                        "method": "POST",
+                        "payload": {
+                            "source_data": "step_3_output",
+                            "target_db": "postgresql",
+                            "optimization_level": "standard"
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "design_created": true,
+                            "ddl_generated": true
+                        }
+                    },
+                    "thought": "I need to design PostgreSQL warehouse"
+                },
+                {
+                    "id": "step_5",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 4,
+                        "endpoint": "/api/v1/warehouse/confirm-design",
+                        "method": "POST",
+                        "payload": {
+                            "design_id": "step_4_output.design_id"
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "table_created": true
+                        }
+                    },
+                    "thought": "I need to create table in PostgreSQL"
+                }
+            ],
+            "edges": [
+                {
+                    "from": "step_1",
+                    "to": "step_2",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_2",
+                    "to": "step_3",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_3",
+                    "to": "step_4",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_4",
+                    "to": "step_5",
+                    "condition": "success"
+                }
+            ],
+            "decision_points": [
+                "target_db_selection",
+                "validation_options",
+                "optimization_level"
+            ]
+        },
+        {
+            "scenario_id": "S009",
+            "goal": "Ensure data format compatibility between validation and aggregation modules",
+            "success_pattern": "validate_clean -> format_check -> aggregate",
+            "nodes": [
+                {
+                    "id": "step_1",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/clean/test_profile",
+                        "method": "POST",
+                        "payload": {
+                            "cleaning_strategy": "auto"
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "cleaning_completed": true
+                        }
+                    },
+                    "thought": "I need to validate and clean test data"
+                },
+                {
+                    "id": "step_2",
+                    "type": "action",
+                    "action": "format_validation",
+                    "parameters": {
+                        "source": "step_1_output.cleaned_data_path",
+                        "expected_schema": {
+                            "format": "parquet",
+                            "columns": ["id", "name", "email", "amount"],
+                            "metadata": {
+                                "quality_score": "number",
+                                "cleaning_applied": "array"
+                            }
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "validation_passed": true
+                        }
+                    },
+                    "thought": "I need to check format of cleaned data"
+                },
+                {
+                    "id": "step_3",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 2,
+                        "endpoint": "/api/v1/aggregation/create-scenario",
+                        "method": "POST",
+                        "payload": {
+                            "source_path": "step_1_output.cleaned_data_path",
+                            "scenario_type": "simple_aggregation"
+                        }
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "scenario_created": true
+                        }
+                    },
+                    "thought": "I need to pass data to aggregation module"
+                }
+            ],
+            "edges": [
+                {
+                    "from": "step_1",
+                    "to": "step_2",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_2",
+                    "to": "step_3",
+                    "condition": "success"
+                }
+            ],
+            "decision_points": [
+                "cleaning_strategy",
+                "format_validation_rules"
+            ]
+        },
+        {
+            "scenario_id": "S016",
+            "goal": "Verify all system modules are operational",
+            "success_pattern": "health_check_all_modules",
+            "nodes": [
+                {
+                    "id": "step_1",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 1,
+                        "endpoint": "/api/v1/data-quality/health-check",
+                        "method": "GET"
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "status": "healthy"
+                        }
+                    },
+                    "thought": "I need to check Module 1 health"
+                },
+                {
+                    "id": "step_2",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 2,
+                        "endpoint": "/api/v1/aggregation/health-check",
+                        "method": "GET"
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "status": "healthy"
+                        }
+                    },
+                    "thought": "I need to check Module 2 health"
+                },
+                {
+                    "id": "step_3",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 3,
+                        "endpoint": "/api/v1/performance/health-check",
+                        "method": "GET"
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "status": "healthy"
+                        }
+                    },
+                    "thought": "I need to check Module 3 health"
+                },
+                {
+                    "id": "step_4",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 4,
+                        "endpoint": "/api/v1/warehouse/health-check",
+                        "method": "GET"
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "status": "healthy"
+                        }
+                    },
+                    "thought": "I need to check Module 4 health"
+                },
+                {
+                    "id": "step_5",
+                    "type": "action",
+                    "action": "module_api_call",
+                    "parameters": {
+                        "module": 5,
+                        "endpoint": "/api/v1/metrics/health-check",
+                        "method": "GET"
+                    },
+                    "result": {
+                        "success": true,
+                        "data": {
+                            "status": "healthy"
+                        }
+                    },
+                    "thought": "I need to check Module 5 health"
+                }
+            ],
+            "edges": [
+                {
+                    "from": "step_1",
+                    "to": "step_2",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_2",
+                    "to": "step_3",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_3",
+                    "to": "step_4",
+                    "condition": "success"
+                },
+                {
+                    "from": "step_4",
+                    "to": "step_5",
+                    "condition": "success"
+                }
+            ],
+            "decision_points": [
+                "timeout_settings",
+                "retry_strategy"
+            ]
+        }
+    ],
+    "statistics": {
+        "total_examples": 35,
+        "successful_scenarios": [
+            "S001", "S002", "S003", "S004", "S005", "S006", "S007", "S008",
+            "S009", "S010", "S011", "S012", "S013", "S014", "S015",
+            "S016", "S017", "S018", "S019", "S020", "S021", "S022", "S023",
+            "S024", "S025", "S026", "S027", "S028", "S029", "S030"
+        ],
+        "failed_scenarios": [],
+        "success_rate": 1.0
+    }
+}

@@ -1,0 +1,46 @@
+-- HDFS Directory Structure and Metadata
+-- Target: {{ table.db }}/{{ table.table }}
+-- 
+-- Directory Structure:
+-- /warehouse/{{ table.table }}/
+-- ├── data/
+-- │   ├── year=2024/month=01/
+-- │   ├── year=2024/month=02/
+-- │   └── ...
+-- ├── _metadata/
+-- │   ├── schema.json
+-- │   └── partitions.json
+-- └── _logs/
+--
+-- Schema Definition:
+CREATE EXTERNAL TABLE {{ table.db }}.{{ table.table }} (
+{%- for col in columns %}
+  {{ col.name }} {{ col.type }}{% if not loop.last %},{% endif %}
+{%- endfor %}
+)
+{% if partition_by -%}
+PARTITIONED BY ({{ partition_by }})
+{% endif -%}
+STORED AS PARQUET
+LOCATION '/warehouse/{{ table.table }}/data/'
+{% if compression -%}
+TBLPROPERTIES (
+  'parquet.compression'='{{ compression.type | default("snappy") }}',
+  'parquet.block.size'='{{ compression.block_size | default("128MB") }}'
+)
+{% endif -%}
+;
+
+-- HDFS Commands to create directory structure:
+-- hdfs dfs -mkdir -p /warehouse/{{ table.table }}/data
+-- hdfs dfs -mkdir -p /warehouse/{{ table.table }}/_metadata  
+-- hdfs dfs -mkdir -p /warehouse/{{ table.table }}/_logs
+
+-- Optimization Notes:
+{% if partition_by -%}
+-- Partitioning: {{ partition_by }}
+{% endif -%}
+{% if compression -%}
+-- Compression: {{ compression.type | default("snappy") }}
+-- Block Size: {{ compression.block_size | default("128MB") }}
+{% endif -%}

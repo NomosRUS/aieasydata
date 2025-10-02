@@ -1,0 +1,5 @@
+{
+  "chosen_db": "postgres",
+  "accept_llm": false,
+  "notes": "Выбираем PostgreSQL для OLTP нагрузки с высокой консистентностью и поддержкой ACID транзакций"
+}

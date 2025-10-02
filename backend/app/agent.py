@@ -58,9 +58,9 @@ def analyze_data_profile(profile: dict) -> dict:
 
 def generate_ddl_with_explanation(payload: dict):
     """
-    Render DDL drafts for PG/CH and ask OpenAI to explain in RU, offering simple improvements.
+    Render DDL drafts for PG/CH/HDFS and ask OpenAI to explain in RU, offering simple improvements.
     payload = {
-      "target_system": "clickhouse|postgres",
+      "target_system": "clickhouse|postgres|hdfs",
       "table": {"db":"analytics","table":"sales_by_day"},
       "columns": [{"name":"dt","type":"Date","nullable":False},{"name":"total_amount","type":"Int64"}],
       "partition_by": "toYYYYMM(dt)",
@@ -71,7 +71,13 @@ def generate_ddl_with_explanation(payload: dict):
     system = payload.get("target_system","clickhouse")
     if system == "clickhouse":
         ddl = _render("ddl/create_table_ch.sql.j2", payload)
+    elif system == "postgres":
+        ddl = _render("ddl/create_table_pg.sql.j2", payload)
+    elif system == "hdfs":
+        # For HDFS, generate directory structure and metadata
+        ddl = _render("ddl/create_hdfs_structure.txt.j2", payload)
     else:
+        # Default to PostgreSQL for unknown systems
         ddl = _render("ddl/create_table_pg.sql.j2", payload)
 
     prompt = f"""

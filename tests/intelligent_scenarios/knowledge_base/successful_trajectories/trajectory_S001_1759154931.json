@@ -1,0 +1,977 @@
+{
+    "scenario_id": "S001",
+    "name": "External API to PostgreSQL Full Cycle",
+    "category": "end_to_end_flows",
+    "timestamp": 1759154931,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Health-check Модуля 1",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_1_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "healthy",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module_5": "not_checked",
+                        "data_landing_zone": "available"
+                    },
+                    "last_check": "2025-09-29T14:07:33.657594"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 2,
+                "description": "Автоопределение типа данных (Модуль 5)",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "auto-detect",
+                "method": "GET",
+                "params": {
+                    "source": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_2_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "row_count": 0,
+                    "size_in_bytes": 0,
+                    "file_count": 0,
+                    "avg_file_size": 0,
+                    "file_types": {},
+                    "processing_time_seconds": 0.01,
+                    "files_analyzed": 0,
+                    "analysis_limited": false,
+                    "data_type": "csv",
+                    "format": "csv",
+                    "detected_type": "file",
+                    "schema": {
+                        "columns": [
+                            {
+                                "name": "id",
+                                "type": "numeric",
+                                "index": 0
+                            },
+                            {
+                                "name": "product_name",
+                                "type": "string",
+                                "index": 1
+                            },
+                            {
+                                "name": "category",
+                                "type": "string",
+                                "index": 2
+                            },
+                            {
+                                "name": "price",
+                                "type": "numeric",
+                                "index": 3
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "numeric",
+                                "index": 4
+                            },
+                            {
+                                "name": "sale_date",
+                                "type": "date",
+                                "index": 5
+                            },
+                            {
+                                "name": "customer_id",
+                                "type": "numeric",
+                                "index": 6
+                            }
+                        ],
+                        "column_count": 7
+                    },
+                    "separator": ",",
+                    "encoding": "utf-8",
+                    "detection_details": {
+                        "type": "file",
+                        "file_type": "csv",
+                        "source": "/data/raw/sales.csv",
+                        "file_size": 557,
+                        "file_name": "sales.csv",
+                        "format": "csv",
+                        "separator": ",",
+                        "encoding": "utf-8",
+                        "schema": {
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "type": "numeric",
+                                    "index": 0
+                                },
+                                {
+                                    "name": "product_name",
+                                    "type": "string",
+                                    "index": 1
+                                },
+                                {
+                                    "name": "category",
+                                    "type": "string",
+                                    "index": 2
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "numeric",
+                                    "index": 3
+                                },
+                                {
+                                    "name": "quantity",
+                                    "type": "numeric",
+                                    "index": 4
+                                },
+                                {
+                                    "name": "sale_date",
+                                    "type": "date",
+                                    "index": 5
+                                },
+                                {
+                                    "name": "customer_id",
+                                    "type": "numeric",
+                                    "index": 6
+                                }
+                            ],
+                            "column_count": 7
+                        },
+                        "sample_data": [
+                            [
+                                "1",
+                                "Laptop Pro",
+                                "Electronics",
+                                "1299.99",
+                                "2",
+                                "2024-01-15",
+                                "101"
+                            ],
+                            [
+                                "2",
+                                "Wireless Mouse",
+                                "Electronics",
+                                "29.99",
+                                "5",
+                                "2024-01-16",
+                                "102"
+                            ],
+                            [
+                                "3",
+                                "Office Chair",
+                                "Furniture",
+                                "199.99",
+                                "1",
+                                "2024-01-17",
+                                "103"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 3,
+                "description": "Валидация файла (Модуль 1)",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "validate-file",
+                "method": "POST",
+                "params": {
+                    "file_path": "/data/raw/sales.csv"
+                },
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_3_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "validation_id": "96cb8c84-5613-4b6b-aed2-750afa53ab22",
+                    "status": "completed",
+                    "quality_score": 0.9839999999999999,
+                    "issues_count": 9,
+                    "issues": [
+                        {
+                            "issue_id": "48cecc64-6d5e-427d-8461-c3a5c337e548",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 2,
+                            "percentage": 20.0,
+                            "description": "Колонка 'price' содержит 2 потенциальных выбросов (20.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "d59cda0f-3f49-4531-83ab-fd77f6795b19",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 10.0,
+                            "description": "Колонка 'quantity' содержит 1 потенциальных выбросов (10.0%)",
+                            "suggested_fix": "Проверьте выбросы на корректность или примените методы нормализации"
+                        },
+                        {
+                            "issue_id": "iqr_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 1299.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_price_4",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке price: значение 699.99 (границы: -150.01 - 381.99)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_0",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 1299.99 (M-Z-score: 16.39)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_price_4",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "price",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке price: значение 699.99 (M-Z-score: 8.30)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "iqr_quantity_7",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "IQR выброс в колонке quantity: значение 10.00 (границы: -0.62 - 6.38)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "modified_z_quantity_7",
+                            "type": "anomaly",
+                            "severity": "medium",
+                            "column": "quantity",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Модифицированный Z-score выброс в колонке quantity: значение 10.00 (M-Z-score: 5.06)",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        },
+                        {
+                            "issue_id": "multivariate_0",
+                            "type": "anomaly",
+                            "severity": "low",
+                            "column": "multivariate",
+                            "count": 1,
+                            "percentage": 0.1,
+                            "description": "Многомерная аномалия в строке 0: необычная комбинация значений",
+                            "suggested_fix": "Проверьте аномальное значение на корректность"
+                        }
+                    ],
+                    "recommendations_count": 1,
+                    "processing_time_ms": 30793.549
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 4,
+                "description": "Создание сценария агрегации (Модуль 2)",
+                "action": "module_api_call",
+                "module": 2,
+                "endpoint": "create-scenario",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "name": "sales_aggregation_test_{{timestamp}}",
+                    "description": "Test aggregation scenario",
+                    "sources": [
+                        {
+                            "source_id": "sales_csv",
+                            "source_type": "file",
+                            "path": "/data/raw/sales.csv",
+                            "selected_columns": [
+                                "category",
+                                "region",
+                                "amount",
+                                "quantity"
+                            ]
+                        }
+                    ],
+                    "aggregations": [
+                        {
+                            "type": "group_by",
+                            "parameters": {
+                                "columns": [
+                                    "category",
+                                    "region"
+                                ],
+                                "aggregates": {
+                                    "total_amount": "sum(amount)",
+                                    "transaction_count": "count(quantity)"
+                                }
+                            }
+                        }
+                    ],
+                    "target_requirements": {
+                        "expected_volume": "<1GB",
+                        "refresh_interval": "daily"
+                    }
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_4_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "scenario_id": "257",
+                    "name": "sales_aggregation_test_1759154885",
+                    "description": "Test aggregation scenario",
+                    "status": "validated",
+                    "sources_analysis": [
+                        {
+                            "source_id": "sales_csv",
+                            "source_type": "file",
+                            "columns": [],
+                            "row_count": 0,
+                            "data_size_bytes": null,
+                            "sample_data": [],
+                            "compatibility_issues": []
+                        }
+                    ],
+                    "estimated_output_size": 1000,
+                    "recommended_engine": "postgres",
+                    "validation_errors": [],
+                    "created_at": "2025-09-29T14:08:06.138064",
+                    "last_modified": "2025-09-29T14:08:06.138067"
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 5,
+                "description": "Анализ производительности (Модуль 3)",
+                "action": "module_api_call",
+                "module": 3,
+                "endpoint": "analyze",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "source": "/data/raw/sales.csv"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_5_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "analysis_id": "analysis_20250929_140806_546046",
+                    "source": "/data/raw/sales.csv",
+                    "source_type": "csv",
+                    "status": "completed",
+                    "current_metrics": {
+                        "source_type": "csv",
+                        "data_size_bytes": 0,
+                        "row_count": 0,
+                        "column_count": null,
+                        "processing_time_ms": 0.0,
+                        "avg_query_time_ms": null,
+                        "index_usage_stats": null,
+                        "partition_stats": null,
+                        "bottlenecks": [],
+                        "structure_info": {}
+                    },
+                    "bottlenecks": [],
+                    "recommendations": [],
+                    "llm_analysis": "### 1. Анализ текущего состояния производительности\n\nНа основании предоставленных метрик, можно сделать следующие выводы о состоянии производительности источника данных:\n\n- **Тип источника:** CSV — это формат, который часто используется для хранения табличных данных, но он может быть неэффективным для больших объемов информации, так как не поддерживает индексы или сложный доступ к данным.\n- **Размер данных:** 0.00 MB — это указывает на отсутствие данных в источнике, что делает его производительность неактуальной. Поскольку нет ни строк, ни столбцов, не происходит никакой обработки данных.\n- **Время обработки:** 0.00 мс — это также связано с отсутствием данных. Невозможно провести оценку производительности в данном состоянии.\n- **Количество строк и колонок:** отсутствие данных делает невозможным анализ структуры данных.\n\nВ текущем состоянии производительность источника данных не может быть оценена, так как отсутствуют сами данные.\n\n### 2. Приоритетные рекомендации по оптимизации\n\n1. **Загрузка и обновление данных:**\n   - **Рекомендация:** Убедитесь, что CSV файл содержит данные, и настройте автоматическую загрузку данных в формате CSV.\n   - **Ожидаемый эффект:** Увеличение объема данных и возможность анализа производительности.\n   - **Риски и ограничения:** Если данные в CSV файле некорректные или плохо структурированные, это может привести к ошибкам при загрузке и необходимости их предварительной обработки.\n\n2. **Переписывание данных в более оптимизированный формат:**\n   - **Рекомендация:** Рассмотрите возможность использования более производительных форматов, таких как Parquet или Avro, которые предлагают поддержку индексации и улучшают производительность при чтении и записи данных.\n   - **Ожидаемый эффект:** Значительное улучшение скорости работы с данными, особенно при больших объемах информации.\n   - **Риски и ограничения:** Может потребоваться изменение существующих процессов обработки данных. Существующие программные средства могут не поддерживать новые форматы.\n\n3. **Оптимизация структуры данных:**\n   - **Рекомендация:** Если данные будут добавлены, предложите организовать их в таблицы с четкими типами данных и индексами для ускорения доступа.\n   - **Ожидаемый эффект:** Быстрый доступ и обработка данных, когда они будут загружены.\n   - **Риски и ограничения:** Могут возникнуть дополнительные трудозатраты на проектирование схемы данных, что может требовать участия квалифицированного специалиста.\n\n### 3. Ожидаемый эффект от каждой рекомендации\n\n1. **Загрузка и обновление данных:** Восстановление данных в источнике позволит оценить текущее состояние производительности и выявить узкие места.\n2. **Переписывание в оптимизированный формат:** Это обеспечит более быстрое чтение и запись данных, особенно для объемных наборов данных.\n3. **Оптимизация структуры данных:** Улучшит время отклика при запросах и упростит дальнейшую работу с данными.\n\n### 4. Риски и ограничения при применении оптимизаций\n\n- **Загрузка и обновление данных:** Если данные не являются валидными или актуальными, это приведет к искажению анализа.\n- **Форматы данных:** Смена формата может потребовать пересмотра всей инфраструктуры и обеспечивает риски совместимости с другими частью системы.\n- **Структура данных:** Необходимость глубокого анализа требует ресурсов, и возможна возникновение ошибок, если структура не будет правильно спроектирована.\n\n### Вывод\n\nВ настоящее время система не предлагает возможности для анализа, так как отсутствуют данные. Оптимизация возможна в будущем, когда данные будут загружены. Учитывая предложенные рекомендации, можно улучшить производительность системы и обеспечить качество данных.",
+                    "created_at": "2025-09-29T14:08:06.547310",
+                    "completed_at": "2025-09-29T14:08:32.102343",
+                    "error_message": null
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 6,
+                "description": "Поиск существующего профиля данных",
+                "action": "module_api_call",
+                "module": 0,
+                "endpoint": "/api/data-inventory",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_6_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "total_count": 7,
+                    "data": [
+                        {
+                            "id": 12,
+                            "kind": null,
+                            "source_path": "/data/syn_csv",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "dt",
+                                    "type": "Date"
+                                },
+                                {
+                                    "name": "amount",
+                                    "type": "Int64"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-28T21:11:06.843000",
+                            "updated_at": "2025-09-28T21:11:06.843008"
+                        },
+                        {
+                            "id": 11,
+                            "kind": null,
+                            "source_path": "https://jsonplaceholder.typicode.com/posts",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "dt",
+                                    "type": "Date"
+                                },
+                                {
+                                    "name": "amount",
+                                    "type": "Int64"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-28T20:20:03.386854",
+                            "updated_at": "2025-09-28T20:20:03.386894"
+                        },
+                        {
+                            "id": 10,
+                            "kind": null,
+                            "source_path": "{{ step_1_output.output_path }}",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "dt",
+                                    "type": "Date"
+                                },
+                                {
+                                    "name": "amount",
+                                    "type": "Int64"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-28T16:56:44.213791",
+                            "updated_at": "2025-09-28T16:56:44.213797"
+                        },
+                        {
+                            "id": 8,
+                            "kind": null,
+                            "source_path": "/data/raw/sales_hdfs.csv",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "transaction_id",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "timestamp",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "user_id",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "session_id",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "event_type",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "product_category",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "revenue",
+                                    "type": "Float64"
+                                },
+                                {
+                                    "name": "country",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "device_type",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "channel",
+                                    "type": "String"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-25T14:44:37.910738",
+                            "updated_at": "2025-09-25T14:44:37.910742"
+                        },
+                        {
+                            "id": 7,
+                            "kind": null,
+                            "source_path": "/data/raw/sales_postgres.csv",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "customer_id",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "product_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "category",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "Float64"
+                                },
+                                {
+                                    "name": "quantity",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "sale_date",
+                                    "type": "Date"
+                                },
+                                {
+                                    "name": "payment_method",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "store_location",
+                                    "type": "String"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-25T14:42:07.483773",
+                            "updated_at": "2025-09-25T14:42:07.483794"
+                        },
+                        {
+                            "id": 6,
+                            "kind": null,
+                            "source_path": "/data/raw/sales_extended.csv",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "product_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "category",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "Float64"
+                                },
+                                {
+                                    "name": "quantity",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "sale_date",
+                                    "type": "Date"
+                                },
+                                {
+                                    "name": "customer_id",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "is_premium",
+                                    "type": "Boolean"
+                                },
+                                {
+                                    "name": "discount_rate",
+                                    "type": "Float64"
+                                },
+                                {
+                                    "name": "region",
+                                    "type": "String"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-25T14:32:16.249354",
+                            "updated_at": "2025-09-25T14:32:16.249360"
+                        },
+                        {
+                            "id": 1,
+                            "kind": null,
+                            "source_path": "/data/raw/sales.csv",
+                            "total_row_count": null,
+                            "file_count": null,
+                            "columns": [
+                                {
+                                    "name": "dt",
+                                    "type": "Date"
+                                },
+                                {
+                                    "name": "amount",
+                                    "type": "Int64"
+                                }
+                            ],
+                            "sample_data": null,
+                            "llm_summary": null,
+                            "error": null,
+                            "created_at": "2025-09-25T13:34:05.487325",
+                            "updated_at": "2025-09-25T13:34:05.487330"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 8,
+                "description": "Проектирование хранилища (Модуль 4)",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "design",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "source_profile_id": "1",
+                    "business_requirements": "OLAP cube for sales analysis",
+                    "analytics_requirements": {},
+                    "constraints": {}
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_8_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "design_id": "23112283-3b0a-4346-af8d-290f791e20ef",
+                    "status": "awaiting_user_confirmation",
+                    "results": {
+                        "context": {
+                            "data_profile": {
+                                "id": 1,
+                                "source_path": "/data/raw/sales.csv",
+                                "kind": null,
+                                "total_row_count": null,
+                                "file_count": null,
+                                "columns": [
+                                    {
+                                        "name": "dt",
+                                        "type": "Date"
+                                    },
+                                    {
+                                        "name": "amount",
+                                        "type": "Int64"
+                                    }
+                                ],
+                                "sample_data": null,
+                                "llm_summary": null,
+                                "error": null,
+                                "created_at": "2025-09-25T13:34:05.487325",
+                                "updated_at": "2025-09-25T13:34:05.487330"
+                            },
+                            "optimization_recommendations": [
+                                {
+                                    "id": 1,
+                                    "table_name": "/data/raw/sales.csv",
+                                    "recommendation_type": "partition",
+                                    "recommendation_details": {
+                                        "partition_by": "toYYYYMM(dt)"
+                                    },
+                                    "created_at": null,
+                                    "updated_at": null
+                                }
+                            ],
+                            "request": {
+                                "source_profile_id": 1,
+                                "business_requirements": "OLAP cube for sales analysis",
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "heuristic_decision": {
+                            "candidate": "postgres",
+                            "scores": {
+                                "clickhouse": 0,
+                                "postgres": 1,
+                                "hdfs": 0
+                            },
+                            "reasons": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "evaluated_facts": {
+                                "total_row_count": 0,
+                                "quality_score": null,
+                                "aggregation_types": [],
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "llm_analysis": {
+                            "final_choice": "postgres",
+                            "summary": "```json\n{\n  \"final_choice\": \"clickhouse\",\n  \"summary\": \"ClickHouse лучше подходит для OLAP задач благодаря высокой скорости обработки запросов и оптимизации под агрегацию данных.\",\n  \"critical_arguments\": [\n    \"Тип нагрузки (OLAP)\",\n    \"Объем данных и возможность масштабирования\",\n    \"Необходимость в быстрой аналитике и агрегации\"\n  ],\n  \"confidence\": \"высокая\",\n  \"notes\": \"Рекомендуется использовать ClickHouse для построения OLAP кубов, поскольку он оптимизирован для аналитических запросов и поддерживает эффективное партиционирование, что будет полезно для обработки данных за определенные месяцы.\"\n}\n```",
+                            "critical_arguments": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "confidence": "средняя",
+                            "notes": "Ответ LLM не в формате JSON; использовано содержание как есть.",
+                            "debug_log": {
+                                "base_url": "https://api.openai.com/v1/",
+                                "model": "gpt-4o-mini",
+                                "prompt": "Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \"context\": {\n    \"data_profile\": {\n      \"id\": 1,\n      \"source_path\": \"/data/raw/sales.csv\",\n      \"kind\": null,\n      \"total_row_count\": null,\n      \"file_count\": null,\n      \"columns\": [\n        {\n          \"name\": \"dt\",\n          \"type\": \"Date\"\n        },\n        {\n          \"name\": \"amount\",\n          \"type\": \"Int64\"\n        }\n      ],\n      \"sample_data\": null,\n      \"llm_summary\": null,\n      \"error\": null,\n      \"created_at\": \"2025-09-25T13:34:05.487325\",\n      \"updated_at\": \"2025-09-25T13:34:05.487330\"\n    },\n    \"optimization_recommendations\": [\n      {\n        \"id\": 1,\n        \"table_name\": \"/data/raw/sales.csv\",\n        \"recommendation_type\": \"partition\",\n        \"recommendation_details\": {\n          \"partition_by\": \"toYYYYMM(dt)\"\n        },\n        \"created_at\": null,\n        \"updated_at\": null\n      }\n    ],\n    \"request\": {\n      \"source_profile_id\": 1,\n      \"business_requirements\": \"OLAP cube for sales analysis\",\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  },\n  \"heuristic\": {\n    \"candidate\": \"postgres\",\n    \"scores\": {\n      \"clickhouse\": 0,\n      \"postgres\": 1,\n      \"hdfs\": 0\n    },\n    \"reasons\": [\n      \"Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\"\n    ],\n    \"evaluated_facts\": {\n      \"total_row_count\": 0,\n      \"quality_score\": null,\n      \"aggregation_types\": [],\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  }\n}",
+                                "response": "```json\n{\n  \"final_choice\": \"clickhouse\",\n  \"summary\": \"ClickHouse лучше подходит для OLAP задач благодаря высокой скорости обработки запросов и оптимизации под агрегацию данных.\",\n  \"critical_arguments\": [\n    \"Тип нагрузки (OLAP)\",\n    \"Объем данных и возможность масштабирования\",\n    \"Необходимость в быстрой аналитике и агрегации\"\n  ],\n  \"confidence\": \"высокая\",\n  \"notes\": \"Рекомендуется использовать ClickHouse для построения OLAP кубов, поскольку он оптимизирован для аналитических запросов и поддерживает эффективное партиционирование, что будет полезно для обработки данных за определенные месяцы.\"\n}\n```",
+                                "error": null
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "step": {
+                "step": 9,
+                "description": "Подтверждение дизайна хранилища (Модуль 4)",
+                "action": "module_api_call",
+                "module": 4,
+                "endpoint": "/design/{{step_8_output.design_id}}/confirm",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "chosen_db": "clickhouse"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": "step_9_output",
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null,
+                "duration": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "design_id": "23112283-3b0a-4346-af8d-290f791e20ef",
+                    "status": "ddl_generated",
+                    "results": {
+                        "context": {
+                            "data_profile": {
+                                "id": 1,
+                                "source_path": "/data/raw/sales.csv",
+                                "kind": null,
+                                "total_row_count": null,
+                                "file_count": null,
+                                "columns": [
+                                    {
+                                        "name": "dt",
+                                        "type": "Date"
+                                    },
+                                    {
+                                        "name": "amount",
+                                        "type": "Int64"
+                                    }
+                                ],
+                                "sample_data": null,
+                                "llm_summary": null,
+                                "error": null,
+                                "created_at": "2025-09-25T13:34:05.487325",
+                                "updated_at": "2025-09-25T13:34:05.487330"
+                            },
+                            "optimization_recommendations": [
+                                {
+                                    "id": 1,
+                                    "table_name": "/data/raw/sales.csv",
+                                    "recommendation_type": "partition",
+                                    "recommendation_details": {
+                                        "partition_by": "toYYYYMM(dt)"
+                                    },
+                                    "created_at": null,
+                                    "updated_at": null
+                                }
+                            ],
+                            "request": {
+                                "source_profile_id": 1,
+                                "business_requirements": "OLAP cube for sales analysis",
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "heuristic_decision": {
+                            "candidate": "postgres",
+                            "scores": {
+                                "clickhouse": 0,
+                                "postgres": 1,
+                                "hdfs": 0
+                            },
+                            "reasons": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "evaluated_facts": {
+                                "total_row_count": 0,
+                                "quality_score": null,
+                                "aggregation_types": [],
+                                "analytics_requirements": {},
+                                "constraints": {}
+                            }
+                        },
+                        "llm_analysis": {
+                            "final_choice": "postgres",
+                            "summary": "```json\n{\n  \"final_choice\": \"clickhouse\",\n  \"summary\": \"ClickHouse лучше подходит для OLAP задач благодаря высокой скорости обработки запросов и оптимизации под агрегацию данных.\",\n  \"critical_arguments\": [\n    \"Тип нагрузки (OLAP)\",\n    \"Объем данных и возможность масштабирования\",\n    \"Необходимость в быстрой аналитике и агрегации\"\n  ],\n  \"confidence\": \"высокая\",\n  \"notes\": \"Рекомендуется использовать ClickHouse для построения OLAP кубов, поскольку он оптимизирован для аналитических запросов и поддерживает эффективное партиционирование, что будет полезно для обработки данных за определенные месяцы.\"\n}\n```",
+                            "critical_arguments": [
+                                "Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение."
+                            ],
+                            "confidence": "средняя",
+                            "notes": "Ответ LLM не в формате JSON; использовано содержание как есть.",
+                            "debug_log": {
+                                "base_url": "https://api.openai.com/v1/",
+                                "model": "gpt-4o-mini",
+                                "prompt": "Ты эксперт по архитектуре хранилищ. Тебе передают контекст (профиль данных, требования) и результат эвристического выбора СУБД. Проверь вывод эвристики. Ответ верни строго в JSON с ключами: final_choice (одно из clickhouse/postgres/hdfs), summary (короткое обоснование), critical_arguments (список ключевых факторов), confidence (низкая/средняя/высокая), notes (доп. рекомендации).\nЕсли не согласен с эвристикой, предложи альтернативу и объясни почему.\nКонтекст:\n{\n  \"context\": {\n    \"data_profile\": {\n      \"id\": 1,\n      \"source_path\": \"/data/raw/sales.csv\",\n      \"kind\": null,\n      \"total_row_count\": null,\n      \"file_count\": null,\n      \"columns\": [\n        {\n          \"name\": \"dt\",\n          \"type\": \"Date\"\n        },\n        {\n          \"name\": \"amount\",\n          \"type\": \"Int64\"\n        }\n      ],\n      \"sample_data\": null,\n      \"llm_summary\": null,\n      \"error\": null,\n      \"created_at\": \"2025-09-25T13:34:05.487325\",\n      \"updated_at\": \"2025-09-25T13:34:05.487330\"\n    },\n    \"optimization_recommendations\": [\n      {\n        \"id\": 1,\n        \"table_name\": \"/data/raw/sales.csv\",\n        \"recommendation_type\": \"partition\",\n        \"recommendation_details\": {\n          \"partition_by\": \"toYYYYMM(dt)\"\n        },\n        \"created_at\": null,\n        \"updated_at\": null\n      }\n    ],\n    \"request\": {\n      \"source_profile_id\": 1,\n      \"business_requirements\": \"OLAP cube for sales analysis\",\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  },\n  \"heuristic\": {\n    \"candidate\": \"postgres\",\n    \"scores\": {\n      \"clickhouse\": 0,\n      \"postgres\": 1,\n      \"hdfs\": 0\n    },\n    \"reasons\": [\n      \"Не найдено явных преимуществ — выбран PostgreSQL как универсальное решение.\"\n    ],\n    \"evaluated_facts\": {\n      \"total_row_count\": 0,\n      \"quality_score\": null,\n      \"aggregation_types\": [],\n      \"analytics_requirements\": {},\n      \"constraints\": {}\n    }\n  }\n}",
+                                "response": "```json\n{\n  \"final_choice\": \"clickhouse\",\n  \"summary\": \"ClickHouse лучше подходит для OLAP задач благодаря высокой скорости обработки запросов и оптимизации под агрегацию данных.\",\n  \"critical_arguments\": [\n    \"Тип нагрузки (OLAP)\",\n    \"Объем данных и возможность масштабирования\",\n    \"Необходимость в быстрой аналитике и агрегации\"\n  ],\n  \"confidence\": \"высокая\",\n  \"notes\": \"Рекомендуется использовать ClickHouse для построения OLAP кубов, поскольку он оптимизирован для аналитических запросов и поддерживает эффективное партиционирование, что будет полезно для обработки данных за определенные месяцы.\"\n}\n```",
+                                "error": null
+                            }
+                        },
+                        "final_selection": {
+                            "chosen_db": "clickhouse",
+                            "accepted_llm": true,
+                            "user_notes": null,
+                            "confirmation_timestamp": "2025-09-29T14:08:37.920954",
+                            "explanation": "```json\n{\n  \"final_choice\": \"clickhouse\",\n  \"summary\": \"ClickHouse лучше подходит для OLAP задач благодаря высокой скорости обработки запросов и оптимизации под агрегацию данных.\",\n  \"critical_arguments\": [\n    \"Тип нагрузки (OLAP)\",\n    \"Объем данных и возможность масштабирования\",\n    \"Необходимость в быстрой аналитике и агрегации\"\n  ],\n  \"confidence\": \"высокая\",\n  \"notes\": \"Рекомендуется использовать ClickHouse для построения OLAP кубов, поскольку он оптимизирован для аналитических запросов и поддерживает эффективное партиционирование, что будет полезно для обработки данных за определенные месяцы.\"\n}\n```"
+                        },
+                        "ddl_script": "-- ClickHouse DDL (MergeTree)\nCREATE DATABASE IF NOT EXISTS analytics;\n\nCREATE TABLE IF NOT EXISTS analytics.sales (\ndt Date,amount Int64)\nENGINE = MergeTree\nPARTITION BY toYYYYMM(dt)\nORDER BY tuple();",
+                        "ddl_generated_at": "2025-09-29T14:08:51.595273"
+                    }
+                }
+            }
+        }
+    ]
+}

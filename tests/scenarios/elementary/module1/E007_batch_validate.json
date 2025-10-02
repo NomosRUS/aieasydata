@@ -1,0 +1,27 @@
+{
+    "scenario_id": "M1_E007",
+    "name": "Module 1 - Batch Validate",
+    "description": "Elementary test for batch validation.",
+    "category": "elementary/module1",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Call batch-validate endpoint",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "/api/v1/data-quality/batch-validate",
+            "method": "POST",
+            "payload": {
+                "sources": [
+                    { "source_id": "sales1", "path": "/data/raw/sales.csv" },
+                    { "source_id": "sales2", "path": "/data/raw/sales_part1.csv" }
+                ]
+            }
+        }
+    ],
+    "ai_training": {
+        "goal": "Elementary test",
+        "success_pattern": "",
+        "key_decisions": []
+    }
+}

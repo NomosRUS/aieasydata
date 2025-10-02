@@ -1,0 +1,35 @@
+{
+    "scenario_id": "S025",
+    "name": "Weekly Optimization via Airflow",
+    "description": "Запускает еженедельную задачу оптимизации хранилищ через Airflow",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Анализ производительности хранилища (Модуль 3)",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "method": "POST",
+            "payload": {
+                "source": "/data/warehouses/sales_data"
+            },
+            "save_to": "step_1_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "optimizations_applied",
+                "design_id": "{{ step_1_output.analysis_id }}"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Analyze and apply performance optimizations for a data warehouse",
+        "success_pattern": "analyze_performance -> apply_optimizations",
+        "key_decisions": [
+            "optimization_strategy"
+        ]
+    }
+}

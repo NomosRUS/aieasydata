@@ -1,0 +1,65 @@
+{
+    "scenario_id": "S013",
+    "name": "Module 4 to Module 5 Format Validation",
+    "description": "Проверка, что Module 5 может корректно подключиться к хранилищу, созданному Module 4",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Проектирование хранилища PostgreSQL в Module 4",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Test for M5 connection",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "design_info"
+        },
+        {
+            "step": 2,
+            "description": "Подтверждение дизайна PostgreSQL",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "/design/{{design_info.design_id}}/confirm",
+            "method": "POST",
+            "payload": {
+                "chosen_db": "postgresql"
+            },
+            "save_to": "warehouse_info"
+        },
+        {
+            "step": 3,
+            "description": "Пауза для фиксации транзакции в БД",
+            "action": "sleep",
+            "duration": 5
+        },
+        {
+            "step": 4,
+            "description": "Сбор метрик из созданного хранилища через Module 5",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "/api/v1/metrics/collect-by-design/{{ warehouse_info.design_id }}",
+            "method": "POST",
+            "expected_response": {
+                "collection_status": "success"
+            },
+            "timeout": 60
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure Module 5 can connect to and collect metrics from a warehouse created by Module 4",
+        "success_pattern": "create_warehouse_m4 -> collect_metrics_m5",
+        "key_decisions": []
+    }
+}

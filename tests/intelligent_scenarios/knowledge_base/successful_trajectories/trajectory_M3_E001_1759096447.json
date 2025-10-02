@@ -1,0 +1,50 @@
+{
+    "scenario_id": "M3_E001",
+    "name": "Module 3 - Health Check",
+    "category": "elementary/module3",
+    "timestamp": 1759096447,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call health-check endpoint",
+                "action": "module_api_call",
+                "module": 3,
+                "endpoint": "/api/v1/performance/health-check",
+                "method": "GET",
+                "params": null,
+                "payload": null,
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "status": "ok",
+                    "module": "performance_optimizer",
+                    "version": "1.0.0",
+                    "integrations": {
+                        "module5_metrics": "ok",
+                        "database": "error"
+                    },
+                    "capabilities": [
+                        "auto_detect_data_types",
+                        "performance_analysis",
+                        "optimization_recommendations",
+                        "ddl_generation",
+                        "module4_integration",
+                        "module5_integration"
+                    ]
+                }
+            }
+        }
+    ]
+}

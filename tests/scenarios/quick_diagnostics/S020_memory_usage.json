@@ -1,0 +1,42 @@
+{
+    "scenario_id": "S020",
+    "name": "Memory Usage Check",
+    "description": "Проверка потребления памяти основными модулями при обработке большого файла",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 2,
+            "description": "Запуск интенсивной операции (валидация большого файла)",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "payload": {
+                "validation_options": {
+                    "check_duplicates": true,
+                    "assess_quality": true
+                }
+            },
+            "params": {
+                "file_path": "/data/raw/large_dataset.csv"
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "memory_usage_within_limits",
+                "baseline": "{{ baseline_metrics }}",
+                "peak": "{{ peak_metrics }}",
+                "threshold_mb": 500
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure memory usage stays within acceptable limits during heavy operations",
+        "success_pattern": "get_baseline_memory -> run_heavy_task -> get_peak_memory -> compare",
+        "key_decisions": [
+            "memory_threshold"
+        ]
+    }
+}

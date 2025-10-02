@@ -5,6 +5,11 @@ from typing import List, Optional, Literal, Dict, Any
 from datetime import datetime
 import os
 from . import agent, analyzer, rule_engine, dag_compiler
+from .warehouse_designer.router import router as warehouse_router
+from .metrics_collector.router import router as metrics_router
+from .performance_optimizer.router import router as performance_router
+from .data_aggregator.router import router as aggregation_router
+from .data_validator.router import router as data_validator_router
 from .database import get_db, DataProfile
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
@@ -20,12 +25,18 @@ app.add_middleware(
     allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
 
+app.include_router(warehouse_router)
+app.include_router(metrics_router)
+app.include_router(performance_router)
+app.include_router(aggregation_router)
+app.include_router(data_validator_router)
+
 class DSLModel(BaseModel):
     name: str
     mode: Literal["batch","stream"] = "batch"
     schedule: Optional[str] = "0 * * * *"
     source: Dict[str, Any]
-    validate: Optional[Dict[str, Any]] = None
+    validation_rules: Optional[Dict[str, Any]] = None
     transforms: Optional[List[Dict[str, Any]]] = []
     target: Dict[str, Any]
     ddl_overrides: Optional[Dict[str, str]] = {}
@@ -50,6 +61,28 @@ class DataInventoryResponse(BaseModel):
     total_count: int
     data: List[DataProfileResponse]
 
+@app.get("/")
+def root():
+    return {
+        "message": "AiEasyData API - Все модули готовы к работе!",
+        "modules": {
+            "module_1": "Валидация и очистка данных",
+            "module_2": "Агрегация и обогащение данных",
+            "module_3": "Оптимизация производительности",
+            "module_4": "Проектирование хранилищ", 
+            "module_5": "Мониторинг хранилищ"
+        },
+        "endpoints": {
+            "docs": "/docs",
+            "health": "/health",
+            "data_quality": "/api/v1/data-quality/health-check",
+            "aggregation": "/api/v1/aggregation/health-check",
+            "performance": "/api/v1/performance/health-check",
+            "warehouse": "/api/v1/warehouse/design",
+            "metrics": "/api/v1/metrics/health-check"
+        }
+    }
+
 @app.get("/health")
 def health():
     return {"ok": True, "uses": "OpenAI API", "model": os.environ.get("OPENAI_MODEL","gpt-4o-mini")}
@@ -61,6 +94,43 @@ def get_data_inventory(db: Session = Depends(get_db)):
     """
     profiles = db.query(DataProfile).order_by(DataProfile.id.desc()).all()
     return {"total_count": len(profiles), "data": profiles}
+
+class CreateDataProfileRequest(BaseModel):
+    source_path: str
+
+@app.post("/api/v1/data-profiles", response_model=DataProfileResponse, status_code=201)
+def create_data_profile(request: CreateDataProfileRequest, db: Session = Depends(get_db)):
+    """
+    Creates a new data profile by analyzing the source data.
+    """
+    try:
+        # Проверяем, существует ли уже профиль с таким source_path
+        existing_profile = db.query(DataProfile).filter(DataProfile.source_path == request.source_path).first()
+        if existing_profile:
+            # Если профиль существует, возвращаем его
+            return existing_profile
+
+        # Если профиль не найден, выполняем быстрый анализ для получения метаданных
+        profile_data = analyzer.quick_profile({'source_path': request.source_path})
+        
+        # Создаем новый объект DataProfile
+        new_profile = DataProfile(
+            source_path=request.source_path,
+            kind=profile_data.get('kind'),
+            total_row_count=profile_data.get('total_row_count'),
+            file_count=profile_data.get('file_count'),
+            columns=profile_data.get('columns'),
+            sample_data=profile_data.get('sample_data')
+        )
+        
+        db.add(new_profile)
+        db.commit()
+        db.refresh(new_profile)
+        
+        return new_profile
+    except Exception as e:
+        db.rollback() # Откатываем транзакцию в случае ошибки
+        raise HTTPException(status_code=500, detail=f"Failed to create data profile: {str(e)}")
 
 @app.post("/api/analyze-profile/{profile_id}", response_model=DataProfileResponse)
 def analyze_profile(profile_id: int, db: Session = Depends(get_db)):

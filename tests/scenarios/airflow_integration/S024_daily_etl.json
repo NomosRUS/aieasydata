@@ -1,0 +1,47 @@
+{
+    "scenario_id": "S024",
+    "name": "Daily ETL via Airflow",
+    "description": "Полный цикл ETL, запускаемый через динамически созданный Airflow DAG",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Генерация Airflow DAG для ежедневного ETL",
+            "action": "module_api_call",
+            "module": 0,
+            "endpoint": "/dag/compile",
+            "method": "POST",
+            "payload": {
+                "name": "daily_sales_etl_{{timestamp}}",
+                "schedule": "@daily",
+                "source": {
+                    "type": "file",
+                    "path": "/data/raw/sales.csv"
+                },
+                "target": {
+                    "type": "clickhouse",
+                    "table": "daily_sales_etl"
+                }
+            },
+            "save_to": "step_1_output"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "dag_run_status",
+                "dag_id": "{{ step_1_output.dag_id }}",
+                "expected_status": "success"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Generate and execute a daily ETL DAG in Airflow",
+        "success_pattern": "compile_dag -> trigger_dag -> check_status",
+        "key_decisions": [
+            "dag_schedule",
+            "source_selection",
+            "target_selection"
+        ]
+    }
+}

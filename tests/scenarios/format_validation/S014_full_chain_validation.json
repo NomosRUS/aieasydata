@@ -1,0 +1,91 @@
+{
+    "scenario_id": "S014",
+    "name": "Full Chain Format Validation",
+    "description": "Сквозная проверка форматов в полной цепочке: M5 -> M1 -> M2 -> M3 -> M4",
+    "category": "format_validation",
+    "steps": [
+        {
+            "step": 1,
+            "description": "M5: Автомопределение типа данных",
+            "action": "module_api_call",
+            "module": 5,
+            "endpoint": "/api/v1/metrics/auto-detect",
+            "params": {
+                "source": "/data/raw/sales.csv"
+            },
+            "save_to": "step1_out",
+            "method": "GET"
+        },
+        {
+            "step": 2,
+            "description": "M1: Валидация на основе профиля M5",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "params": {
+                "file_path": "/data/raw/sales.csv"
+            },
+            "payload": {
+                "check_duplicates": true,
+                "assess_quality": true
+            },
+            "save_to": "step2_out",
+            "method": "POST"
+        },
+        {
+            "step": 3,
+            "description": "M2: Агрегация валидированных данных",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "custom-dataset",
+            "payload": {
+                "sources": [
+                    "{{ step2_out.validated_path }} "
+                ]
+            },
+            "save_to": "step3_out",
+            "method": "POST"
+        },
+        {
+            "step": 4,
+            "description": "M3: Анализ производительности агрегированных данных",
+            "action": "module_api_call",
+            "module": 3,
+            "endpoint": "analyze",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Full chain validation",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "save_to": "step4_out",
+            "method": "POST"
+        },
+        {
+            "step": 5,
+            "description": "M4: Проектирование хранилища на основе рекомендаций M3",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Full chain validation",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "method": "POST"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Validate data format compatibility across the entire M5->M1->M2->M3->M4 chain",
+        "success_pattern": "profile -> validate -> aggregate -> analyze -> design_optimized",
+        "key_decisions": []
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "scenario_id": "S028",
+    "name": "Airflow DAG Conditional Execution",
+    "description": "Проверка условного выполнения задач в DAG (например, выполнение только при наличии новых файлов)",
+    "category": "airflow_integration",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Запуск DAG без новых файлов (ожидается пропуск шагов)",
+            "action": "airflow_dag_trigger",
+            "dag_id": "conditional_etl_dag",
+            "conf": {
+                "check_for_new_files": true,
+                "source_path": "/data/raw/empty_source"
+            },
+            "wait_for_completion": true,
+            "save_to": "run1"
+        },
+        {
+            "step": 2,
+            "description": "Создание нового файла и повторный запуск DAG (ожидается выполнение)",
+            "action": "module_api_call",
+            "command": "echo 'data' > /data/raw/empty_source/new_file.csv",
+            "method": "POST"
+        },
+        {
+            "step": 3,
+            "description": "Повторный запуск DAG",
+            "action": "airflow_dag_trigger",
+            "dag_id": "conditional_etl_dag",
+            "conf": {
+                "check_for_new_files": true,
+                "source_path": "/data/raw/empty_source"
+            },
+            "wait_for_completion": true,
+            "save_to": "run2"
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "dag_task_status",
+                "dag_run_id": "{{ run1.dag_run_id }}",
+                "task_id": "process_files",
+                "expected_status": "skipped"
+            },
+            {
+                "type": "dag_task_status",
+                "dag_run_id": "{{ run2.dag_run_id }}",
+                "task_id": "process_files",
+                "expected_status": "success"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify conditional task execution in Airflow based on data availability",
+        "success_pattern": "trigger_with_no_data -> verify_skipped -> add_data -> trigger_with_data -> verify_success",
+        "key_decisions": [
+            "branching_logic"
+        ]
+    }
+}

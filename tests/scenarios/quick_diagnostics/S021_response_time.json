@@ -1,0 +1,88 @@
+{
+    "scenario_id": "S021",
+    "name": "API Response Time Check",
+    "description": "Проверка времени отклика ключевых API endpoints под нагрузкой",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Проверка времени отклика Module 1 (validate-file)",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "validate-file",
+            "method": "POST",
+            "validation": {
+                "max_response_time_ms": 1000
+            },
+            "params": {
+                "file_path": "/data/raw/sales.csv"
+            }
+        },
+        {
+            "step": 2,
+            "description": "Проверка времени отклика Module 2 (create-scenario)",
+            "action": "module_api_call",
+            "module": 2,
+            "endpoint": "create-scenario",
+            "method": "POST",
+            "payload": {
+                "name": "response_time_test_{{timestamp}}",
+                "description": "Test description",
+                "sources": [
+                    {
+                        "source_id": "sales",
+                        "source_type": "file",
+                        "path": "/data/raw/sales.csv",
+                        "selected_columns": ["product_name", "price"]
+                    }
+                ],
+                "aggregations": [
+                    {
+                        "type": "group_by",
+                        "parameters": {
+                            "columns": ["product_name"],
+                            "aggregates": { "avg_price": "avg(price)" }
+                        }
+                    }
+                ],
+                "target_requirements": {
+                    "expected_volume": "<1GB"
+                }
+            },
+            "validation": {
+                "max_response_time_ms": 500
+            }
+        },
+        {
+            "step": 3,
+            "description": "Проверка времени отклика Module 4 (design)",
+            "action": "module_api_call",
+            "module": 4,
+            "endpoint": "design",
+            "method": "POST",
+            "payload": {
+                "source_profile_id": 1,
+                "business_requirements": "Response time test",
+                "analytics_requirements": {},
+                "constraints": {}
+            },
+            "validation": {
+                "max_response_time_ms": 1500
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Ensure key API endpoints respond within acceptable time limits",
+        "success_pattern": "check_m1_latency -> check_m2_latency -> check_m4_latency",
+        "key_decisions": [
+            "response_time_thresholds"
+        ]
+    }
+}

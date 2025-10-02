@@ -1,0 +1,297 @@
+{
+    "scenario_id": "M1_E006",
+    "name": "Module 1 - Check Homogeneity",
+    "category": "elementary/module1",
+    "timestamp": 1759094779,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call check-homogeneity endpoint",
+                "action": "module_api_call",
+                "module": 1,
+                "endpoint": "/api/v1/data-quality/check-homogeneity",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "folder_path": "/data/raw"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "folder_path": "/data/raw",
+                    "homogeneous": false,
+                    "total_files": 6,
+                    "homogeneous_files": 1,
+                    "inconsistent_files": 5,
+                    "inconsistent_files_moved_to": "",
+                    "reference_schema": {
+                        "columns": [
+                            "id",
+                            "product_name",
+                            "category",
+                            "price",
+                            "quantity",
+                            "sale_date",
+                            "customer_id"
+                        ],
+                        "column_types": {
+                            "id": "int64",
+                            "product_name": "object",
+                            "category": "object",
+                            "price": "float64",
+                            "quantity": "int64",
+                            "sale_date": "object",
+                            "customer_id": "int64"
+                        },
+                        "separator": ",",
+                        "encoding": "utf-8"
+                    },
+                    "file_analyses": [
+                        {
+                            "file_path": "/data/raw/sales.csv",
+                            "schema": {
+                                "columns": [
+                                    "id",
+                                    "product_name",
+                                    "category",
+                                    "price",
+                                    "quantity",
+                                    "sale_date",
+                                    "customer_id"
+                                ],
+                                "column_types": {
+                                    "id": "int64",
+                                    "product_name": "object",
+                                    "category": "object",
+                                    "price": "float64",
+                                    "quantity": "int64",
+                                    "sale_date": "object",
+                                    "customer_id": "int64"
+                                },
+                                "separator": ",",
+                                "encoding": "utf-8"
+                            },
+                            "is_consistent": true,
+                            "differences": []
+                        },
+                        {
+                            "file_path": "/data/raw/sales_extended.csv",
+                            "schema": {
+                                "columns": [
+                                    "id",
+                                    "product_name",
+                                    "category",
+                                    "price",
+                                    "quantity",
+                                    "sale_date",
+                                    "customer_id",
+                                    "is_premium",
+                                    "discount_rate",
+                                    "region"
+                                ],
+                                "column_types": {
+                                    "id": "int64",
+                                    "product_name": "object",
+                                    "category": "object",
+                                    "price": "float64",
+                                    "quantity": "int64",
+                                    "sale_date": "object",
+                                    "customer_id": "int64",
+                                    "is_premium": "bool",
+                                    "discount_rate": "float64",
+                                    "region": "object"
+                                },
+                                "separator": ",",
+                                "encoding": "utf-8"
+                            },
+                            "is_consistent": false,
+                            "differences": [
+                                "Разное количество колонок: эталон 7, файл 10",
+                                "Дополнительные колонки: ['discount_rate', 'region', 'is_premium']"
+                            ]
+                        },
+                        {
+                            "file_path": "/data/raw/sales_hdfs.csv",
+                            "schema": {
+                                "columns": [
+                                    "transaction_id",
+                                    "timestamp",
+                                    "user_id",
+                                    "session_id",
+                                    "event_type",
+                                    "product_category",
+                                    "revenue",
+                                    "country",
+                                    "device_type",
+                                    "channel"
+                                ],
+                                "column_types": {
+                                    "transaction_id": "object",
+                                    "timestamp": "object",
+                                    "user_id": "object",
+                                    "session_id": "object",
+                                    "event_type": "object",
+                                    "product_category": "object",
+                                    "revenue": "float64",
+                                    "country": "object",
+                                    "device_type": "object",
+                                    "channel": "object"
+                                },
+                                "separator": ",",
+                                "encoding": "utf-8"
+                            },
+                            "is_consistent": false,
+                            "differences": [
+                                "Разное количество колонок: эталон 7, файл 10",
+                                "Отсутствующие колонки: ['quantity', 'customer_id', 'product_name', 'category', 'price', 'id', 'sale_date']",
+                                "Дополнительные колонки: ['product_category', 'country', 'revenue', 'transaction_id', 'user_id', 'device_type', 'session_id', 'timestamp', 'channel', 'event_type']"
+                            ]
+                        },
+                        {
+                            "file_path": "/data/raw/sales_postgres.csv",
+                            "schema": {
+                                "columns": [
+                                    "id",
+                                    "customer_id",
+                                    "product_name",
+                                    "category",
+                                    "price",
+                                    "quantity",
+                                    "sale_date",
+                                    "payment_method",
+                                    "store_location"
+                                ],
+                                "column_types": {
+                                    "id": "int64",
+                                    "customer_id": "int64",
+                                    "product_name": "object",
+                                    "category": "object",
+                                    "price": "float64",
+                                    "quantity": "int64",
+                                    "sale_date": "object",
+                                    "payment_method": "object",
+                                    "store_location": "object"
+                                },
+                                "separator": ",",
+                                "encoding": "utf-8"
+                            },
+                            "is_consistent": false,
+                            "differences": [
+                                "Разное количество колонок: эталон 7, файл 9",
+                                "Дополнительные колонки: ['store_location', 'payment_method']"
+                            ]
+                        },
+                        {
+                            "file_path": "/data/raw/test_integration.csv",
+                            "schema": {
+                                "columns": [
+                                    "id",
+                                    "name",
+                                    "age\\n1",
+                                    "Alice",
+                                    "25\\n2",
+                                    "Bob",
+                                    "30\\n"
+                                ],
+                                "column_types": {
+                                    "id": "object",
+                                    "name": "object",
+                                    "age\\n1": "object",
+                                    "Alice": "object",
+                                    "25\\n2": "object",
+                                    "Bob": "object",
+                                    "30\\n": "object"
+                                },
+                                "separator": ",",
+                                "encoding": "utf-8"
+                            },
+                            "is_consistent": false,
+                            "differences": [
+                                "Отсутствующие колонки: ['quantity', 'customer_id', 'product_name', 'category', 'price', 'sale_date']",
+                                "Дополнительные колонки: ['30\\\\n', 'age\\\\n1', 'name', '25\\\\n2', 'Bob', 'Alice']",
+                                "Несовместимые типы в колонке 'id': эталон int64, файл object"
+                            ]
+                        },
+                        {
+                            "file_path": "/data/raw/test_small.csv",
+                            "schema": {
+                                "columns": [
+                                    "id",
+                                    "value",
+                                    "category",
+                                    "date"
+                                ],
+                                "column_types": {
+                                    "id": "int64",
+                                    "value": "int64",
+                                    "category": "object",
+                                    "date": "object"
+                                },
+                                "separator": ",",
+                                "encoding": "utf-8"
+                            },
+                            "is_consistent": false,
+                            "differences": [
+                                "Разное количество колонок: эталон 7, файл 4",
+                                "Отсутствующие колонки: ['quantity', 'product_name', 'customer_id', 'price', 'sale_date']",
+                                "Дополнительные колонки: ['value', 'date']"
+                            ]
+                        }
+                    ],
+                    "schema_differences": [
+                        {
+                            "file": "/data/raw/sales_extended.csv",
+                            "issues": [
+                                "Разное количество колонок: эталон 7, файл 10",
+                                "Дополнительные колонки: ['discount_rate', 'region', 'is_premium']"
+                            ]
+                        },
+                        {
+                            "file": "/data/raw/sales_hdfs.csv",
+                            "issues": [
+                                "Разное количество колонок: эталон 7, файл 10",
+                                "Отсутствующие колонки: ['quantity', 'customer_id', 'product_name', 'category', 'price', 'id', 'sale_date']",
+                                "Дополнительные колонки: ['product_category', 'country', 'revenue', 'transaction_id', 'user_id', 'device_type', 'session_id', 'timestamp', 'channel', 'event_type']"
+                            ]
+                        },
+                        {
+                            "file": "/data/raw/sales_postgres.csv",
+                            "issues": [
+                                "Разное количество колонок: эталон 7, файл 9",
+                                "Дополнительные колонки: ['store_location', 'payment_method']"
+                            ]
+                        },
+                        {
+                            "file": "/data/raw/test_integration.csv",
+                            "issues": [
+                                "Отсутствующие колонки: ['quantity', 'customer_id', 'product_name', 'category', 'price', 'sale_date']",
+                                "Дополнительные колонки: ['30\\\\n', 'age\\\\n1', 'name', '25\\\\n2', 'Bob', 'Alice']",
+                                "Несовместимые типы в колонке 'id': эталон int64, файл object"
+                            ]
+                        },
+                        {
+                            "file": "/data/raw/test_small.csv",
+                            "issues": [
+                                "Разное количество колонок: эталон 7, файл 4",
+                                "Отсутствующие колонки: ['quantity', 'product_name', 'customer_id', 'price', 'sale_date']",
+                                "Дополнительные колонки: ['value', 'date']"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

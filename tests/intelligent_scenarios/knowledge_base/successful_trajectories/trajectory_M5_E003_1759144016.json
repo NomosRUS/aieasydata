@@ -1,0 +1,46 @@
+{
+    "scenario_id": "M5_E003",
+    "name": "Module 5 - Collect Metrics",
+    "category": "elementary/module5",
+    "timestamp": 1759144016,
+    "trajectory": [
+        {
+            "step": {
+                "step": 1,
+                "description": "Call collect endpoint",
+                "action": "module_api_call",
+                "module": 5,
+                "endpoint": "/api/v1/metrics/collect",
+                "method": "POST",
+                "params": null,
+                "payload": {
+                    "db_type": "file_system",
+                    "file_path": "/data/raw/sales.csv"
+                },
+                "headers": null,
+                "expected_format": null,
+                "save_to": null,
+                "expected_response": null,
+                "source": null,
+                "expected_schema": null,
+                "timeout": 300,
+                "dag_id": null,
+                "condition": null
+            },
+            "result": {
+                "success": true,
+                "status_code": 200,
+                "data": {
+                    "row_count": 0,
+                    "size_in_bytes": 0,
+                    "avg_query_duration_ms": null,
+                    "p95_query_duration_ms": null,
+                    "total_queries": null,
+                    "file_count": 0,
+                    "avg_file_size": 0,
+                    "file_types": {}
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "scenario_id": "S019",
+    "name": "Module 1 Health Check (Simplified)",
+    "description": "Проверяет работоспособность Модуля 1 через эндпоинт health-check.",
+    "category": "quick_diagnostics",
+    "steps": [
+        {
+            "step": 1,
+            "description": "Вызов health-check для Модуля 1",
+            "action": "module_api_call",
+            "module": 1,
+            "endpoint": "health-check",
+            "method": "GET",
+            "expected_response": {
+                "status_code": 200,
+                "body": {
+                    "status": "ok"
+                }
+            }
+        }
+    ],
+    "validation": {
+        "final_checks": [
+            {
+                "type": "all_steps_succeeded"
+            }
+        ]
+    },
+    "ai_training": {
+        "goal": "Verify that Module 1 is online and responsive.",
+        "success_pattern": "health_check_ok",
+        "key_decisions": []
+    }
+}

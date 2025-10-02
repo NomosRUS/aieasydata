@@ -1,0 +1,20 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file into the container at /app
+COPY requirements.fake_api.txt .
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.fake_api.txt
+
+# Copy the application code into the container at /app
+COPY fake_external_api.py .
+
+# Make port 8001 available to the world outside this container
+EXPOSE 8001
+
+# Run fake_external_api.py when the container launches
+CMD ["uvicorn", "fake_external_api:app", "--host", "0.0.0.0", "--port", "8001"]
